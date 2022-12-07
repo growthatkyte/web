@@ -1,0 +1,90 @@
+/* Basic callout popup */
+ .basic-callout {
+     width: max-content;
+     height: fit-content;
+     position: fixed;
+     top: 15%;
+     left: 0;
+     right: 0;
+     bottom: 15%;
+     margin: 0 auto;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     flex-wrap: nowrap;
+     flex-direction: column;
+     background-color: #fff;
+     border: 2px solid #363f4d;
+     border-radius: 12px;
+     padding: 10px;
+     z-index: 99999;
+     overflow: hidden;
+}
+ .basic-callout-header {
+     padding: 0px 10px 0px 10px;
+}
+ .basic-callout-img {
+     margin: 10px 0px 10px 0px;
+     width: 100%;
+     border-radius: 12px;
+}
+ .basic-callout-form {
+     width: fit-content;
+     display: flex;
+     justify-content: center;
+     align-items: flex-start;
+     flex-wrap: nowrap;
+     flex-direction: column;
+}
+ .basic-callout-form.active {
+     display: none;
+}
+ .basic-callout-message {
+     color: green;
+     display: none;
+}
+ .basic-callout-message.active {
+     display: block;
+}
+ .basic-callout-close {
+     background-color: #F7f7f8;
+     border-radius: 6px;
+     padding: 10px;
+     position: absolute;
+     top: 20px;
+     right: 20px;
+     cursor: pointer;
+}
+/* Basic lead form */
+ .basic-form {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     flex-wrap: nowrap;
+     flex-direction: column;
+     height: auto;
+     padding: 10px;
+     position: static;
+     overflow: hidden 
+}
+ .basic-form-field {
+     width: 90%;
+     height: 50px;
+     border: 2px solid #363f4d;
+     border-radius: 6px;
+     margin: 10px;
+     padding: 10px;
+     font-size: 18px;
+}
+ .basic-form-button {
+     width: 80%;
+     height: 75px;
+     background-color: #2dd1ac;
+     color: white;
+     border: none;
+     border-radius: 6px;
+     margin: 20px 10px 20px 10px;
+     padding: 10px 15px 10px 15px;
+     font-size: 18px;
+     font-weight: 500;
+}
