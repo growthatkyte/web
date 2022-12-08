@@ -1,6 +1,6 @@
 /* Basic callout popup */
 .basic-callout {
-  position: fixed;
+position: fixed;
     top: 0;
     left: 0;
     right: 0;
@@ -8,7 +8,6 @@
     display: flex;
     z-index: 99999;
     overflow: hidden;
-    margin: 30px;
     justify-content: space-around;
     align-content: space-around;
     flex-direction: column;
