@@ -78,8 +78,7 @@ position: relative;
   font-size: 18px;
 }
 .basic-form-button {
-  width: 60%;
-       @media only screen and (max-width: 80%)
+  width: 80%;
   height: 50px;
   background-color: #2dd1ac;
   color: white;
