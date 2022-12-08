@@ -1,15 +1,18 @@
 /* Basic callout popup */
 .basic-callout {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  z-index: 99999;
-  overflow: hidden;
-  margin: 30px;
-  justify-content: center;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    z-index: 99999;
+    overflow: hidden;
+    margin: 30px;
+    justify-content: space-around;
+    align-content: space-around;
+    flex-direction: column;
+    flex-wrap: wrap;
 }
 .content-modal {
 background-color: #fff;
