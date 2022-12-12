@@ -41,7 +41,7 @@ position: relative;
   display: none;
 }
 .basic-callout-message {
-  color: #2DD1AC;
+  color: #363f4d;
   display: none;
 }
 .basic-callout-message.active {
@@ -70,7 +70,7 @@ position: relative;
 }
 .basic-form-field {
   width: -webkit-fill-available;
-  height: 70px;
+  height: 60px;
   border: 2px solid #363F4D;
   border-radius: 6px;
   margin: 10px;
