@@ -17,7 +17,7 @@ position: fixed;
 background-color: #FFFFFF;
 border: 2px solid #363f4d;
 border-radius: 12px;
-padding: 10px;
+padding: 30px 10px 20px 10px;
 overflow: auto;
 position: relative;
 max-width: 420px;
