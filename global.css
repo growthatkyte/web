@@ -14,7 +14,7 @@ position: fixed;
     flex-wrap: wrap;
 }
 .content-modal {
-background-color: #fff;
+background-color: #FFFFFF;
 border: 2px solid #363f4d;
 border-radius: 12px;
 padding: 10px;
@@ -41,7 +41,7 @@ position: relative;
   display: none;
 }
 .basic-callout-message {
-  color: green;
+  color: #2DD1AC;
   display: none;
 }
 .basic-callout-message.active {
@@ -70,8 +70,8 @@ position: relative;
 }
 .basic-form-field {
   width: 90%;
-  height: 40px;
-  border: 1px solid #ccc;
+  height: 50px;
+  border: 1px solid #363F4D;
   border-radius: 6px;
   margin: 10px;
   padding: 10px;
@@ -81,7 +81,7 @@ position: relative;
   width: 90%;
   height: 50px;
   background-color: #2dd1ac;
-  color: white;
+  color: #FFFFFF;
   border: none;
   border-radius: 6px;
   margin: 20px 10px 20px 10px;
