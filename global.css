@@ -26,8 +26,9 @@ position: relative;
 }
 .basic-callout-img {
   margin: 10px 0px 10px 0px;
-  height: 320px;
+  height: auto;
   width: 100%;
+  max-width: 640px;
   border-radius: 12px;
 }
 .basic-callout-form {
