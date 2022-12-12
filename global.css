@@ -26,6 +26,7 @@ position: relative;
 }
 .basic-callout-img {
   margin: 10px 0px 10px 0px;
+  height: 320px;
   width: 100%;
   border-radius: 12px;
 }
