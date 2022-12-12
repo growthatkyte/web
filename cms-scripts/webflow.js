@@ -39,6 +39,25 @@
 	 * Faz as devidas alterações no FORM de Elements e altera links
 	 */
 	var fillFormAndLinks = function(params){
+
+        /**
+         * Verifica se link dinamico e adiciona variáveis de acordo com a situação
+        */
+        var mergeUrlVars = function(url, paramsUrl){
+            if(url.indexOf('?link=') !== -1 || url.indexOf('&link=') !== -1) {
+                var parts = url.split('?'); 
+                var paramsParts = parts[1].split('&');
+                paramsParts.forEach(function(v, k){	
+                    var p = v.split('=');
+                    if(p[0] === 'link') { paramsParts[k] = 'link='+ p[1] + '?' +encodeURIComponent(paramsUrl); }
+                });
+                url = parts[0] +'?'+ paramsParts.join('&') + '&' + paramsUrl;
+            } else {
+                url += (url.indexOf('?') === -1 ? '?' : '&') + paramsUrl;
+            }
+            return url    
+        }
+
 		// Adicionando informações ao form
 		var linkAttr = [];
 		for(var k in params){
@@ -48,31 +67,41 @@
                 for(var i in inputsElms) { inputsElms[i].value =  params[k]; }
             }
 		}
+
+
+        $( ".form-controll" ).submit(function( event ) {            
+            event.preventDefault();
+            let formObj = $('#'+ event.target.id)
+            let postUrl = formObj.find("input[name='postUrl']").val();
+            let redirectUrl = formObj.find("input[name='redirectUrl']").val();
+            // Construção do payload
+            let params = {};
+            let paramsUrl = []
+            keys.forEach(function(key){
+                let value = formObj.find('input[name="'+ key +'"]').val()
+                if(!!value) {
+                    params[key] = value
+                    paramsUrl.push(key +'='+ value)
+                }
+            });
+            paramsUrl = paramsUrl.join('&')
+            $.post(postUrl, params).done(function( data ) {
+                var redirect = mergeUrlVars(redirectUrl, paramsUrl)
+                window.location.href = redirect
+            });
+        });        
+
 		// Altera links adicionando os parametros na URL
 		var buttonsHolder = document.querySelectorAll('[apply_params]');        
 		if(linkAttr.length > 0 && buttonsHolder.length > 0){
 			linkAttr = linkAttr.join('&');
 			buttonsHolder.forEach(function(button) {
-				var href = button.getAttribute('href');
-				if(href.indexOf('?link=') !== -1 || href.indexOf('&link=') !== -1) {
-					var hrefParts = href.split('?');
-					var hrefUrlParams = hrefParts[1].split('&');
-					hrefUrlParams.forEach(function(v, k){	
-						var p = v.split('=');
-						if(p[0] === 'link') { hrefUrlParams[k] = 'link='+ p[1] + '?' +encodeURIComponent(linkAttr); }
-					});
-					href = hrefParts[0] +'?'+ hrefUrlParams.join('&') + '&' + linkAttr;
-				} else {
-					href += (href.indexOf('?') === -1 ? '?' : '&') + linkAttr;
-				}
+				var href = mergeUrlVars(button.getAttribute('href'), linkAttr)
 				button.setAttribute('href', href);
 			});
 			// Envia parâmetros para a Kyte
-			var xhrSend = new XMLHttpRequest();
-			kyteParams.event = 'PageView';
-			xhrSend.open('post', 'https://analytics.kyteapp.com/collect');
-			xhrSend.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-			xhrSend.send(JSON.stringify(kyteParams));
+            kyteParams.event = 'PageView';
+            $.post('https://analytics.kyteapp.com/collect', kyteParams)
 		}
 	};
 
@@ -106,17 +135,11 @@
 	});
 
 	// Carrega KID
-	var xhrReceive = new XMLHttpRequest();
-	xhrReceive.open('post', 'https://analytics.kyteapp.com/get-kyte-id');
-	xhrReceive.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-	xhrReceive.onreadystatechange = function(){
-		if(xhrReceive.readyState === XMLHttpRequest.DONE){
-            var kidResult = JSON.parse(xhrReceive.responseText)
-            if(typeof (dataLayer) === 'object') dataLayer.push({ event:"KidIdentify", kid: kidResult.kid });
-            Object.assign(kyteParams, kidResult); 
-			fillFormAndLinks(kyteParams);
-		}
-	};    
-	xhrReceive.send(JSON.stringify(kyteParams));    
+    $.post('https://analytics.kyteapp.com/get-kyte-id', kyteParams).done(function(data) {
+        console.log('RETORNO', data)
+        if(typeof (dataLayer) === 'object') dataLayer.push({ event: "KidIdentify", kid: data.kid });
+        Object.assign(kyteParams, data); 
+		fillFormAndLinks(kyteParams);
+    });
 	
 })();
