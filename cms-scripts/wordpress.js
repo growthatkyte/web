@@ -112,7 +112,7 @@
 		if(xhrReceive.readyState === XMLHttpRequest.DONE){
 			if(xhrReceive.responseText) {
                 var kidResult = JSON.parse(xhrReceive.responseText)
-                if(typeof (dataLayer) === 'object') dataLayer.push({ user_id: kidResult.kid });
+                if(typeof (dataLayer) === 'object') dataLayer.push({ event:"KidIdentify", kid: kidResult.kid });
                 Object.assign(kyteParams, kidResult); 
             }
 			fillFormAndLinks(kyteParams);
