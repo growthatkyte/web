@@ -136,7 +136,6 @@
 
 	// Carrega KID
     $.post('https://analytics.kyteapp.com/get-kyte-id', kyteParams).done(function(data) {
-        console.log('RETORNO', data)
         if(typeof (dataLayer) === 'object') dataLayer.push({ event: "KidIdentify", kid: data.kid });
         Object.assign(kyteParams, data); 
 		fillFormAndLinks(kyteParams);
