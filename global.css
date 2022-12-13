@@ -71,19 +71,19 @@ max-width: 420px;
   overflow: hidden 
 }
 .basic-form-field {
-  width: -webkit-fill-available;
-  height: 60px;
-  border: 2px solid #363F4D;
+  width: 90%;
+  height: 40px;
+  border: 1px solid #ccc;
   border-radius: 6px;
   margin: 10px;
-  padding: 10px 15px 10px 15px;
+  padding: 10px;
   font-size: 18px;
 }
 .basic-form-button {
   width: 90%;
-  height: 70px;
+  height: 50px;
   background-color: #2dd1ac;
-  color: #FFFFFF;
+  color: white;
   border: none;
   border-radius: 6px;
   margin: 20px 10px 20px 10px;
