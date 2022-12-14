@@ -69,7 +69,7 @@
 		}
 
 
-        $( ".form-controll" ).submit(function( event ) {            
+        $( ".form-control" ).submit(function( event ) {            
             event.preventDefault();
             let formObj = $('#'+ event.target.id)
             let postUrl = formObj.find("input[name='postUrl']").val();
