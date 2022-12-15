@@ -68,7 +68,6 @@
             }
 		}
 
-
         $( ".form-control" ).submit(function( event ) {            
             event.preventDefault();
             let formObj = $('#'+ event.target.id)
@@ -80,7 +79,7 @@
             keys.forEach(function(key){
                 let value = formObj.find('input[name="'+ key +'"]').val()
                 if(!!value) {
-                    params[key] = value
+                    params['fields_'+ key] = value
                     paramsUrl.push(key +'='+ value)
                 }
             });
