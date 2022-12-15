@@ -58,6 +58,19 @@ max-width: 420px;
   right: 20px;
   cursor: pointer;
 }
+.basic-card {
+  background-color: #DDF7F2;
+  border-radius: 12px;
+  margin: 10px 0px 10px 0px;
+  padding: 20px 10px 10px 10px;
+  height: 150px ;
+}
+
+.highlight {
+  display: inline;
+  background: #2dd1ac;
+  box-shadow: 0.2em 0 0 #2dd1ac, 0.2em 0 0 #2dd1ac;
+}
 /* Basic lead form */
 .basic-form {
   display: flex;
