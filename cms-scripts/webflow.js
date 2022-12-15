@@ -79,7 +79,8 @@
             keys.forEach(function(key){
                 let value = formObj.find('input[name="'+ key +'"]').val()
                 if(!!value) {
-                    params['fields_'+ key] = value
+					if(key === 'email') params.email = value
+					else params['fields_'+ key] = value
                     paramsUrl.push(key +'='+ value)
                 }
             });
