@@ -18,6 +18,7 @@
 		'aid',
 		'kid',
 		'first_name',
+		'name',
 		'email',
 		'fbclid',
 		'gclid',
