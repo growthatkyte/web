@@ -115,13 +115,13 @@
 	var urlParams = location.search.substring(1).split('&');
 	urlParams.forEach(function(v){
 		var p = v.split('=');
-		if (keys.indexOf(p[0]) !== -1) { kyteParams[p[0]] = decodeURI(p[1]); }
+		if (keys.indexOf(p[0]) !== -1 && !!p[1] && p[1] !== 'undefined')  { kyteParams[p[0]] = decodeURI(p[1]); }
 	});
 
 	// Adicona informações de LocalStorage para chaves não encontradas
 	keys.forEach(function(k){
 		var value = localStorage.getItem(k);
-		if(!kyteParams[k] && value) { kyteParams[k] = value; }
+		if(!kyteParams[k] && !!value && value !== 'undefined') { kyteParams[k] = value; }
 	});
 
 	// Adiciona informações de Cookie para chaves não encontradas
@@ -132,7 +132,7 @@
 		if(p[0] === '_ga' && !kyteParams.cid){
 			kyteParams.cid = p[1].replace('GA1.1.', '');
 		} // Parâmetro "cid" vem de "_ga"
-		else if(keys.indexOf(p[0]) !== -1 && !!kyteParams[p[0]]){ kyteParams[p[0]] = p[1]; }
+		else if(keys.indexOf(p[0]) !== -1 && !kyteParams[p[0]] && !!p[1] && !!p[1] !== 'undefined'){ kyteParams[p[0]] = p[1]; }
 	});
 
 	// Carrega KID
