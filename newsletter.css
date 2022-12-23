@@ -46,6 +46,10 @@ a[x-apple-data-detectors] {
     padding: 15px 25px 15px 25px !important;
 }
 
+[data-ogsb] .es-button.es-button-1671809147044 {
+    padding: 15px 25px !important;
+}
+
 /*
 END OF IMPORTANT
 */
@@ -61,7 +65,7 @@ body {
 }
 
 body {
-    font-family: arial, 'helvetica neue', helvetica, sans-serif;
+    font-family: arvo, courier, georgia, serif;
 }
 
 table {
@@ -109,7 +113,7 @@ h3,
 h4,
 h5 {
     Margin: 0;
-    line-height: 120%;
+    line-height: 200%;
     mso-line-height-rule: exactly;
     font-family: lato, helvetica, arial, sans-serif;
 }
@@ -307,7 +311,7 @@ a {
 p,
 ul li,
 ol li {
-    font-family: arial, 'helvetica neue', helvetica, sans-serif;
+    font-family: arvo, courier, georgia, serif;
     line-height: 150%;
 }
 
@@ -320,7 +324,7 @@ ol li {
 .es-menu td a {
     text-decoration: none;
     display: block;
-    font-family: arial, 'helvetica neue', helvetica, sans-serif;
+    font-family: arvo, courier, georgia, serif;
 }
 
 .es-wrapper {
@@ -333,7 +337,7 @@ ol li {
 
 .es-wrapper-color,
 .es-wrapper {
-    background-color: #f4f4f4;
+    background-color: #ffffff;
 }
 
 .es-header {
@@ -367,12 +371,12 @@ ol li {
 .es-content-body ul li,
 .es-content-body ol li {
     color: #666666;
-    font-size: 16px;
+    font-size: 18px;
 }
 
 .es-content-body a {
     color: #539be2;
-    font-size: 16px;
+    font-size: 18px;
 }
 
 .es-footer {
@@ -416,21 +420,21 @@ h1 {
     font-size: 48px;
     font-style: normal;
     font-weight: normal;
-    color: #111111;
+    color: #363f4d;
 }
 
 h2 {
     font-size: 24px;
     font-style: normal;
     font-weight: normal;
-    color: #111111;
+    color: #363f4d;
 }
 
 h3 {
     font-size: 20px;
     font-style: normal;
     font-weight: normal;
-    color: #111111;
+    color: #363f4d;
 }
 
 .es-header-body h1 a,
@@ -454,13 +458,13 @@ h3 {
 a.es-button,
 button.es-button {
     border-style: solid;
-    border-color: #539be2;
+    border-color: #2dd1ac;
     border-width: 15px 25px 15px 25px;
     display: inline-block;
-    background: #539be2;
-    border-radius: 2px;
-    font-size: 20px;
-    font-family: helvetica, arial, verdana, sans-serif;
+    background: #2dd1ac;
+    border-radius: 6px;
+    font-size: 16px;
+    font-family: arvo, courier, georgia, serif;
     font-weight: normal;
     font-style: normal;
     line-height: 120%;
@@ -473,10 +477,10 @@ button.es-button {
 .es-button-border {
     border-style: solid solid solid solid;
     border-color: #539be2 #539be2 #539be2 #539be2;
-    background: #539be2;
+    background: #2dd1ac;
     border-width: 1px 1px 1px 1px;
     display: inline-block;
-    border-radius: 2px;
+    border-radius: 6px;
     width: auto;
 }
 
@@ -496,7 +500,7 @@ button.es-button {
     h1 a,
     h2 a,
     h3 a {
-        line-height: 120% !important;
+        line-height: 200% !important;
     }
 
     h1 {
@@ -714,19 +718,26 @@ button.es-button {
         max-height: inherit !important;
     }
 
-    .h-auto {
-        height: auto !important;
+    button.es-button {
+        width: 100%;
     }
 }
 
 /* END RESPONSIVE STYLES */
 .es-p-default {
-    padding-top: 20px;
-    padding-right: 30px;
-    padding-bottom: 0px;
-    padding-left: 30px;
+    padding-top: 25px;
+    padding-right: 25px;
+    padding-bottom: 25px;
+    padding-left: 25px;
 }
 
 .es-p-all-default {
-    padding: 0px;
+    padding: 25px;
+}
+
+input,
+textarea {
+    box-sizing: border-box;
+    resize: vertical;
+    -webkit-appearance: none;
 }
