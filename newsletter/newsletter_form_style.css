@@ -1,0 +1,39 @@
+/* Basic lead form */
+.basic-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+  flex-direction: column;
+  height: auto;
+  padding: 10px;
+  position: static;
+  overflow: hidden 
+}
+.basic-form-field {
+  width: 90%;
+  height: 40px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  margin: 0px; 0px; 10px; 0px;
+  padding: 20px; 100px; 20px; 100px;
+  font-size: 18px;
+}
+.basic-form-button {
+  width: 90%;
+  height: 50px;
+  background-color: #2dd1ac;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  margin: 0px 0px 0px 0px;
+  padding: 9px 20px 9px 20px;
+  font-size: 16px;
+  font-hight: 20px;
+  font-weight: 500;
+}
+Footer
+© 2022 GitHub, Inc.
+Footer navigation
+Terms
+Priv
