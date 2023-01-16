@@ -33,7 +33,8 @@
 		'campaignid',
 		'adgroupid',
 		'keyword',
-		'channel_flow'
+		'channel_flow',
+		'orderingGroup'
 	];
 
 	/**
