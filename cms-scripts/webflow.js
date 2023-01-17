@@ -34,7 +34,7 @@
 		'adgroupid',
 		'keyword',
 		'channel_flow',
-		'orderingGroup'
+		'30_days_sales_range'
 	];
 
 	/**
@@ -123,6 +123,7 @@
 	keys.forEach(function(k){
 		var value = localStorage.getItem(k);
 		if(!kyteParams[k] && !!value && value !== 'undefined') { kyteParams[k] = value; }
+		else if (keys === "utm_campaign") { kyteParams[k] = window.location.pathname; }
 	});
 
 	// Adiciona informações de Cookie para chaves não encontradas
