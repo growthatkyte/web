@@ -83,17 +83,6 @@ max-width: 420px;
   position: static;
   overflow: hidden 
 }
-.basic-form-home {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: nowrap;
-  flex-direction: row;
-  height: auto;
-  padding: 10px;
-  position: static;
-  overflow: hidden 
-}
 .basic-form-field {
   width: 90%;
   height: 40px;
