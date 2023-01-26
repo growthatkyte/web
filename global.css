@@ -81,7 +81,7 @@ max-width: 420px;
   height: auto;
   padding: 10px;
   position: static;
-  overflow: hidden 
+  overflow: hidden; 
 }
 .basic-form-home {
   display: flex;
@@ -92,7 +92,8 @@ max-width: 420px;
   height: auto;
   padding: 10px;
   position: static;
-  overflow: hidden 
+  overflow: hidden;
+  color: #ccc;
 }
 .basic-form-field {
   width: 90%;
