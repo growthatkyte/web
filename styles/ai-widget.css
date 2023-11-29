@@ -1,0 +1,118 @@
+.chat-body {
+    display: block;
+    position: fixed;
+    left: 25px;
+    bottom: 60px;
+    width: 360px;
+    margin: 50px auto;
+}
+
+@media screen and (max-width: 479px) {
+    .chat-body {
+        max-width: 90vw;
+        bottom: 30px;
+        left: 20px;
+        right: auto;
+    }
+}
+
+.card-body {
+    background-color: #363F4D;
+    color: #fff;
+    border-radius: 10px;
+    padding: 1.25rem;
+}
+
+.card-closer {
+    position: relative;
+    direction: rtl;
+    left: 5px;
+    bottom: -15px
+}
+
+.card-closer img {
+    width: 20px;
+    width: 20px;
+}
+
+.card-title {
+    font-size: larger;
+    font-weight: bold;
+    color: #fff;
+}
+
+.card-text {
+    font-size: 12px;
+    font-weight: 400;
+    color: #fff;
+}
+
+.messages {
+    overflow: scroll;
+    max-height: 300px;
+}
+
+.server-message {
+    background-color: #444E5E;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 6px;
+}
+
+.server-message p {
+    color: #fff;
+    font-size: 14px;
+    text-align: left;
+}
+
+.client-message {
+    background-color: #535D6E;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 6px;
+}
+
+.client-message p {
+    color: #fff;
+    font-size: 14px;
+    text-align: left;
+}
+
+.form-inline {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.25rem;
+}
+
+.form-control {
+    width: 80%;
+    background-color: #444E5E;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    margin-right: 10px;
+}
+
+#send {
+    background-color: #2DD1AC;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+}
+
+.form-message {
+    margin-top: 10px;
+}
+
+.card-title {
+    text-align: center;
+    font-size: 1.25rem;
+    font-weight: 500;
+}
+
+.card-text {
+    text-align: center;
+    font-size: 0.875rem;
+}

@@ -1,0 +1,137 @@
+#outlook a {
+    padding: 0;
+}
+
+.ReadMsgBody {
+    width: 100%;
+}
+
+.ExternalClass {
+    width: 100%;
+}
+
+.ExternalClass * {
+    line-height: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    background-color: #E3F6F1;
+    font-family: "Open Sans", sans-serif !important;
+    display: grid;
+    justify-content: center;
+    font-size: 14px;
+    line-height: 1.6;
+    text-align: left;
+    color: #363f4d;
+}
+
+table,
+td {
+    border-collapse: collapse;
+}
+
+img {
+    border-radius: 6px;
+    max-width: 600px;
+    padding: 1rem 0 1rem 0;
+    -ms-interpolation-mode: bicubic;
+}
+img text {
+    font-size: 12px !important;
+    line-height: 1.6 !important;
+    text-align: center !important;
+    color: #808c9e !important;
+    background: #eeeeee !important;
+    padding: 10px !important;
+}
+
+p {
+    display: block;
+    margin: 13px 0;
+}
+
+@media only screen and (max-width:480px) {
+    @-ms-viewport {
+        width: 320px;
+    }
+
+    @viewport {
+        width: 320px;
+    }
+}
+
+header {
+    display: flex;
+    justify-content: center;
+    padding-top: 2rem;
+    padding-bottom: 1rem;
+}
+
+header .logo {
+    width: 40px;
+    height: 40px;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    background-color: #FFFFFF;
+    max-width: 600px;
+    padding: 1rem;
+    margin: 1rem;
+    border-radius: 6px;
+    border: none;
+}
+
+footer {
+    display: flex;
+    justify-content: center;
+    padding: 1rem;
+    margin: 1rem;
+}
+
+footer div[data-slot="text"] {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: smaller !important;
+    line-height: 1.6 !important;
+    text-align: center !important;
+    color: #808c9e !important;
+    margin-bottom: 10px !important;
+}
+
+div[data-slot="text"] {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: medium !important;
+    line-height: 1.6 !important;
+    text-align: left !important;
+    color: #363f4d !important;
+    margin-bottom: 10px !important;
+}
+
+div[style="clear:both"] {
+    margin-bottom: 20px !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0 !important;
+    margin-bottom: 10px !important;
+}
+
+.outlook-group-fix {
+    width: 100% !important;
+}
+
+@media only screen and (min-width:360px) {
+    .mj-column-per-100 {
+        width: 100% !important;
+    }
+}

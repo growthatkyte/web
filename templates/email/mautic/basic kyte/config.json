@@ -1,0 +1,7 @@
+{
+  "name": "Kyte Basic",
+  "author": "Ivan",
+  "authorUrl": "https://kyteapp.com",
+  "builder": ["legacy", "grapesjsbuilder"],
+  "features": ["email"]
+}
