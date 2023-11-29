@@ -5,7 +5,7 @@ import pandas as pd
 def get_trending_data():
     # Set up the base URL and the API key
     base_url = "https://api.appfollow.io/aso/trending"
-    api_key = "MLgajeVmXqWngrSs6ky6"  # Substitute with your actual API key
+    api_key = ""  # Substitute with your actual API key
 
     # Request parameters from the user
     keyword = input("Enter a keyword: ")

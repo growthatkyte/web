@@ -7,7 +7,7 @@ def aso_keyword_search(limit=None):
     base_url = "https://api.appfollow.io/aso/search?"
 
     # Your API key
-    api_key = "MLgajeVmXqWngrSs6ky6"
+    api_key = ""
 
     # Ask for parameters
     term = input("Enter a search term: ")

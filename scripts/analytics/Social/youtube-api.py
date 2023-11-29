@@ -2,7 +2,7 @@ import csv
 import google_auth_oauthlib.flow
 import googleapiclient.discovery
 
-CLIENT_SECRET_FILE = "client_secret_1068616619719-rn6sa6e8gsiuqqogg32fo3hjp0c1du4b.apps.googleusercontent.com.json"
+CLIENT_SECRET_FILE = ""
 SCOPES = ["https://www.googleapis.com/auth/yt-analytics.readonly"]
 
 
