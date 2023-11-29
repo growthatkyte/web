@@ -1,0 +1,19 @@
+{
+  "name": "growthai",
+  "version": "1.0.0",
+  "description": "Kyte's Growth AI app used to analyze SEO competitors and oportunities.",
+  "main": "index.mjs",
+  "scripts": {
+    "start": "node /Users/ivanfarias/Documents/Development/web/scripts/growthAI/index.mjs"
+  },
+  "author": "Ivan Farias",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "*",
+    "cli-progress": "*",
+    "cli-table3": "*",
+    "inquirer": "*",
+    "openai": "*",
+    "puppeteer": "*"
+  }
+}

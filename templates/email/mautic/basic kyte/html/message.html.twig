@@ -1,0 +1,17 @@
+{% extends ":"~template~":base.html.twig" %}
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ getAssetUrl('themes/'~template~'/static/style.css', null, null, true) }}" type="text/css" />
+{% endblock %}
+{% block header %}
+    <header>
+        <img class="logo" src="https://growthatkyte.github.io/web/assets/green-logo.png" />
+    </header>
+{% endblock %}
+{% block content %}
+    <div>
+        {{ message|raw }}
+        {% if content is defined %}
+        <div>{{ content|raw }}</div>
+        {% endif %}
+    </div>
+{% endblock %}

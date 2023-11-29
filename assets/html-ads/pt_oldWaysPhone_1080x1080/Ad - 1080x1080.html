@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ad - 1080x1080</title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 1080px;
+            height: 1080px;
+            overflow: hidden;
+        }
+
+        .ad-content {
+            width: 100%;
+            height: 100%;
+            background-color: #eee;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="lottie-animation"></div>
+</body>
+<script src="lottie.min.js"></script>
+<script>
+    var animation = lottie.loadAnimation({
+        container: document.getElementById('lottie-animation'), // the DOM element that will contain the animation
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        path: 'pt_gAds_oldWaysPhone_1080x1080.lottie.json' // the path to the animation JSON
+    });
+    animation.setSpeed(4); 
+</script>
+
+</html>
