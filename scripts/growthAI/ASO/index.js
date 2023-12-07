@@ -1,19 +1,16 @@
 import inquirer from 'inquirer';
 import ora from 'ora';
+import chalk from 'chalk';
+import figlet from 'figlet';
 import fs from 'fs';
 import path from 'path';
 import { fetchAppDetails, fetchReviews, fetchReviewsForApps, getRankingsForCompetitorApps, fetchCompetitorAppsByKeyword } from './modules/appInfo.js';
 import { delay, removeDuplicates, filterData } from './modules/utils.js';
 import { generateReport, loadJsonData } from './modules/generateReport.js';
 
-const sectionSeparator = `
-**************************************************
-*                                                *
-*           ~ APP STORE OPTIMZATION ~            *
-*                                                *
-**************************************************
-`;
-
+const sectionSeparator = chalk.cyanBright(
+    figlet.textSync('APP STORE OPTIMIZATION', { font: 'Small' })
+);
 
 async function getUserInputs() {
     const questions = [{
@@ -31,7 +28,12 @@ async function getUserInputs() {
         type: 'input',
         name: 'keywords',
         message: 'Enter your targeted keywords (comma separated):',
-        default: ''
+        validate: (input) => {
+            if (!input) {
+                return 'Please enter at least one keyword.';
+            }
+            return true;
+        }
     },
     {
         type: 'input',
@@ -59,32 +61,36 @@ async function getUserInputs() {
         default: ''
     }
     ];
-    return inquirer.prompt(questions);
+    return inquirer.prompt(questions).then(answers => {
+        if (typeof answers.keywords === 'string') {
+            answers.keywords = answers.keywords.split(',').map(kw => kw.trim());
+        }
+        return answers;
+    });
 }
 
 async function main() {
     console.log(sectionSeparator);
-    console.log("Hello 👋\nWelcome to the Growth ASO Module");
+
+    console.log(chalk.yellow("Hello 👋 \nWelcome to the Growth ASO Module"));
+
+
     const userInputs = await getUserInputs();
     const { platform, appId, keywords, country, languageCode } = userInputs;
-
-    const keywordList = keywords.split(',').map(k => k.trim()).filter(k => k.length > 0);
-
-    if (keywordList.length === 0) {
-        console.error("No keywords provided. Exiting process.");
-        return;
-    }
-
-    spinner.start(`Fetching app details for ${appId}`);
-    const appDetails = await fetchAppDetails(platform, appId, country, languageCode);
-    spinner.succeed(`App details fetched`);
-
     const spinner = ora({ text: 'Setting up...', spinner: 'dots' }).start();
 
-    let competitorApps = [];
+    const keywordList = keywords;
 
+    if (!Array.isArray(keywordList)) {
+        keywordList = Array.from(keywordList);
+    }
+    spinner.start(chalk.blue(`Fetching app details for ${appId}`));
+    const appDetails = await fetchAppDetails(platform, appId, country, languageCode);
+    spinner.succeed(chalk.green(`App details fetched`));
+
+    let competitorApps = [];
     for (const keyword of keywordList) {
-        spinner.text = `🔍 Looking for competitors with keyword '${keyword}'`;
+        spinner.text = ` Looking for competitors with keyword ${keyword}'`;
         try {
             const competitors = await fetchCompetitorAppsByKeyword(platform, keyword, country, languageCode);
             if (competitors.length === 0) {
@@ -103,7 +109,7 @@ async function main() {
 
     spinner.start("Total competitor apps fetched (before removing duplicates): " + competitorApps.length);
     competitorApps = removeDuplicates(competitorApps, 'appId');
-    spinner.succeed("🧹 Total competitor apps fetched (after removing duplicates): " + competitorApps.length);
+    spinner.succeed(" Total competitor apps fetched (after removing duplicates): " + competitorApps.length);
 
     spinner.start("Fetching reviews for the main app");
     const reviews = await fetchReviews(platform, appId, country);
@@ -113,8 +119,6 @@ async function main() {
     const reviewsForCompetitorApps = await fetchReviewsForApps(platform, competitorApps, country);
     spinner.succeed("Reviews for competitor apps fetched");
 
-    console.log("keywordList type:", typeof keywordList, Array.isArray(keywordList) ? "Array" : "Not an Array");
-
     spinner.start("Getting rankings for each competitor app");
     const rankingsForCompetitorApps = await getRankingsForCompetitorApps(platform, competitorApps, keywordList, country);
     spinner.succeed("Rankings for competitor apps obtained");
@@ -123,7 +127,6 @@ async function main() {
         appDetails,
         competitorApps,
         keywords,
-        keywordList,
         rankingsForCompetitorApps,
         reviews,
         reviewsForCompetitorApps,
@@ -135,7 +138,7 @@ async function main() {
     }
 
     // Generate filename with appId and timestamp
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-'); // ISO string with ':' and '.' replaced with '-'
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const filename = `${appId}_${timestamp}.json`;
     const filePath = path.join(resultsDir, filename);
 
@@ -157,8 +160,8 @@ async function main() {
         try {
             spinner.start("Generating Markdown report...");
             const jsonDataPath = path.join(resultsDir, recentJsonFile);
-            const jsonData = loadJsonData(jsonDataPath); // Assuming loadJsonData is exported from generateReport.js
-            const markdownTemplatePath = './results/report_template.md'; // Replace with your actual markdown template path
+            const jsonData = loadJsonData(jsonDataPath);
+            const markdownTemplatePath = './results/report_template.md';
             const reportOutputPath = path.join(resultsDir, `${appId}_report_${timestamp}.md`);
 
             // Pass the 'country' variable explicitly
@@ -173,9 +176,9 @@ async function main() {
         console.error("No recent JSON file found for report generation.");
     }
 
-    console.log("Process completed successfully");
+    console.log(chalk.magenta("Process completed successfully"));
 }
 
 main().catch(error => {
-    console.error("An error occurred in the main function:", error);
+    console.error(chalk.red("An error occurred in the main function:"), error);
 });

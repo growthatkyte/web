@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Load the CSV data
-df = pd.read_csv("/Users/ivanfarias/Documents/Development/web/scripts/subs_seo.csv")
+df = pd.read_csv("/Users/ivanfarias/Downloads/subs_seo.csv")
 
 # Convert 'Date' to datetime
 df["Date"] = pd.to_datetime(df["Date"])
@@ -11,20 +11,32 @@ df["OS_Category"] = df["OS"].map(
     {"Android": "Mobile", "iOS": "Mobile", "Web": "Web", "undefined": "Web"}
 )
 
-# Filter for 'SEO' and 'undefined' UTMs
-filtered_df = df[
-    (df["UTMs"] == "SEO") | ((df["UTMs"] == "undefined") & (df["OS_Category"] == "Web"))
-]
+# Ask the user if they want to group by week or month
+grouping_period = input("Do you want to group by 'week' or 'month'? ")
 
-# Group by week, 'OS_Category', and 'Language', then sum the totals
+if grouping_period.lower() == "week":
+    freq = "W"
+elif grouping_period.lower() == "month":
+    freq = "M"
+else:
+    raise ValueError("Invalid input. Please enter 'week' or 'month'.")
+
+# Group by the selected period, 'OS_Category', and 'Language', then sum the totals
 grouped = (
-    filtered_df.groupby([pd.Grouper(key="Date", freq="W"), "OS_Category", "Language"])
+    df.groupby([pd.Grouper(key="Date", freq=freq), "OS", "Language"])
     .sum()
     .reset_index()
 )
+
+# If grouping by month, convert dates to month periods
+if freq == "M":
+    grouped["Date"] = grouped["Date"].dt.to_period("M")
 
 # Filter for the languages 'pt', 'en', 'es'
 final_df = grouped[grouped["Language"].isin(["pt", "en", "es"])]
 
 # Save the aggregated data to a CSV file
-final_df.to_csv("aggregated_data_by_week.csv", index=False)
+csv_filename = f"aggregated_data_by_{grouping_period}.csv"
+final_df.to_csv(csv_filename, index=False)
+
+print(f"Data aggregated and saved to {csv_filename}")

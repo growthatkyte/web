@@ -11,17 +11,12 @@
     "license": "MIT",
     "dependencies": {
         "app-store-scraper": "^0.18.0",
-        "compromise": "^14.10.1",
+        "chalk": "*",
+        "figlet": "*",
         "fs": "*",
         "google-play-scraper": "^10.0.0",
         "inquirer": "*",
-        "natural": "^6.10.3",
-        "node-nlp": "^4.27.0",
-        "ora": "*",
-        "pos": "^0.4.2",
-        "ramda": "^0.29.1",
-        "spacy": "^0.0.4",
-        "spacy-js": "^0.0.5",
-        "stopword": "^2.0.8"
+        "ora": "^7.0.1",
+        "ramda": "^0.29.1"
     }
 }

@@ -136,9 +136,8 @@ export async function fetchReviewsForApps(platform, apps, country) {
 }
 
 export async function getRankingsForCompetitorApps(platform, apps, keywords, country) {
-    console.log("Received in getRankingsForCompetitorApps:", keywords);
     let rankings = {};
-    for (const app of apps) { // Iterate over the passed 'apps' array
+    for (const app of apps) {
         const appId = platform === 'Android' ? app.appId : app.id;
         rankings[appId] = {};
         if (Array.isArray(keywords)) {

@@ -6,13 +6,12 @@
 
 ### Details
 
-- **App ID:** {{id}}
+- **App ID:** {{appId}}
 - **Summary (Android only):** {{summary}}
 - **Description:** {{description}}
 
 - **Description Length:** {{descriptionCount}} characters
 - **Categories:** {{genres}}
-- **Available Languages:** {{languages}}
 - **Current Version:** {{version}}
 - **Free to Download:** {{free}}
 - **Number Screenshots (Total):** {{screenshots}}
@@ -20,11 +19,6 @@
 
 ## Ratings Distribution (Android only)
 {{ratingsDistribution}}
-**5 stars:** 
-**4 stars:** 
-**3 stars:** 
-**2 stars:** 
-**1 star:**
 
 ## Review Sentiment Analysis
 

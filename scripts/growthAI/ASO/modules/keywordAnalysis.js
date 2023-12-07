@@ -8,10 +8,13 @@ const MAX_KEYWORD_LENGTH = 25;
 
 
 export async function fetchTopAppsByKeyword(platform, keyword, country) {
+    if (!Array.isArray(keyword)) {
+        throw new Error("'keyword' must be an array");
+    }
     try {
         const searchFunc = platform === 'Android' ? gplay.search : store.search;
         const results = await searchFunc({
-            term: keyword,
+            term: [keyword],
             country,
             num: 10,
             fullDetail: true
@@ -36,9 +39,9 @@ export function getAdvancedKeywordScore(keyword) {
         }
 
         const prefix = keyword.slice(0, length);
-        return gplay.suggest({ term: prefix }).then(suggestions => {
+        return gplay.suggest({ term: [keyword] }).then(suggestions => {
             if (!Array.isArray(suggestions)) {
-                console.error(`Error fetching suggestions for prefix '${prefix}'`);
+                console.error(`Error fetching suggestions for prefix '${keyword}'`);
                 return { length: undefined, index: undefined, suggestions: [] };
             }
 
@@ -69,7 +72,7 @@ export function getAdvancedKeywordScore(keyword) {
 
 export function calculatePartialMatchScore(suggestions, keyword) {
     // Find the closest match and its index
-    const closestMatch = suggestions.find(suggestion => suggestion.includes(keyword));
+    const closestMatch = suggestions.find(suggestion => suggestion.includes([keyword]));
     const index = closestMatch ? suggestions.indexOf(closestMatch) : -1;
     const closenessScore = closestMatch ? keyword.length / closestMatch.length : 0;
     const positionScore = index >= 0 ? calc.izScore(suggestions.length, index) : 0;
@@ -78,12 +81,12 @@ export function calculatePartialMatchScore(suggestions, keyword) {
 }
 
 export function getKeywordScore(keyword, app) {
-    const keywordLower = keyword.toLowerCase();
-    const titleMatch = app.title.toLowerCase().includes(keywordLower) ? 1 : 0;
-    const summaryMatch = app.summary && app.summary.toLowerCase().includes(keywordLower) ? 1 : 0;
-    const descriptionMatch = app.description && app.description.toLowerCase().includes(keywordLower) ? 1 : 0;
+    const keywordLower = [keyword].toLowerCase();
+    const titleMatch = app.title.toLowerCase().includes(keywordLower[0]);
+    const summaryMatch = app.summary && app.summary.toLowerCase().includes(keywordLower[0]);
+    const descriptionMatch = app.description && app.description.toLowerCase().includes(keywordLower[0]);
 
-    return titleMatch + summaryMatch + descriptionMatch; // Each match adds 1 to the score
+    return titleMatch + summaryMatch + descriptionMatch;
 }
 
 export function getSuggestLength(gplay, keyword, length = 1) {
