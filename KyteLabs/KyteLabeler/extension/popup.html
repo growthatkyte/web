@@ -9,29 +9,12 @@
 </head>
 
 <body>
-    <div class="redeem-container">
-
-    </div>
-</body>
-
-</html>
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Label and Barcode Generator</title>
-    <link rel="stylesheet" href="popup.css">
-</head>
-
-<body>
     <!-- Label Generator Section -->
     <div id="labelGeneratorSection" class="redeem-container">
         <header>
             <img class="hero-icon" src="./images/icon128.png" alt="Barcode" />
             <h1>Label Generator</h1>
+
         </header>
 
         <p class="instruction">Create labels and keep inventory organized
@@ -40,7 +23,7 @@
             The easy one, where you just paste your Kyte Catalog URL, and
             all labels are generated automatically. And the manual one, where you enter the information for each label.
         </p>
-        <button class="catalog-btn" onclick="toggleSections()">Use Kyte Catalog</button>
+        <button class="catalog-btn">Use Kyte Catalog</button>
         <a href="#" class="manual-btn">Create labels manually.</a>
         <footer>
             <a class="link" href="#">Terms and Conditions</a>
@@ -60,12 +43,9 @@
         </select>
         <button id="generateButton">Generate</button>
         <div id="status"></div>
-        <script src="popup.js"></script>
     </div>
+    <script src="popup.js"></script>
 
-    <script>
-
-    </script>
 </body>
 
 </html>
