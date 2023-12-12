@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Label Generator</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+    <div class="redeem-container">
+
+    </div>
+</body>
+
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Label and Barcode Generator</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+    <!-- Label Generator Section -->
+    <div id="labelGeneratorSection" class="redeem-container">
+        <header>
+            <img class="hero-icon" src="./images/icon128.png" alt="Barcode" />
+            <h1>Label Generator</h1>
+        </header>
+
+        <p class="instruction">Create labels and keep inventory organized
+            process</p>
+        <p class="subtext">You've got two options here: <br>
+            The easy one, where you just paste your Kyte Catalog URL, and
+            all labels are generated automatically. And the manual one, where you enter the information for each label.
+        </p>
+        <button class="catalog-btn" onclick="toggleSections()">Use Kyte Catalog</button>
+        <a href="#" class="manual-btn">Create labels manually.</a>
+        <footer>
+            <a class="link" href="#">Terms and Conditions</a>
+        </footer>
+        <!-- ... -->
+    </div>
+    <!-- Barcode Generator Section, initially hidden -->
+    <div id="barcodeGeneratorSection" style="display: none;">
+        <input type="text" id="xmlUrl" placeholder="Enter your Kyte Catalog URL">
+        <select id="labelSize">
+            <option value="1x2">1" x 2"</option>
+            <option value="1.5x1">1.5" x 1"</option>
+            <option value="2x1">2" x 1"</option>
+            <option value="3x1">3" x 1"</option>
+            <option value="4x6">4" x 6"</option>
+            <option value="2x4">2" x 4"</option>
+        </select>
+        <button id="generateButton">Generate</button>
+        <div id="status"></div>
+        <script src="popup.js"></script>
+    </div>
+
+    <script>
+
+    </script>
+</body>
+
+</html>
