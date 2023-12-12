@@ -20,13 +20,21 @@ app.use(cors());
 app.use(json());
 app.use(urlencoded({ extended: true }));
 
+function transformUrl(baseUrl) {
+    const url = new URL(baseUrl);
+    url.hostname = url.hostname.split('.').shift() + '.stage.kyte.site';
+    url.pathname = '/feed/';
+    return url.toString();
+}
+
 // Endpoint to process XML URL and generate PDF
 app.post('/generate-barcodes', async (req, res) => {
     try {
-        const xmlUrl = req.body.xmlUrl;
+        const xmlUrl = req.body.xmlUrl; // Get xmlUrl from the request body first
+        const transformedUrl = transformUrl(xmlUrl); // Then transform it
         const selectedSize = req.body.size || '1x2'; // Default size if not provided
         const labelSize = labelSizes[selectedSize];
-        const xmlData = (await axios.get(xmlUrl)).data;
+        const xmlData = (await axios.get(transformedUrl)).data;
 
         const parser = new xml2js.Parser();
         const result = await parser.parseStringPromise(xmlData);
@@ -71,52 +79,6 @@ app.post('/generate-barcodes', async (req, res) => {
     }
 });
 
-app.get('/test-generate-barcodes', async (req, res) => {
-    try {
-        const xmlUrl = 'https://koolaid.stage.kyte.site/feed'; // Replace with actual URL
-        const selectedSize = req.query.size || '1x2'; // You can pass size as a query parameter
-        const labelSize = labelSizes[selectedSize];
-        const xmlData = (await axios.get(xmlUrl)).data;
-
-        const parser = new xml2js.Parser();
-        const result = await parser.parseStringPromise(xmlData);
-
-        const items = result.rss.channel[0].item;
-        const gtins = items.map(item => item['g:gtin'] ? item['g:gtin'][0] : null).filter(gtin => gtin !== null);
-
-        const doc = new PDFDocument();
-        const pdfBuffer = [];
-
-        doc.on('data', data => pdfBuffer.push(data));
-        doc.on('end', () => {
-            const pdfData = Buffer.concat(pdfBuffer);
-            res.writeHead(200, {
-                'Content-Length': Buffer.byteLength(pdfData),
-                'Content-Type': 'application/pdf',
-                'Content-disposition': 'attachment;filename=barcodes.pdf',
-            }).end(pdfData);
-        });
-
-        for (const gtin of gtins) {
-            const barcode = await bwipjs.toBuffer({
-                bcid: 'code128',
-                text: gtin,
-                scale: 3,
-                height: labelSize.height, // Use dynamic height
-                includetext: true,
-                textxalign: 'center',
-            });
-
-            doc.image(barcode, 50, doc.y, { fit: [labelSize.width, labelSize.height] });
-            doc.moveDown();
-        }
-
-        doc.end();
-    } catch (error) {
-        console.error('Error detail:', error);
-        res.status(500).send('Error processing request');
-    }
-});
 
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
