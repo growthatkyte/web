@@ -11,12 +11,15 @@
     "license": "MIT",
     "dependencies": {
         "app-store-scraper": "^0.18.0",
+        "axios": "^1.6.2",
         "chalk": "*",
+        "dotenv": "^16.3.1",
+        "express": "^4.18.2",
         "figlet": "*",
         "fs": "*",
         "google-play-scraper": "^10.0.0",
         "inquirer": "*",
-        "ora": "^7.0.1",
-        "ramda": "^0.29.1"
+        "natural": "^6.10.4",
+        "ora": "^7.0.1"
     }
 }
