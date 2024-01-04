@@ -68,9 +68,17 @@ export async function fetchGoogleAdsKeywordIdeas(userKeywords, languageCode, cou
 
 
 // Function to fetch top apps by keyword
-export async function fetchTopAppsByKeyword(platform, keyword, country) {
+export async function fetchTopAppsByKeyword(platform, keyword, country, languageCode) {
+    const searchOptions = {
+        term: keyword,
+        country,
+        num: 10,
+        fullDetail: false,
+        lang: languageCode
+    };
+
     const searchFunc = platform === 'Android' ? gplay.search : store.search;
-    const apps = await searchFunc({ term: keyword, country, num: 10, fullDetail: false });
+    const apps = await searchFunc(searchOptions);
     return apps.map(app => platform === 'Android' ? app.appId : app.id);
 }
 
