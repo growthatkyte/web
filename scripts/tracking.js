@@ -7,7 +7,6 @@ function loadScript(src, callback) {
 }
 
 loadScript('https://cdn.kyteapp.com/$web/kyte-analytics-short-unique-id.js', function () {
-    // Define kyteParams and kyteAnalyticsKeys
     const kyteParams = {
         utm_campaign: window.location.pathname,
         referrer: document.referrer
@@ -15,16 +14,11 @@ loadScript('https://cdn.kyteapp.com/$web/kyte-analytics-short-unique-id.js', fun
 
     const kyteAnalyticsKeys = ['aid', 'kid', 'pkid', 'cid', 'email', 'fbclid', 'gclid'];
 
-
-    // addParams function
     function addParams(url, keys) {
         try {
             const urlObj = new URL(url);
             Object.keys(keys).forEach(key => urlObj.searchParams.set(key, keys[key]));
-
-            // Cache busting
             urlObj.searchParams.set('cacheBust', Date.now());
-
             return urlObj.toString();
         } catch (e) {
             console.error('Error in addParams:', e);
@@ -36,20 +30,17 @@ loadScript('https://cdn.kyteapp.com/$web/kyte-analytics-short-unique-id.js', fun
         const baseURL = "https://kyteapp.page.link/";
         const loginPageURL = "https://web.kyteapp.com/login";
 
-        // Get UTM parameters from kyteParams
         const utmSource = kyteParams.utm_source || '';
         const utmMedium = kyteParams.utm_medium || '';
         let utmCampaign = kyteParams.utm_campaign || '';
         utmCampaign = utmCampaign.replace(/\//g, '_');
 
-        // Construct the query parameters
         const queryParams = new URLSearchParams({
             'utm_source': utmSource,
             'utm_medium': utmMedium,
             'utm_campaign': utmCampaign
         }).toString();
 
-        // Create the final link
         let encodedQueryParams = encodeURIComponent(queryParams);
         let finalLink = `${loginPageURL}?${encodedQueryParams}`;
 
@@ -66,17 +57,13 @@ loadScript('https://cdn.kyteapp.com/$web/kyte-analytics-short-unique-id.js', fun
     }
 
     function setActionURL(formElement, submitButton) {
-        // Generate the dynamic link using the createDynamicLink function
         const dynamicLink = createDynamicLink(submitButton);
-
-        // Set the dynamic link as the value of the '_redir' input field
         const redirInput = formElement.querySelector('input[name="_redir"]');
         if (redirInput) {
             redirInput.value = dynamicLink;
         }
     }
 
-    // getKid function
     function getKid(params = {}, onLoad = function () { }) {
         try {
             Object.keys(params).forEach(k => {
@@ -148,27 +135,28 @@ loadScript('https://cdn.kyteapp.com/$web/kyte-analytics-short-unique-id.js', fun
         }
     }
 
-    // Self-invoking function for initialization
     (function () {
         if (typeof ShortUniqueId !== 'function') {
             console.error('ShortUniqueId module failed to load');
             return;
         }
 
-        const formElement = document.getElementById("LeadForm");
-        const submitButton = document.getElementById("submitBtn");
+        const buttons = document.querySelectorAll('.catalog-redir, .control-redir');
 
-        formElement.addEventListener("submit", function (event) {
-            event.preventDefault(); // Prevent the form from submitting immediately
-            setActionURL(formElement, submitButton); // Set the action URL based on the class
-
-            // Submit the form after the action URL has been set
-            formElement.submit();
-        }, false);
+        buttons.forEach(button => {
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
+                const formElement = this.closest('form');
+                if (formElement) {
+                    setActionURL(formElement, this);
+                    formElement.submit();
+                }
+            });
+        });
 
         getKid({
             url: window.location.href
-        }, function (kid) {
+        }, function () {
             Array.from(document.getElementsByTagName('input')).forEach(f => {
                 const name = f.getAttribute('name');
                 if (name && kyteParams[name]) {
