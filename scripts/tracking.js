@@ -141,34 +141,35 @@ loadScript('https://cdn.kyteapp.com/$web/kyte-analytics-short-unique-id.js', fun
             return;
         }
 
-        const buttons = document.querySelectorAll('.catalog-redir, .control-redir');
-
-        buttons.forEach(button => {
-            button.addEventListener('click', function (event) {
+        document.addEventListener('click', function (event) {
+            const target = event.target;
+            if (target.matches('.catalog-redir, .control-redir')) {
                 event.preventDefault();
-                const formElement = this.closest('form');
+                const formElement = target.closest('form');
                 if (formElement) {
-                    setActionURL(formElement, this);
+                    setActionURL(formElement, target);
                     formElement.submit();
                 }
-            });
+            }
         });
 
         getKid({
             url: window.location.href
         }, function () {
-            Array.from(document.getElementsByTagName('input')).forEach(f => {
-                const name = f.getAttribute('name');
+            const inputElements = document.querySelectorAll('input');
+            for (const input of inputElements) {
+                const name = input.getAttribute('name');
                 if (name && kyteParams[name]) {
-                    f.value = kyteParams[name];
+                    input.value = kyteParams[name];
                 }
-            });
+            }
 
-            Array.from(document.getElementsByTagName('a')).forEach(aTag => {
-                if (aTag.href.indexOf(window.location.href) === -1) {
-                    aTag.href = addParams(aTag.href, kyteParams);
+            const linkElements = document.getElementsByTagName('a');
+            for (const link of linkElements) {
+                if (link.href.indexOf(window.location.href) === -1) {
+                    link.href = addParams(link.href, kyteParams);
                 }
-            });
+            }
         });
     })();
 });
