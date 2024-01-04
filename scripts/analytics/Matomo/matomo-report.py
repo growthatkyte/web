@@ -1,6 +1,10 @@
 import requests
 import csv
 from io import StringIO
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 def fetch_matomo_data(base_url, site_id, token_auth, report_id, date_range, columns):
@@ -69,7 +73,7 @@ def save_to_csv(data, filename):
 def main():
     # Matomo details
     base_url = "https://kyte.matomo.cloud"
-    token_auth = ""
+    token_auth = os.getenv("TOKEN_AUTH")
     columns = "nb_visits,goal_3_conversion"  # Visits and Conversions for Goal ID 3
 
     # Site and report configurations
