@@ -6,6 +6,17 @@ function loadScript(src, callback) {
     document.head.appendChild(script);
 }
 
+function loadLandingPagesConfig(url, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            callback(JSON.parse(xhr.responseText));
+        }
+    };
+    xhr.open("GET", url, true);
+    xhr.send();
+}
+
 loadScript('https://cdn.kyteapp.com/$web/kyte-analytics-short-unique-id.js', function () {
     const kyteParams = {
         utm_campaign: window.location.pathname,
@@ -169,6 +180,16 @@ loadScript('https://cdn.kyteapp.com/$web/kyte-analytics-short-unique-id.js', fun
                 if (link.href.indexOf(window.location.href) === -1) {
                     link.href = addParams(link.href, kyteParams);
                 }
+            }
+        });
+
+        loadLandingPagesConfig('/path/to/landingPages.json', function (landingPages) {
+            const currentPage = window.location.pathname;
+            const submitButtons = document.querySelectorAll('input[type="submit"], button[type="submit"]');
+            if (landingPages[currentPage]) {
+                submitButtons.forEach(button => {
+                    button.classList.add(landingPages[currentPage]);
+                });
             }
         });
     })();
