@@ -12,18 +12,21 @@ const openai = new OpenAI({
 
 puppeteer.use(StealthPlugin());
 
-
 async function scrapeGoogle(query, limit = 10) {
     const browser = await puppeteer.launch({ headless: "new" });
     const page = await browser.newPage();
     try {
-        await page.goto(`https://www.google.com/search?q=${encodeURIComponent(query)}&pws=0&gl=br`, { waitUntil: 'networkidle2' });
+        await page.goto(`https://www.google.com/search?q=${encodeURIComponent(query)}&num=${limit}`, { waitUntil: 'networkidle2' });
         await page.waitForSelector('div#main', { timeout: 60000 });
 
         const searchResults = await page.evaluate((limit) => {
-            return Array.from(document.querySelectorAll('div.g')).slice(0, limit).map(item => ({
-                url: item.querySelector('a.cz3goc.BmP5tf')?.href || ''
-            }));
+            // Updated to a more generic selector for Google search results
+            return Array.from(document.querySelectorAll('div.g')).slice(0, limit).map(item => {
+                const linkElement = item.querySelector('a');
+                return {
+                    url: linkElement ? new URL(linkElement.href).origin : ''
+                };
+            });
         }, limit);
 
         await browser.close();
