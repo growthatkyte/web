@@ -9,11 +9,14 @@
   "author": "Ivan Farias",
   "license": "MIT",
   "dependencies": {
+    "axios": "*",
     "chalk": "*",
     "cli-progress": "*",
-    "cli-table3": "*",
     "inquirer": "*",
     "openai": "*",
-    "puppeteer": "*"
+    "puppeteer": "*",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "xml2js": "*"
   }
 }

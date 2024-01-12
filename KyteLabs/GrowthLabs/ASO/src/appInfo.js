@@ -29,35 +29,52 @@ export async function fetchAppDetails(platform, appId, country, languageCode) {
     }
 }
 
-
 // Function to find top competitors
-export async function findTopCompetitors(resultsDir, keyword, country, platform, languageCode) {
-    const filePath = path.join(resultsDir, 'initial_competitors.json');
-    if (!fs.existsSync(filePath)) {
-        throw new Error('initial_competitors.json not found');
-    }
+async function fetchTopAppsByKeyword(platform, keyword, country, languageCode) {
+    const searchOptions = {
+        term: keyword,
+        country,
+        num: 10,
+        fullDetail: false,
+        lang: languageCode
+    };
 
-    const competitorsData = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-    const topCompetitors = [];
-
-    // Iterate over each category in the JSON file
-    for (const category in competitorsData) {
-        if (Array.isArray(competitorsData[category])) {
-            for (const appId of competitorsData[category]) {
-                const details = await fetchAppDetails(platform, appId, country, languageCode, keyword);
-                if (details) {
-                    topCompetitors.push({ appId, ...details });
-                } else {
-                    console.warn(`Skipping app ID ${appId} as it could not be fetched`);
-                }
-                await delay(5000);
-            }
-        }
-    }
-
-    return topCompetitors;
+    const searchFunc = platform === 'Android' ? gplay.search : store.search;
+    const apps = await searchFunc(searchOptions);
+    return apps.map(app => platform === 'Android' ? app.appId : app.id);
 }
 
+// Main function to find top competitors
+export async function findTopCompetitors(platform, keywords, userAppId, country, languageCode) {
+    const allApps = new Map();
+    const currentDate = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+
+    // Fetch top apps for each keyword with a delay between requests
+    for (const keyword of keywords.split(',')) {
+        const topApps = await fetchTopAppsByKeyword(platform, keyword.trim(), country, languageCode);
+        topApps.forEach((appId, index) => {
+            if (appId !== userAppId) { // Exclude user's own app
+                if (!allApps.has(appId)) {
+                    allApps.set(appId, { count: 0, ranks: {} });
+                }
+                allApps.get(appId).count++;
+                allApps.get(appId).ranks[keyword] = { position: index + 1, date: currentDate };
+            }
+        });
+        await delay(1000);
+    }
+
+    // Sort and select top 10 competitors
+    const sortedCompetitors = Array.from(allApps)
+        .sort((a, b) => b[1].count - a[1].count)
+        .slice(0, 10)
+        .reduce((obj, [appId, data]) => {
+            obj[appId] = { ranksFor: data.ranks };
+            return obj;
+        }, {});
+
+    return { competitors: sortedCompetitors };
+}
 
 
 export async function fetchReviews(platform, appId, country, languageCode) {
@@ -89,7 +106,6 @@ export async function fetchReviews(platform, appId, country, languageCode) {
     return reviews;
 }
 
-
 export async function checkRank(platform, appId, keyword, country, languageCode) {
     const options = {
         term: keyword,
@@ -99,6 +115,7 @@ export async function checkRank(platform, appId, keyword, country, languageCode)
     };
 
     try {
+        await delay(1000);
         const results = await (platform === 'Android' ? gplay.search(options) : store.search(options));
         const rankedApp = results.find(app => app.appId === appId || app.id === appId);
         return rankedApp ? results.indexOf(rankedApp) + 1 : '30+';
@@ -107,4 +124,5 @@ export async function checkRank(platform, appId, keyword, country, languageCode)
         return 'Error';
     }
 }
+
 
