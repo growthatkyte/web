@@ -6,6 +6,17 @@ function loadScript(src, callback) {
     document.head.appendChild(script);
 }
 
+function loadLandingPagesConfig(url, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            callback(JSON.parse(xhr.responseText));
+        }
+    };
+    xhr.open("GET", url, true);
+    xhr.send();
+}
+
 function createDynamicLink(submitButton) {
     const utmParams = {
         utm_campaign: window.location.pathname,
@@ -55,6 +66,16 @@ function setActionURL(formElement, submitButton) {
                 setActionURL(formElement, target);
                 formElement.submit();
             }
+        }
+    });
+
+    loadLandingPagesConfig('./landing-pages-list.json', function (landingPages) {
+        const currentPage = window.location.pathname;
+        const submitButtons = document.querySelectorAll('input[type="submit"], button[type="submit"]');
+        if (landingPages[currentPage]) {
+            submitButtons.forEach(button => {
+                button.classList.add(landingPages[currentPage]);
+            });
         }
     });
 })();
