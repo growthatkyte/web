@@ -69,7 +69,7 @@ function setActionURL(formElement, submitButton) {
         }
     });
 
-    loadLandingPagesConfig('./landing-pages-list.json', function (landingPages) {
+    loadLandingPagesConfig('https://growthatkyte.github.io/web/scripts/landing-pages-list.json', function (landingPages) {
         const currentPage = window.location.pathname;
         const submitButtons = document.querySelectorAll('input[type="submit"], button[type="submit"]');
         if (landingPages[currentPage]) {
