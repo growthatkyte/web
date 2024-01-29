@@ -59,7 +59,7 @@ keywords_es = [
 
 # Configurations for Android
 countries = ['br', 'us', 'mx']
-device_info = {'ext_id': 'com.kyte', 'device': 'android'}  #com.kyte (PDV) | com.kyte.catalog (Catálogo) | com.kytecontrol (Controle)
+device_info = {'ext_id': 'com.kyte', 'device': 'android'}  # com.kyte (PDV) | com.kyte.catalog (Catálogo) | com.kytecontrol (Controle)
 date = input("Enter the date (YYYY-MM-DD) or leave blank for current day: ")
 
 # Fetching, aggregating, and saving data for Android
