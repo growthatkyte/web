@@ -11,7 +11,6 @@
     "license": "MIT",
     "dependencies": {
         "app-store-scraper": "^0.18.0",
-        "aso": "^1.1.1",
         "axios": "^1.6.2",
         "body-parser": "^1.20.2",
         "chalk": "*",
@@ -23,7 +22,6 @@
         "fs": "*",
         "google-play-scraper": "^10.0.0",
         "inquirer": "*",
-        "natural": "^6.10.4",
         "ngrok": "^5.0.0-beta.2",
         "node-cache": "^5.1.2",
         "node-fetch": "^3.3.2",
