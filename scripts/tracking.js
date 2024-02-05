@@ -75,13 +75,19 @@ function handleRedirection(target) {
     }
 }
 
+function isDesktop() {
+    const userAgent = navigator.userAgent;
+    return !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+}
+
 function constructDynamicLink(pageConfig, baseURL, finalLink, classList, kyteParams) {
     let dynamicLink = `${baseURL}?link=${encodeURIComponent(finalLink)}`;
-    const userAgent = navigator.userAgent || window.opera;
+    const isIOS = isIOSDevice();
+    const isDesktopUser = isDesktop();
 
-    const isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
-
-    if (classList.contains("cpp-redir")) {
+    if (classList.contains("cpp-redir") && isDesktopUser) {
+        return "https://web.kyteapp.com/login";
+    } else if (classList.contains("cpp-redir")) {
         return isIOS ? pageConfig.ios : pageConfig.android;
     }
 
