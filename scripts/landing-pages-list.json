@@ -1,23 +1,77 @@
 {
-    "/selling/whatsapp-sales": "catalog-redir",
-    "/engaging/digital-catalog": "catalog-redir",
-    "/sales/selling-on-instagram": "catalog-redir",
-    "/sales/selling-on-facebook": "catalog-redir",
-    "/sales/online-orders": "catalog-redir",
-    "/engage/digital-menu-maker": "catalog-redir",
-    "/vender/vender-por-whatsapp": "catalog-redir",
-    "/fidelizar/catalogo-online": "catalog-redir",
-    "/fidelice/menu-digital": "catalog-redir",
-    "/venda/pedido-online": "catalog-redir",
-    "/venda/vender-en-instagram": "catalog-redir",
-    "/venda/vender-por-whatsapp": "catalog-redir",
-    "/vender/venda-pelo-whatsapp": "catalog-redir",
-    "/vender/site-de-pedidos": "catalog-redir",
-    "/vender/venda-redes-sociais": "catalog-redir",
-    "/fidelizar/catalogo-de-produtos": "catalog-redir",
-    "/fidelizar/cardapio-digital": "catalog-redir",
-    "/fidelizar/vitrine-virtual": "catalog-redir",
-    "/gerenciar/gestao-de-despesas": "control-redir",
-    "/managing/expense-management": "control-redir",
-    "/administrar/gestion-de-gastos": "control-redir"
+    "/selling/whatsapp-sales": {
+        "redirectClass": "catalog-redir"
+    },
+    "/engaging/digital-catalog": {
+        "redirectClass": "catalog-redir"
+    },
+    "/sales/selling-on-instagram": {
+        "redirectClass": "catalog-redir"
+    },
+    "/sales/selling-on-facebook": {
+        "redirectClass": "catalog-redir"
+    },
+    "/sales/online-orders": {
+        "redirectClass": "catalog-redir"
+    },
+    "/engage/digital-menu-maker": {
+        "redirectClass": "catalog-redir"
+    },
+    "/vender/vender-por-whatsapp": {
+        "redirectClass": "catalog-redir"
+    },
+    "/fidelizar/catalogo-online": {
+        "redirectClass": "catalog-redir"
+    },
+    "/fidelice/menu-digital": {
+        "redirectClass": "catalog-redir"
+    },
+    "/venda/pedido-online": {
+        "redirectClass": "catalog-redir"
+    },
+    "/venda/vender-en-instagram": {
+        "redirectClass": "catalog-redir"
+    },
+    "/venda/vender-por-whatsapp": {
+        "redirectClass": "catalog-redir"
+    },
+    "/vender/venda-pelo-whatsapp": {
+        "redirectClass": "catalog-redir"
+    },
+    "/vender/site-de-pedidos": {
+        "redirectClass": "catalog-redir"
+    },
+    "/vender/venda-redes-sociais": {
+        "redirectClass": "catalog-redir"
+    },
+    "/fidelizar/catalogo-de-produtos": {
+        "redirectClass": "catalog-redir"
+    },
+    "/fidelizar/cardapio-digital": {
+        "redirectClass": "catalog-redir"
+    },
+    "/fidelizar/vitrine-virtual": {
+        "redirectClass": "catalog-redir"
+    },
+    "/gerenciar/gestao-de-despesas": {
+        "redirectClass": "control-redir"
+    },
+    "/managing/expense-management": {
+        "redirectClass": "control-redir"
+    },
+    "/administrar/gestion-de-gastos": {
+        "redirectClass": "control-redir"
+    },
+    "/selling/receipts": {
+        "ios": "https://apps.apple.com/app/kyte/idCustomPageID?customProductPageForReceiptsEN",
+        "android": "https://play.google.com/store/apps/details?id=com.kyte&customProductPageForReceiptsEN"
+    },
+    "/vender/recibos-digitales-e-impresos": {
+        "ios": "https://apps.apple.com/app/kyte/idCustomPageID?customProductPageForReceiptsES",
+        "android": "https://play.google.com/store/apps/details?id=com.kyte&customProductPageForReceiptsES"
+    },
+    "/vender/recibos": {
+        "ios": "https://apps.apple.com/app/kyte/idCustomPageID?customProductPageForReceiptsPT",
+        "android": "https://play.google.com/store/apps/details?id=com.kyte&customProductPageForReceiptsPT"
+    }
 }

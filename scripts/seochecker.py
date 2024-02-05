@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Load the CSV data
-df = pd.read_csv("/Users/ivanfarias/Downloads/subs_seo.csv")
+df = pd.read_csv("/Users/ivanfarias/Downloads/seo_subs.csv")
 
 # Convert 'Date' to datetime
 df["Date"] = pd.to_datetime(df["Date"])
