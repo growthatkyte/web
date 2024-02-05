@@ -18,87 +18,62 @@ function loadLandingPagesConfig(url, callback) {
 }
 
 loadScript('https://cdn.kyteapp.com/$web/kyte-analytics-short-unique-id.js', function () {
-    const kyteParams = {
-        utm_campaign: window.location.pathname,
-        referrer: document.referrer
-    };
-
-    function extractUTMParams() {
-        const queryParams = new URLSearchParams(window.location.search);
-        ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(param => {
-            if (queryParams.has(param)) {
-                kyteParams[param] = queryParams.get(param);
-            }
-        });
-    }
-
-    function loadParamsFromStorage() {
-        const kyteAnalyticsKeys = ['aid', 'kid', 'pkid', 'cid', 'email', 'fbclid', 'gclid'];
-        kyteAnalyticsKeys.forEach(key => {
-            const value = localStorage.getItem(key);
-            if (value) kyteParams[key] = value;
-        });
-    }
-
-    function updateStorageFromParams() {
-        Object.keys(kyteParams).forEach(key => {
-            localStorage.setItem(key, kyteParams[key]);
-        });
-    }
-
-    extractUTMParams();
-    loadParamsFromStorage();
-
-    function addParams(url, keys) {
-        try {
-            const urlObj = new URL(url);
-            keys.forEach(key => {
-                if (kyteParams[key]) {
-                    urlObj.searchParams.set(key, kyteParams[key]);
+    document.addEventListener('DOMContentLoaded', function () {
+        loadLandingPagesConfig('https://growthatkyte.github.io/web/scripts/landing-pages-list.json', function (landingPages) {
+            const currentPage = window.location.pathname;
+            const submitButtons = document.querySelectorAll('input[type="submit"], button[type="submit"]');
+            submitButtons.forEach(button => {
+                if (landingPages[currentPage]) {
+                    const pageConfig = landingPages[currentPage];
+                    if (pageConfig.redirectClass) {
+                        button.classList.add(pageConfig.redirectClass);
+                    } else if (pageConfig.ios || pageConfig.android) {
+                        button.classList.add("cpp-redir");
+                    }
                 }
             });
-            urlObj.searchParams.set('cacheBust', Date.now());
-            return urlObj.toString();
-        } catch (e) {
-            console.error('Error in addParams:', e);
-            return url;
-        }
-    }
-
-    function createDynamicLink(pageConfig) {
-        const baseURL = "https://kyteapp.page.link/";
-        let finalLink = "https://web.kyteapp.com/login";
-        if (pageConfig.default) {
-            finalLink = pageConfig.default;
-        }
-        finalLink = addParams(finalLink, Object.keys(kyteParams));
-        let dynamicLink = `${baseURL}?link=${encodeURIComponent(finalLink)}`;
-        return dynamicLink;
-    }
-
-    function setActionURL(formElement) {
-        loadLandingPagesConfig('https://growthatkyte.github.io/web/scripts/landing-pages-list.json', function (landingPagesConfig) {
-            const pathname = window.location.pathname;
-            const pageConfig = landingPagesConfig[pathname] || {};
-            const dynamicLink = createDynamicLink(pageConfig);
-            const redirInput = formElement.querySelector('input[name="_redir"]');
-            if (redirInput) {
-                redirInput.value = dynamicLink;
-            }
         });
-    }
+    });
 
     document.addEventListener('click', function (event) {
         const target = event.target;
-        if (target.matches('.catalog-redir, .control-redir')) {
+        if (target.matches('.catalog-redir, .control-redir, .cpp-redir')) {
             event.preventDefault();
-            const formElement = target.closest('form');
-            if (formElement) {
-                setActionURL(formElement);
-                formElement.submit();
-            }
+            loadLandingPagesConfig('https://growthatkyte.github.io/web/scripts/landing-pages-list.json', function (landingPages) {
+                const currentPage = window.location.pathname;
+                if (landingPages[currentPage]) {
+                    const pageConfig = landingPages[currentPage];
+                    let dynamicLink = '#';
+                    if (target.classList.contains('cpp-redir')) {
+                        dynamicLink = createDynamicLinkForCPP(pageConfig);
+                    } else {
+                        dynamicLink = createAppStoreLink(pageConfig);
+                    }
+                    setActionURL(target, dynamicLink);
+                }
+            });
         }
     });
-
-    updateStorageFromParams();
 });
+
+function createDynamicLinkForCPP(pageConfig) {
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+        return pageConfig.ios;
+    } else if (/android/i.test(userAgent)) {
+        return pageConfig.android;
+    } else {
+        return "https://web.kyteapp.com/login";
+    }
+}
+
+function setActionURL(target, dynamicLink) {
+    const formElement = target.closest('form');
+    if (formElement) {
+        const redirInput = formElement.querySelector('input[name="_redir"]');
+        if (redirInput) {
+            redirInput.value = dynamicLink;
+        }
+        formElement.submit();
+    }
+}
