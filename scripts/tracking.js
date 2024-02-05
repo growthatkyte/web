@@ -75,9 +75,18 @@ function handleRedirection(target) {
     }
 }
 
-function isDesktop() {
+function isMobileDevice() {
     const userAgent = navigator.userAgent;
-    return !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+    return /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent) || (userAgent.includes('Macintosh') && 'ontouchend' in document);
+}
+
+function isIOSDevice() {
+    const userAgent = navigator.userAgent;
+    return /iPad|iPhone|iPod/.test(userAgent) || (userAgent.includes('Macintosh') && 'ontouchend' in document);
+}
+
+function isDesktop() {
+    return !isMobileDevice();
 }
 
 function constructDynamicLink(pageConfig, baseURL, finalLink, classList, kyteParams) {
@@ -85,10 +94,14 @@ function constructDynamicLink(pageConfig, baseURL, finalLink, classList, kytePar
     const isIOS = isIOSDevice();
     const isDesktopUser = isDesktop();
 
-    if (classList.contains("cpp-redir") && isDesktopUser) {
-        return "https://web.kyteapp.com/login";
-    } else if (classList.contains("cpp-redir")) {
-        return isIOS ? pageConfig.ios : pageConfig.android;
+    if (classList.contains("cpp-redir")) {
+        if (isDesktopUser) {
+            return "https://web.kyteapp.com/login";
+        } else if (isIOS) {
+            return pageConfig.ios;
+        } else {
+            return pageConfig.android;
+        }
     }
 
     dynamicLink += `&apn=${classList.contains("catalog-redir") ? "com.kyte.catalog" : classList.contains("control-redir") ? "com.kytecontrol" : "com.kyte"}&ibi=${classList.contains("catalog-redir") ? "com.kytecatalog" : classList.contains("control-redir") ? "com.kytecontrol" : "com.kytepos"}&isi=${classList.contains("catalog-redir") ? "6462521196" : classList.contains("control-redir") ? "6472947922" : "1345983058"}`;
