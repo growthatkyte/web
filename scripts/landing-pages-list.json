@@ -63,15 +63,15 @@
         "redirectClass": "control-redir"
     },
     "/selling/receipts": {
-        "ios": "https://apps.apple.com/app/kyte/idCustomPageID?customProductPageForReceiptsEN",
-        "android": "https://play.google.com/store/apps/details?id=com.kyte&customProductPageForReceiptsEN"
+        "ios": "https://apps.apple.com/us/app/kyte-pos-inventory-system/id1345983058?platform=iphone&ppid=02b18316-746d-4b2c-9537-0bcebfa0e7c0",
+        "android": "play.google.com/store/apps/details?id=com.kyte&listing=receipts-en"
     },
     "/vender/recibos-digitales-e-impresos": {
-        "ios": "https://apps.apple.com/app/kyte/idCustomPageID?customProductPageForReceiptsES",
-        "android": "https://play.google.com/store/apps/details?id=com.kyte&customProductPageForReceiptsES"
+        "ios": "https://apps.apple.com/mx/app/kyte-punto-de-venta-m%C3%B3vil/id1345983058?platform=iphone&ppid=983d8ef4-abd9-49c1-bc60-66925889ab68",
+        "android": "play.google.com/store/apps/details?id=com.kyte&listing=recibos-es"
     },
     "/vender/recibos": {
-        "ios": "https://apps.apple.com/app/kyte/idCustomPageID?customProductPageForReceiptsPT",
-        "android": "https://play.google.com/store/apps/details?id=com.kyte&customProductPageForReceiptsPT"
+        "ios": "https://apps.apple.com/br/app/kyte-pdv-para-loja-e-estoque/id1345983058?platform=iphone&ppid=ee74035a-eec8-4d3c-aa54-2c53386beb3b",
+        "android": "https://play.google.com/store/apps/details?id=com.kyte&listing=recibos-pt"
     }
 }
