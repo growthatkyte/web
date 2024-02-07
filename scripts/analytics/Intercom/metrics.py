@@ -52,6 +52,11 @@ grouped_df = (
     )
     .reset_index()
 )
+
+grouped_df.rename(
+    columns={"daily_conversion_rate": "weekly_conversion_rate"}, inplace=True
+)
+
 # Group by week ends here
 
 # Group by month starts here
@@ -75,9 +80,7 @@ grouped_df = (
 
 
 # Rename 'daily_conversion_rate' to 'weekly_conversion_rate' for clarity
-grouped_df.rename(
-    columns={"daily_conversion_rate": "weekly_conversion_rate"}, inplace=True
-)
+
 
 # Save the grouped data to a new CSV file
 grouped_df.to_csv("weekly_conversion_rates.csv", index=False)
