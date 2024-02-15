@@ -6,15 +6,16 @@ function loadScript(src, callback) {
     document.head.appendChild(script);
 }
 
-function loadLandingPagesConfig(url) {
-    return fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .catch(error => console.error('There has been a problem with your fetch operation:', error));
+async function loadLandingPagesConfig(url) {
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return await response.json();
+    } catch (error) {
+        return console.error('There has been a problem with your fetch operation:', error);
+    }
 }
 
 let landingPagesConfig;
@@ -25,6 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
             landingPagesConfig = landingPages;
             applyRedirectClasses();
         });
+    loadScript('https://cdn.kyteapp.com/$web/kyte-analytics-short-unique-id.js', initializeTracking);
 });
 
 function applyRedirectClasses() {
@@ -51,19 +53,16 @@ function handleRedirection(target) {
     const pageConfig = landingPagesConfig[currentPage];
     if (!pageConfig) return;
 
-    const kyteParams = {
-        utm_campaign: window.location.pathname,
-        referrer: document.referrer,
-        utm_source: document.referrer ? new URL(document.referrer).hostname : '',
-        utm_medium: 'web'
-    };
+    let kyteParams = extractAndStoreUTMParams();
 
-    const baseURL = "https://kyteapp.page.link/";
-    let utmCampaign = kyteParams.utm_campaign.replace(/\//g, '_');
+    let utmCampaign = kyteParams.utm_campaign.replace(/^\//, '').replace(/\/$/, '').replace(/\//g, '_');
+
     const loginPageURL = "https://web.kyteapp.com/login";
-    const queryParams = `utm_source=${kyteParams.utm_source}&utm_medium=${kyteParams.utm_medium}&utm_campaign=${utmCampaign}`;
+    const queryParams = `utm_source=${encodeURIComponent(kyteParams.utm_source)}&utm_medium=${encodeURIComponent(kyteParams.utm_medium)}&utm_campaign=${encodeURIComponent(utmCampaign)}`;
     let finalLink = `${loginPageURL}?${queryParams}`;
-    let dynamicLink = constructDynamicLink(pageConfig, baseURL, finalLink, target.classList, kyteParams);
+    let encodedFinalLink = encodeURIComponent(finalLink);
+
+    let dynamicLink = constructDynamicLink(pageConfig, baseURL, encodedFinalLink, target.classList, kyteParams);
 
     if (dynamicLink) {
         const formElement = target.closest('form');
@@ -75,6 +74,37 @@ function handleRedirection(target) {
     }
 }
 
+function extractAndStoreUTMParams() {
+    let kyteParams = {
+        utm_campaign: window.location.pathname.replace(/^\//, '').replace(/\/$/, '').replace(/\//g, '_'),
+        referrer: document.referrer,
+        utm_source: document.referrer ? new URL(document.referrer).hostname : '',
+        utm_medium: 'web'
+    };
+
+    const queryParams = new URLSearchParams(window.location.search);
+    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(param => {
+        if (queryParams.has(param)) {
+            kyteParams[param] = queryParams.get(param);
+        }
+    });
+
+    const kyteAnalyticsKeys = ['aid', 'kid', 'pkid', 'cid', 'email', 'fbclid', 'gclid', ...Object.keys(kyteParams)];
+    kyteAnalyticsKeys.forEach(key => {
+        const value = localStorage.getItem(key) || kyteParams[key];
+        if (value) {
+            localStorage.setItem(key, value);
+            kyteParams[key] = value;
+        }
+    });
+
+    return kyteParams;
+}
+
+function initializeTracking() {
+    console.log('Tracking script loaded and initialized');
+}
+
 function isMobileDevice() {
     const userAgent = navigator.userAgent;
     return /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent) || (userAgent.includes('Macintosh') && 'ontouchend' in document);
@@ -82,30 +112,32 @@ function isMobileDevice() {
 
 function isIOSDevice() {
     const userAgent = navigator.userAgent;
-    return /iPad|iPhone|iPod/.test(userAgent) || (userAgent.includes('Macintosh') && 'ontouchend' in document);
+    return /iPad|iPhone|iPod/.test(userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 }
 
 function isDesktop() {
     return !isMobileDevice();
 }
 
-function constructDynamicLink(pageConfig, baseURL, finalLink, classList, kyteParams) {
-    let dynamicLink = `${baseURL}?link=${encodeURIComponent(finalLink)}`;
+
+function constructDynamicLink(pageConfig, baseURL, encodedFinalLink, classList, kyteParams) {
+    let dynamicLink = `${baseURL}?link=${encodedFinalLink}`;
     const isIOS = isIOSDevice();
     const isDesktopUser = isDesktop();
 
     if (classList.contains("cpp-redir")) {
         if (isDesktopUser) {
-            return "https://web.kyteapp.com/login";
+            dynamicLink = "https://web.kyteapp.com/login";
         } else if (isIOS) {
-            return pageConfig.ios;
+            dynamicLink += `&ibi=${pageConfig.ios}`;
         } else {
-            return pageConfig.android;
+            dynamicLink += `&apn=${pageConfig.android}`;
         }
+    } else {
+        dynamicLink += `&apn=${classList.contains("catalog-redir") ? "com.kyte.catalog" : classList.contains("control-redir") ? "com.kytecontrol" : "com.kyte"}&ibi=${classList.contains("catalog-redir") ? "com.kytecatalog" : classList.contains("control-redir") ? "com.kytecontrol" : "com.kytepos"}&isi=${classList.contains("catalog-redir") ? "6462521196" : classList.contains("control-redir") ? "6472947922" : "1345983058"}`;
     }
 
-    dynamicLink += `&apn=${classList.contains("catalog-redir") ? "com.kyte.catalog" : classList.contains("control-redir") ? "com.kytecontrol" : "com.kyte"}&ibi=${classList.contains("catalog-redir") ? "com.kytecatalog" : classList.contains("control-redir") ? "com.kytecontrol" : "com.kytepos"}&isi=${classList.contains("catalog-redir") ? "6462521196" : classList.contains("control-redir") ? "6472947922" : "1345983058"}`;
-    dynamicLink += `&utm_source=${kyteParams.utm_source}&utm_medium=${kyteParams.utm_medium}&utm_campaign=${kyteParams.utm_campaign.replace(/\//g, '_')}&pt=120346822&ct=${classList.contains("catalog-redir") ? "catalog" : classList.contains("control-redir") ? "control" : "default"}_${kyteParams.utm_campaign.replace(/\//g, '_')}&mt=8`;
+    dynamicLink += `&utm_source=${encodeURIComponent(kyteParams.utm_source)}&utm_medium=${encodeURIComponent(kyteParams.utm_medium)}&utm_campaign=${encodeURIComponent(utmCampaign)}&pt=120346822&ct=${classList.contains("catalog-redir") ? "catalog" : classList.contains("control-redir") ? "control" : "default"}_${utmCampaign}&mt=8`;
 
     return dynamicLink;
 }
