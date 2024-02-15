@@ -64,7 +64,7 @@ function handleRedirection(target) {
     let finalLink = `${loginPageURL}?${queryParams}`;
     let encodedFinalLink = encodeURIComponent(finalLink);
 
-    let dynamicLink = constructDynamicLink(pageConfig, baseURL, encodedFinalLink, target.classList, kyteParams);
+    let dynamicLink = constructDynamicLink(pageConfig, baseURL, encodedFinalLink, target.classList, kyteParams, utmCampaign);
 
     if (dynamicLink) {
         const formElement = target.closest('form');
@@ -122,7 +122,7 @@ function isDesktop() {
 }
 
 
-function constructDynamicLink(pageConfig, baseURL, encodedFinalLink, classList, kyteParams) {
+function constructDynamicLink(pageConfig, baseURL, encodedFinalLink, classList, kyteParams, utmCampaign) {
     let dynamicLink = `${baseURL}?link=${encodedFinalLink}`;
     const isIOS = isIOSDevice();
     const isDesktopUser = isDesktop();
