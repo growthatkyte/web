@@ -57,6 +57,8 @@ function handleRedirection(target) {
 
     let utmCampaign = kyteParams.utm_campaign.replace(/^\//, '').replace(/\/$/, '').replace(/\//g, '_');
 
+    const baseURL = "https://kyteapp.page.link/";
+
     const loginPageURL = "https://web.kyteapp.com/login";
     const queryParams = `utm_source=${encodeURIComponent(kyteParams.utm_source)}&utm_medium=${encodeURIComponent(kyteParams.utm_medium)}&utm_campaign=${encodeURIComponent(utmCampaign)}`;
     let finalLink = `${loginPageURL}?${queryParams}`;
