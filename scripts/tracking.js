@@ -5,13 +5,13 @@ async function initializeLandingPageRedirection() {
         if (!response.ok) throw new Error('Failed to fetch landing pages configuration');
         const config = await response.json();
 
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', function () {
             applyClasses(config);
             loadScript('https://cdn.kyteapp.com/$web/kyte-analytics-short-unique-id.js', () => console.log('Analytics initialized'));
         });
 
         document.addEventListener('click', (event) => {
-            if (event.target.closest('.catalog-redir, .cpp-redir, .control-redir')) {
+            if (event.target.closest('input[type="submit"], button[type="submit"]')) {
                 event.preventDefault();
                 handleRedirection(event.target, config);
             }
@@ -22,12 +22,17 @@ async function initializeLandingPageRedirection() {
 }
 
 function applyClasses(config) {
-    const path = window.location.pathname;
+    const path = window.location.pathname.endsWith('/') ? window.location.pathname : `${window.location.pathname}/`;
     const buttons = document.querySelectorAll('input[type="submit"], button[type="submit"]');
-    const configEntry = config[path] || config[`${path}/`];
-    if (configEntry) {
-        buttons.forEach(button => button.classList.add(configEntry.redirectClass));
-    }
+
+    Object.keys(config).forEach(key => {
+        const normalizedKey = key.endsWith('/') ? key : `${key}/`;
+        if (normalizedKey === path) {
+            const redirectClass = config[key].redirectClass;
+            buttons.forEach(button => button.classList.add(redirectClass));
+            console.log(`Redirect class '${redirectClass}' applied to buttons on ${path}`);
+        }
+    });
 }
 
 function handleRedirection(target, config) {
