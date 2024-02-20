@@ -130,10 +130,10 @@ function constructDynamicLink(pageConfig, baseURL, encodedFinalLink, classList, 
     if (classList.contains("cpp-redir")) {
         if (isDesktopUser) {
             dynamicLink = "https://web.kyteapp.com/login";
-        } else if (isIOS) {
-            dynamicLink += `&ibi=${pageConfig.ios}`;
         } else {
-            dynamicLink += `&apn=${pageConfig.android}`;
+            const linkPrefix = isIOS ? pageConfig.ios : pageConfig.android;
+            const formattedLinkPrefix = linkPrefix.startsWith('http') ? linkPrefix : `https://${linkPrefix}`;
+            dynamicLink = `${formattedLinkPrefix}?${queryParams}`;
         }
     } else {
         dynamicLink += `&apn=${classList.contains("catalog-redir") ? "com.kyte.catalog" : classList.contains("control-redir") ? "com.kytecontrol" : "com.kyte"}&ibi=${classList.contains("catalog-redir") ? "com.kytecatalog" : classList.contains("control-redir") ? "com.kytecontrol" : "com.kytepos"}&isi=${classList.contains("catalog-redir") ? "6462521196" : classList.contains("control-redir") ? "6472947922" : "1345983058"}`;
