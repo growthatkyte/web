@@ -5,15 +5,16 @@ async function initializeLandingPageRedirection() {
         if (!response.ok) throw new Error('Failed to fetch landing pages configuration');
         const config = await response.json();
 
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', () => {
             applyClasses(config);
             loadScript('https://cdn.kyteapp.com/$web/kyte-analytics-short-unique-id.js', () => console.log('Analytics initialized'));
         });
 
         document.addEventListener('click', (event) => {
-            if (event.target.closest('input[type="submit"], button[type="submit"]')) {
+            const target = event.target.closest('input[type="submit"], button[type="submit"]');
+            if (target && target.classList.contains('catalog-redir') || target.classList.contains('cpp-redir') || target.classList.contains('control-redir')) {
                 event.preventDefault();
-                handleRedirection(event.target, config);
+                handleRedirection(target, config);
             }
         });
     } catch (error) {
@@ -24,61 +25,57 @@ async function initializeLandingPageRedirection() {
 function applyClasses(config) {
     const path = window.location.pathname.endsWith('/') ? window.location.pathname : `${window.location.pathname}/`;
     const buttons = document.querySelectorAll('input[type="submit"], button[type="submit"]');
-
     Object.keys(config).forEach(key => {
         const normalizedKey = key.endsWith('/') ? key : `${key}/`;
         if (normalizedKey === path) {
             const redirectClass = config[key].redirectClass;
             buttons.forEach(button => button.classList.add(redirectClass));
-            console.log(`Redirect class '${redirectClass}' applied to buttons on ${path}`);
         }
     });
 }
 
 function handleRedirection(target, config) {
-    const path = window.location.pathname;
-    const pageConfig = config[path] || config[`${path}/`];
-    if (!pageConfig) return console.error('Configuration missing for this page');
+    const path = window.location.pathname.endsWith('/') ? window.location.pathname : `${window.location.pathname}/`;
+    const pageConfig = config[path];
+    if (!pageConfig) {
+        console.error('Configuration missing for this page');
+        return;
+    }
 
     const utmParams = getUTMParams();
-    const isCPPRedir = target.classList.contains('cpp-redir');
-    redirectUser(pageConfig, utmParams, isCPPRedir);
+    redirectUser(pageConfig, utmParams, target.classList.contains('cpp-redir'));
 }
 
 function getUTMParams() {
     const params = new URLSearchParams(location.search);
-    const utmParams = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
-    return utmParams.reduce((acc, param) => {
-        acc[param] = params.get(param) || '';
-        return acc;
-    }, {});
+    const utmParams = {};
+    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(param => {
+        utmParams[param] = params.get(param) || '';
+    });
+    return utmParams;
 }
 
 function redirectUser(config, utmParams, isCPPRedir) {
-    if (isMobileDevice()) {
-        if (isCPPRedir) {
-            const url = isIOSDevice() ? config.ios : config.android;
-            window.location.href = url;
-        } else {
-            const queryParams = new URLSearchParams(utmParams).toString();
-            const dynamicLink = createDynamicLink(config.redirectClass, queryParams);
-            window.location.href = dynamicLink;
-        }
-    } else {
-        const queryParams = new URLSearchParams(utmParams).toString();
-        const loginUrl = `https://web.kyteapp.com/login?${queryParams}`;
-        window.location.href = loginUrl;
-    }
+    const dynamicLink = isCPPRedir ? handleCPPRedirection(config, isMobileDevice()) : createDynamicLink(config.redirectClass, utmParams);
+    window.location.href = dynamicLink;
 }
 
-function createDynamicLink(redirectClass, queryParams) {
+function createDynamicLink(redirectClass, utmParams) {
     const base = 'https://kyteapp.page.link/';
-    const link = `https://web.kyteapp.com/login?${queryParams}`;
-    const apn = redirectClass === 'control-redir' ? 'com.kytecontrol' : redirectClass === 'catalog-redir' ? 'com.kyte.catalog' : 'com.kyte';
-    const ibi = redirectClass === 'control-redir' ? 'com.kytecontrol' : redirectClass === 'catalog-redir' ? 'com.kytecatalog' : 'com.kytepos';
-    const isi = redirectClass === 'control-redir' ? '6472947922' : redirectClass === 'catalog-redir' ? '6462521196' : '1345983058';
-    const ct = `${redirectClass}_${utmParams.utm_campaign}`;
-    return `${base}?link=${encodeURIComponent(link)}&apn=${apn}&ibi=${ibi}&isi=${isi}&utm_source=${utmParams.utm_source}&utm_medium=${utmParams.utm_medium}&utm_campaign=${utmParams.utm_campaign}&pt=120346822&ct=${ct}&mt=8`;
+    const loginPageURL = "https://web.kyteapp.com/login";
+    const queryParams = new URLSearchParams(utmParams).toString();
+    const link = `${loginPageURL}?${queryParams}`;
+    // Ensure utmParams are properly included in the dynamic link
+    const dynamicParams = `link=${encodeURIComponent(link)}&apn=${redirectClass}&ibi=${redirectClass}&isi=123456789&ct=${redirectClass}_${utmParams.utm_campaign}`;
+    return `${base}?${dynamicParams}`;
+}
+
+function handleCPPRedirection(config, isMobile) {
+    if (!isMobile) {
+        const queryParams = new URLSearchParams(getUTMParams()).toString();
+        return `https://web.kyteapp.com/login?${queryParams}`;
+    }
+    return isIOSDevice() ? config.ios : config.android;
 }
 
 function isMobileDevice() {
