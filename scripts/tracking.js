@@ -5,11 +5,9 @@ async function initializeLandingPageRedirection() {
         if (!response.ok) throw new Error('Failed to fetch landing pages configuration');
         const config = await response.json();
 
-        // Ensure the DOM is fully loaded before applying classes
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => applyClasses(config));
         } else {
-            // DOM is already loaded
             applyClasses(config);
         }
 
@@ -26,17 +24,27 @@ async function initializeLandingPageRedirection() {
 }
 
 function applyClasses(config) {
-    const path = window.location.pathname;
+    const path = window.location.pathname.endsWith('/') ? window.location.pathname : `${window.location.pathname}/`;
     const buttons = document.querySelectorAll('input[type="submit"], button[type="submit"]');
+    let classApplied = false;
+
     Object.keys(config).forEach(key => {
         const configPath = key.endsWith('/') ? key : `${key}/`;
-        const currentPage = path.endsWith('/') ? path : `${path}/`;
-        if (configPath === currentPage) {
+        if (configPath === path) {
             const redirectClass = config[key].redirectClass;
-            buttons.forEach(button => button.classList.add(redirectClass));
+            buttons.forEach(button => {
+                button.classList.add(redirectClass);
+            });
+            console.log(`Applied '${redirectClass}' to buttons for path: ${path}`);
+            classApplied = true;
         }
     });
+
+    if (!classApplied) {
+        console.warn(`No redirect class applied. Check if the current path '${path}' is correctly configured.`);
+    }
 }
+
 
 function handleRedirection(target, config) {
     const path = window.location.pathname.endsWith('/') ? window.location.pathname : `${window.location.pathname}/`;
