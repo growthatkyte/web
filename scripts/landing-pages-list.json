@@ -76,5 +76,10 @@
         "redirectClass": "cpp-redir",
         "ios": "https://apps.apple.com/br/app/kyte-pdv-para-loja-e-estoque/id1345983058?platform=iphone&ppid=ee74035a-eec8-4d3c-aa54-2c53386beb3b",
         "android": "https://play.google.com/store/apps/details?id=com.kyte&listing=recibos-pt"
+    },
+    "/v2/recibos": {
+        "redirectClass": "cpp-redir",
+        "ios": "https://apps.apple.com/br/app/kyte-pdv-para-loja-e-estoque/id1345983058?platform=iphone&ppid=ee74035a-eec8-4d3c-aa54-2c53386beb3b",
+        "android": "https://play.google.com/store/apps/details?id=com.kyte&listing=recibos-pt"
     }
 }
