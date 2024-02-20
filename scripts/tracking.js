@@ -121,25 +121,25 @@ function isDesktop() {
     return !isMobileDevice();
 }
 
-function constructDynamicLink(pageConfig, baseURL, classList, kyteParams, utmCampaign) {
+function constructDynamicLink(pageConfig, baseURL, redirectClass, kyteParams, utmCampaign) {
     const isIOS = isIOSDevice();
     const isDesktopUser = isDesktop();
 
-    const webQueryParams = `origin=link&utm_source=${encodeURIComponent(kyteParams.utm_source)}&utm_medium=${encodeURIComponent(kyteParams.utm_medium)}&utm_campaign=${encodeURIComponent(utmCampaign)}&utm_content=${encodeURIComponent(kyteParams.utm_content || '')}`;
+    const webQueryParams = `utm_source=${encodeURIComponent(kyteParams.utm_source)}&utm_medium=${encodeURIComponent(kyteParams.utm_medium)}&utm_campaign=${encodeURIComponent(utmCampaign)}&utm_content=${encodeURIComponent(kyteParams.utm_content || '')}`;
+    const directOrEncodedLink = isDesktopUser ? `https://web.kyteapp.com/login?${webQueryParams}` : encodeURIComponent(`https://web.kyteapp.com/login?${webQueryParams}`);
     const campaignTag = `${kyteParams.utm_source}_${kyteParams.utm_medium}_${utmCampaign}`;
 
     let dynamicLink = baseURL;
 
-    if (classList.contains("cpp-redir")) {
+    if (redirectClass === "cpp-redir") {
         if (isDesktopUser) {
-            dynamicLink += `?link=${encodeURIComponent(`https://web.kyteapp.com/login?${webQueryParams}`)}`;
+            dynamicLink += `?link=${directOrEncodedLink}`;
         } else {
             const platformURL = isIOS ? pageConfig.ios : pageConfig.android;
             dynamicLink = platformURL.startsWith('http') ? platformURL : `https://${platformURL}`;
         }
     } else {
-        const encodedWebLoginURL = encodeURIComponent(`https://web.kyteapp.com/login?${webQueryParams}`);
-        dynamicLink += `?apn=${classList.contains("catalog-redir") ? "com.kyte.catalog" : classList.contains("control-redir") ? "com.kytecontrol" : "com.kyte"}&ibi=${classList.contains("catalog-redir") ? "com.kytecatalog" : classList.contains("control-redir") ? "com.kytecontrol" : "com.kytepos"}&isi=1345983058&mt=8&pt=120346822&link=${encodedWebLoginURL}&utm_source=${kyteParams.utm_source}&utm_medium=${kyteParams.utm_medium}&utm_campaign=${utmCampaign}&utm_content=${kyteParams.utm_content || ''}&ct=${campaignTag}`;
+        dynamicLink += `?apn=${redirectClass === "catalog-redir" ? "com.kyte.catalog" : redirectClass === "control-redir" ? "com.kytecontrol" : "com.kyte"}&ibi=com.kytecatalog&isi=1345983058&mt=8&pt=120346822&link=${directOrEncodedLink}&utm_source=${kyteParams.utm_source}&utm_medium=${kyteParams.utm_medium}&utm_campaign=${utmCampaign}&utm_content=${kyteParams.utm_content || ''}&ct=${campaignTag}`;
     }
 
     return dynamicLink;
