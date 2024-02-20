@@ -121,26 +121,24 @@ function isDesktop() {
     return !isMobileDevice();
 }
 
-
 function constructDynamicLink(pageConfig, baseURL, encodedFinalLink, classList, kyteParams, utmCampaign) {
-    let dynamicLink = `${baseURL}?link=${encodedFinalLink}`;
+    let dynamicLink = baseURL;
     const isIOS = isIOSDevice();
     const isDesktopUser = isDesktop();
 
-    const queryParams = `utm_source=${encodeURIComponent(kyteParams.utm_source)}&utm_medium=${encodeURIComponent(kyteParams.utm_medium)}&utm_campaign=${encodeURIComponent(utmCampaign)}`;
-
     if (classList.contains("cpp-redir")) {
         if (isDesktopUser) {
-            dynamicLink = "https://web.kyteapp.com/login";
+            dynamicLink += `?link=${encodedFinalLink}`;
         } else {
-            const platformURL = isIOS ? pageConfig.ios : `https://${pageConfig.android}`;
-            dynamicLink = `${platformURL}?${queryParams}`;
+            dynamicLink = isIOS ? pageConfig.ios : `https://${pageConfig.android}`;
+            if (!isIOS && !pageConfig.android.startsWith('http')) {
+                dynamicLink = `https://${pageConfig.android}`;
+            }
         }
     } else {
-        dynamicLink += `&apn=${classList.contains("catalog-redir") ? "com.kyte.catalog" : classList.contains("control-redir") ? "com.kytecontrol" : "com.kyte"}&ibi=${classList.contains("catalog-redir") ? "com.kytecatalog" : classList.contains("control-redir") ? "com.kytecontrol" : "com.kytepos"}&isi=${classList.contains("catalog-redir") ? "6462521196" : classList.contains("control-redir") ? "6472947922" : "1345983058"}`;
+        dynamicLink += `?link=${encodedFinalLink}&apn=${classList.contains("catalog-redir") ? "com.kyte.catalog" : classList.contains("control-redir") ? "com.kytecontrol" : "com.kyte"}&ibi=${classList.contains("catalog-redir") ? "com.kytecatalog" : classList.contains("control-redir") ? "com.kytecontrol" : "com.kytepos"}&isi=${classList.contains("catalog-redir") ? "6462521196" : classList.contains("control-redir") ? "6472947922" : "1345983058"}`;
+        dynamicLink += `&pt=120346822&ct=${classList.contains("catalog-redir") ? "catalog" : classList.contains("control-redir") ? "control" : "default"}_${utmCampaign}&mt=8`;
     }
-
-    dynamicLink += `&pt=120346822&ct=${classList.contains("catalog-redir") ? "catalog" : classList.contains("control-redir") ? "control" : "default"}_${utmCampaign}&mt=8`;
 
     return dynamicLink;
 }
