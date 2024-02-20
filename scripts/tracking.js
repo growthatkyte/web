@@ -5,14 +5,17 @@ async function initializeLandingPageRedirection() {
         if (!response.ok) throw new Error('Failed to fetch landing pages configuration');
         const config = await response.json();
 
-        document.addEventListener('DOMContentLoaded', () => {
+        // Ensure the DOM is fully loaded before applying classes
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => applyClasses(config));
+        } else {
+            // DOM is already loaded
             applyClasses(config);
-            loadScript('https://cdn.kyteapp.com/$web/kyte-analytics-short-unique-id.js', () => console.log('Analytics initialized'));
-        });
+        }
 
         document.addEventListener('click', (event) => {
             const target = event.target.closest('input[type="submit"], button[type="submit"]');
-            if (target && target.classList.contains('catalog-redir') || target.classList.contains('cpp-redir') || target.classList.contains('control-redir')) {
+            if (target && (target.classList.contains('catalog-redir') || target.classList.contains('cpp-redir') || target.classList.contains('control-redir'))) {
                 event.preventDefault();
                 handleRedirection(target, config);
             }
@@ -23,11 +26,12 @@ async function initializeLandingPageRedirection() {
 }
 
 function applyClasses(config) {
-    const path = window.location.pathname.endsWith('/') ? window.location.pathname : `${window.location.pathname}/`;
+    const path = window.location.pathname;
     const buttons = document.querySelectorAll('input[type="submit"], button[type="submit"]');
     Object.keys(config).forEach(key => {
-        const normalizedKey = key.endsWith('/') ? key : `${key}/`;
-        if (normalizedKey === path) {
+        const configPath = key.endsWith('/') ? key : `${key}/`;
+        const currentPage = path.endsWith('/') ? path : `${path}/`;
+        if (configPath === currentPage) {
             const redirectClass = config[key].redirectClass;
             buttons.forEach(button => button.classList.add(redirectClass));
         }
