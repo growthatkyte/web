@@ -23,34 +23,31 @@ async function initializeLandingPageRedirection() {
     }
 }
 
-function applyClasses(config) {
-    const path = window.location.pathname.endsWith('/') ? window.location.pathname : `${window.location.pathname}/`;
-    const buttons = document.querySelectorAll('input[type="submit"], button[type="submit"]');
-    let classApplied = false;
-
-    Object.keys(config).forEach(key => {
-        const configPath = key.endsWith('/') ? key : `${key}/`;
-        if (configPath === path) {
-            const redirectClass = config[key].redirectClass;
-            buttons.forEach(button => {
-                button.classList.add(redirectClass);
-            });
-            console.log(`Applied '${redirectClass}' to buttons for path: ${path}`);
-            classApplied = true;
-        }
-    });
-
-    if (!classApplied) {
-        console.warn(`No redirect class applied. Check if the current path '${path}' is correctly configured.`);
-    }
+function normalizePath(path) {
+    return path.endsWith('/') ? path.slice(0, -1) : path;
 }
 
+function applyClasses(config) {
+    const path = normalizePath(window.location.pathname);
+    const buttons = document.querySelectorAll('input[type="submit"], button[type="submit"]');
+    Object.keys(config).forEach(key => {
+        if (normalizePath(key) === path) {
+            const redirectClass = config[key].redirectClass;
+            buttons.forEach(button => button.classList.add(redirectClass));
+            console.log(`Applied '${redirectClass}' to buttons for path: ${path}`);
+        }
+    });
+}
 
 function handleRedirection(target, config) {
-    const path = window.location.pathname.endsWith('/') ? window.location.pathname : `${window.location.pathname}/`;
-    const pageConfig = config[path];
+    const path = normalizePath(window.location.pathname);
+    const pageConfig = config[normalizePath(path)];
+
+    console.log(`Current path: ${path}`);
+    console.log(`Configuration found:`, pageConfig);
+
     if (!pageConfig) {
-        console.error('Configuration missing for this page');
+        console.error('Configuration missing for this page:', path);
         return;
     }
 
@@ -77,7 +74,6 @@ function createDynamicLink(redirectClass, utmParams) {
     const loginPageURL = "https://web.kyteapp.com/login";
     const queryParams = new URLSearchParams(utmParams).toString();
     const link = `${loginPageURL}?${queryParams}`;
-    // Ensure utmParams are properly included in the dynamic link
     const dynamicParams = `link=${encodeURIComponent(link)}&apn=${redirectClass}&ibi=${redirectClass}&isi=123456789&ct=${redirectClass}_${utmParams.utm_campaign}`;
     return `${base}?${dynamicParams}`;
 }
