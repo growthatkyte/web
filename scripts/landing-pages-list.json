@@ -65,12 +65,12 @@
     "/selling/receipts": {
         "redirectClass": "cpp-redir",
         "ios": "https://apps.apple.com/us/app/kyte-pos-inventory-system/id1345983058?platform=iphone&ppid=02b18316-746d-4b2c-9537-0bcebfa0e7c0",
-        "android": "play.google.com/store/apps/details?id=com.kyte&listing=receipts-en"
+        "android": "https://play.google.com/store/apps/details?id=com.kyte&listing=receipts-en"
     },
     "/vender/recibos-digitales-e-impresos": {
         "redirectClass": "cpp-redir",
         "ios": "https://apps.apple.com/mx/app/kyte-punto-de-venta-m%C3%B3vil/id1345983058?platform=iphone&ppid=983d8ef4-abd9-49c1-bc60-66925889ab68",
-        "android": "play.google.com/store/apps/details?id=com.kyte&listing=recibos-es"
+        "android": "https://play.google.com/store/apps/details?id=com.kyte&listing=recibos-es"
     },
     "/vender/recibos": {
         "redirectClass": "cpp-redir",

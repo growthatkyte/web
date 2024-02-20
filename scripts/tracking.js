@@ -121,23 +121,25 @@ function isDesktop() {
     return !isMobileDevice();
 }
 
-function constructDynamicLink(pageConfig, baseURL, encodedFinalLink, classList, kyteParams, utmCampaign) {
-    let dynamicLink = baseURL;
+function constructDynamicLink(pageConfig, baseURL, classList, kyteParams, utmCampaign) {
     const isIOS = isIOSDevice();
     const isDesktopUser = isDesktop();
 
+    const webQueryParams = `origin=link&utm_source=${encodeURIComponent(kyteParams.utm_source)}&utm_medium=${encodeURIComponent(kyteParams.utm_medium)}&utm_campaign=${encodeURIComponent(utmCampaign)}&utm_content=${encodeURIComponent(kyteParams.utm_content || '')}`;
+    const campaignTag = `${kyteParams.utm_source}_${kyteParams.utm_medium}_${utmCampaign}`;
+
+    let dynamicLink = baseURL;
+
     if (classList.contains("cpp-redir")) {
         if (isDesktopUser) {
-            dynamicLink += `?link=${encodedFinalLink}`;
+            dynamicLink += `?link=${encodeURIComponent(`https://web.kyteapp.com/login?${webQueryParams}`)}`;
         } else {
-            dynamicLink = isIOS ? pageConfig.ios : `https://${pageConfig.android}`;
-            if (!isIOS && !pageConfig.android.startsWith('http')) {
-                dynamicLink = `https://${pageConfig.android}`;
-            }
+            const platformURL = isIOS ? pageConfig.ios : pageConfig.android;
+            dynamicLink = platformURL.startsWith('http') ? platformURL : `https://${platformURL}`;
         }
     } else {
-        dynamicLink += `?link=${encodedFinalLink}&apn=${classList.contains("catalog-redir") ? "com.kyte.catalog" : classList.contains("control-redir") ? "com.kytecontrol" : "com.kyte"}&ibi=${classList.contains("catalog-redir") ? "com.kytecatalog" : classList.contains("control-redir") ? "com.kytecontrol" : "com.kytepos"}&isi=${classList.contains("catalog-redir") ? "6462521196" : classList.contains("control-redir") ? "6472947922" : "1345983058"}`;
-        dynamicLink += `&pt=120346822&ct=${classList.contains("catalog-redir") ? "catalog" : classList.contains("control-redir") ? "control" : "default"}_${utmCampaign}&mt=8`;
+        const encodedWebLoginURL = encodeURIComponent(`https://web.kyteapp.com/login?${webQueryParams}`);
+        dynamicLink += `?apn=${classList.contains("catalog-redir") ? "com.kyte.catalog" : classList.contains("control-redir") ? "com.kytecontrol" : "com.kyte"}&ibi=${classList.contains("catalog-redir") ? "com.kytecatalog" : classList.contains("control-redir") ? "com.kytecontrol" : "com.kytepos"}&isi=1345983058&mt=8&pt=120346822&link=${encodedWebLoginURL}&utm_source=${kyteParams.utm_source}&utm_medium=${kyteParams.utm_medium}&utm_campaign=${utmCampaign}&utm_content=${kyteParams.utm_content || ''}&ct=${campaignTag}`;
     }
 
     return dynamicLink;
