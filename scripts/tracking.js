@@ -130,3 +130,4 @@ function constructAndRedirect(pageConfig, utmParams, isCPPRedir) {
         window.location.href = finalURL;
     }
 }
+
