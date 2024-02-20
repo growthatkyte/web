@@ -127,19 +127,25 @@ function constructDynamicLink(pageConfig, baseURL, encodedFinalLink, classList, 
     const isIOS = isIOSDevice();
     const isDesktopUser = isDesktop();
 
+    const queryParams = `utm_source=${encodeURIComponent(kyteParams.utm_source)}&utm_medium=${encodeURIComponent(kyteParams.utm_medium)}&utm_campaign=${encodeURIComponent(utmCampaign)}`;
+
     if (classList.contains("cpp-redir")) {
         if (isDesktopUser) {
             dynamicLink = "https://web.kyteapp.com/login";
         } else {
-            const linkPrefix = isIOS ? pageConfig.ios : pageConfig.android;
-            const formattedLinkPrefix = linkPrefix.startsWith('http') ? linkPrefix : `https://${linkPrefix}`;
-            dynamicLink = `${formattedLinkPrefix}?${queryParams}`;
+            const platformURL = isIOS ? pageConfig.ios : pageConfig.android;
+            if (!platformURL.startsWith('http')) {
+                dynamicLink = `https://${platformURL}?${queryParams}`;
+            } else {
+                dynamicLink = `${platformURL}?${queryParams}`;
+            }
         }
     } else {
         dynamicLink += `&apn=${classList.contains("catalog-redir") ? "com.kyte.catalog" : classList.contains("control-redir") ? "com.kytecontrol" : "com.kyte"}&ibi=${classList.contains("catalog-redir") ? "com.kytecatalog" : classList.contains("control-redir") ? "com.kytecontrol" : "com.kytepos"}&isi=${classList.contains("catalog-redir") ? "6462521196" : classList.contains("control-redir") ? "6472947922" : "1345983058"}`;
     }
 
-    dynamicLink += `&utm_source=${encodeURIComponent(kyteParams.utm_source)}&utm_medium=${encodeURIComponent(kyteParams.utm_medium)}&utm_campaign=${encodeURIComponent(utmCampaign)}&pt=120346822&ct=${classList.contains("catalog-redir") ? "catalog" : classList.contains("control-redir") ? "control" : "default"}_${utmCampaign}&mt=8`;
+    dynamicLink += `&pt=120346822&ct=${classList.contains("catalog-redir") ? "catalog" : classList.contains("control-redir") ? "control" : "default"}_${utmCampaign}&mt=8`;
 
     return dynamicLink;
 }
+
