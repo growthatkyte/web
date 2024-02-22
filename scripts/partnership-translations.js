@@ -304,6 +304,11 @@ const translations = {
       en: 'Become a partner',
       es: 'Iniciar asociación',
       pt: 'Iniciar parceria'
+    },
+    'where.login.title': {
+        en: 'Already have an account?',
+        es: '¿Ya tienes una cuenta?',
+        pt: 'Já tem uma conta?'
     }
   };
   
@@ -410,6 +415,8 @@ updateElementContent('faq.a.8', userLocale);
 updateElementContent('faq.cta.title', userLocale);
 updateElementContent('faq.cta.description', userLocale);
 updateElementContent('faq.cta.button', userLocale);
+updateElementContent('where.login.title', userLocale);
+
 
 // Get translated content for each form element
 updateElementContent('pfy-input-first_name', userLocale);
