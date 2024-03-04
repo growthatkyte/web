@@ -70,8 +70,8 @@ function redirectUser(config, utmParams, isCPPRedir) {
 }
 
 const appConfig = {
-    'catalog-redir': { apn: 'com.kyte.catalog', ibi: 'com.kytecontrol', isi: '6472947922' },
-    'control-redir': { apn: 'com.kytecontrol', ibi: 'com.kytecatalog', isi: '6462521196' },
+    'catalog-redir': { apn: 'com.kyte.catalog', ibi: 'com.kytecatalog', isi: '6462521196' },
+    'control-redir': { apn: 'com.kytecontrol', ibi: 'com.kytecontrol', isi: '6472947922' },
     'default': { apn: 'com.kyte', ibi: 'com.kytepos', isi: '1345983058' }
 };
 
