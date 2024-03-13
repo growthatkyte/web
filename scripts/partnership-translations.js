@@ -180,9 +180,9 @@ const translations = {
       pt: 'Como e quando sou pago?'
     },
     'faq.a.3': {
-      en: 'We\'ve got you covered! When you earn a referral reward, we\'ll email you and ask how you\'d like to receive your cash. We make payments at the end of every month. As soon as your referral pays for their first month, your earnings start. But remember, we verify and send out payments 60 days after your referral subscribes to a new Kyte plan.',
-      es: 'Nos encargamos de todo. Cuando ganes una comisión por referencias, te enviaremos un correo electrónico preguntándote cómo te gustaría recibir tu dinero. Los pagos se realizan al final de cada mes. Tan pronto como tus referencias paguen por el primer mes, tu comisión se registrará. Pero recuerda, verificamos y realizamos el pago 60 días después de que tu referido haya firmado.',
-      pt: 'Nós cuidamos de tudo. Quando você ganhar uma comissão de indicação, nós te enviaremos um e-mail perguntando como você gostaria de receber seu dinheiro. Os pagamentos são realizados no final de cada mês. Assim que suas indicações pagarem pelo primeiro mês, sua comissão já é registrada. Mas lembre-se, nós verificamos e fazemos o pagamento 60 dias após a sua indicação ter assinado.'
+      en: 'We\'ve got you covered! Upon earning a referral commission, we\'ll contact you via email to arrange your cash payout. Commissions are paid monthly. For monthly subscriptions, commissions are validated and paid after the first renewal, meaning in the second month. For yearly subscriptions, commissions are paid 30 days post-subscription. We conduct a verification process and disburse payments accordingly.',
+      es: 'Nos encargamos de todo. Al ganar una comisión por referido, te contactaremos por correo electrónico para organizar tu pago en efectivo. Las comisiones se pagan mensualmente. Para suscripciones mensuales, las comisiones se validan y pagan después de la primera renovación, es decir, en el segundo mes. Para suscripciones anuales, las comisiones se pagan 30 días después de la suscripción. Realizamos un proceso de verificación y emitimos los pagos correspondientemente.',
+      pt: 'Nós cuidamos de tudo. Ao conquistar uma comissão por indicação, entraremos em contato por e-mail para organizar o seu pagamento em dinheiro. As comissões são pagas mensalmente. Para assinaturas mensais, as comissões são validadas e pagas após a primeira renovação, ou seja, no segundo mês. Para assinaturas anuais, as comissões são pagas 30 dias após a assinatura. Realizamos um processo de verificação e efetuamos os pagamentos de acordo.'
     },
     'faq.q.4': {
       en: 'Do you help with getting referrals?',
@@ -200,9 +200,9 @@ const translations = {
       pt: 'Quando vou ser pago?'
     },
     'faq.a.5': {
-      en: 'As soon as your referral pays for their first month, your earnings start. But remember, we verify and send out payments 60 days after your referral subscribes to a new Kyte plan.',
-      es: 'Tan pronto como tus referencias paguen por el primer mes, tu comisión se registrará. Pero recuerda, verificamos y realizamos el pago 60 días después de que tu referido haya firmado.',
-      pt: 'Assim que suas indicações pagarem pelo primeiro mês, sua comissão já é registrada. Mas lembre-se, nós verificamos e fazemos o pagamento 60 dias após a sua indicação ter assinado.'
+      en: 'Your commission becomes eligible once your referral completes their first renewal, not just the initial payment. To clarify, we begin the verification process and schedule your commission for payout 60 days after this first renewal under a new Kyte plan.',
+      es: 'Tu comisión se vuelve elegible una vez que tu referido completa su primera renovación, no solo el pago inicial. Para aclarar, comenzamos el proceso de verificación y programamos tu pago de comisión 60 días después de esta primera renovación bajo un nuevo plan Kyte.',
+      pt: '"Sua comissão se torna elegível uma vez que sua indicação completa a primeira renovação, não apenas o pagamento inicial. Para esclarecer, iniciamos o processo de verificação e programamos o pagamento da sua comissão 60 dias após essa primeira renovação sob um novo plano Kyte.'
     },
     'faq.q.6': {
       en: 'How do you keep track of who I refer?',
