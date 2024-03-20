@@ -56,6 +56,9 @@
     "/gerenciar/gestao-de-despesas": {
         "redirectClass": "control-redir"
     },
+    "/gerenciar/gestao-de-fornecedores": {
+        "redirectClass": "control-redir"
+    },
     "/managing/expense-management": {
         "redirectClass": "control-redir"
     },
