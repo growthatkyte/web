@@ -62,6 +62,9 @@
     "/managing/expense-management": {
         "redirectClass": "control-redir"
     },
+    "/managing/suppliers-management-system": {
+        "redirectClass": "control-redir"
+    },
     "/administrar/gestion-de-gastos": {
         "redirectClass": "control-redir"
     },
