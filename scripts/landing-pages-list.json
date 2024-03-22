@@ -11,7 +11,7 @@
     "/sales/selling-on-facebook": {
         "redirectClass": "catalog-redir"
     },
-    "/sales/online-orders": {
+    "/selling/online-orders": {
         "redirectClass": "catalog-redir"
     },
     "/engage/digital-menu-maker": {
@@ -62,10 +62,13 @@
     "/managing/expense-management": {
         "redirectClass": "control-redir"
     },
-    "/managing/suppliers-management-system": {
+    "/managing/supplier-management-system": {
         "redirectClass": "control-redir"
     },
     "/administrar/gestion-de-gastos": {
+        "redirectClass": "control-redir"
+    },
+    "/administrar/gestionar-proveedores": {
         "redirectClass": "control-redir"
     },
     "/selling/receipts": {
