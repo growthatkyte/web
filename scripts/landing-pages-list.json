@@ -11,19 +11,13 @@
     "/sales/selling-on-facebook": {
         "redirectClass": "catalog-redir"
     },
-    "/selling/online-orders": {
-        "redirectClass": "catalog-redir"
-    },
-    "/engage/digital-menu-maker": {
+    "/sales/online-orders": {
         "redirectClass": "catalog-redir"
     },
     "/vender/vender-por-whatsapp": {
         "redirectClass": "catalog-redir"
     },
     "/fidelizar/catalogo-online": {
-        "redirectClass": "catalog-redir"
-    },
-    "/fidelice/menu-digital": {
         "redirectClass": "catalog-redir"
     },
     "/venda/pedido-online": {
@@ -47,28 +41,16 @@
     "/fidelizar/catalogo-de-produtos": {
         "redirectClass": "catalog-redir"
     },
-    "/fidelizar/cardapio-digital": {
-        "redirectClass": "catalog-redir"
-    },
     "/fidelizar/vitrine-virtual": {
         "redirectClass": "catalog-redir"
     },
     "/gerenciar/gestao-de-despesas": {
         "redirectClass": "control-redir"
     },
-    "/gerenciar/gestao-de-fornecedores": {
-        "redirectClass": "control-redir"
-    },
     "/managing/expense-management": {
         "redirectClass": "control-redir"
     },
-    "/managing/supplier-management-system": {
-        "redirectClass": "control-redir"
-    },
     "/administrar/gestion-de-gastos": {
-        "redirectClass": "control-redir"
-    },
-    "/administrar/gestionar-proveedores": {
         "redirectClass": "control-redir"
     },
     "/selling/receipts": {
@@ -90,5 +72,65 @@
         "redirectClass": "cpp-redir",
         "ios": "https://apps.apple.com/br/app/kyte-pdv-para-loja-e-estoque/id1345983058?platform=iphone&ppid=ee74035a-eec8-4d3c-aa54-2c53386beb3b",
         "android": "https://play.google.com/store/apps/details?id=com.kyte&listing=recibos-pt"
+    },
+    "/selling/pos-system": {
+        "redirectClass": "cpp-redir",
+        "ios": "https://apps.apple.com/us/app/kyte-retail-point-of-sales/id1345983058?platform=iphone&ppid=d035d5da-fead-43ab-9af9-de6247b9e820",
+        "android": "https://play.google.com/store/apps/details?id=com.kyte&listing=sell-en"
+    },
+    "/vender/punto-de-venta": {
+        "redirectClass": "cpp-redir",
+        "ios": "https://apps.apple.com/mx/app/kyte-tpv-inventario-y-ventas/id1345983058?platform=iphone&ppid=aadfa05b-3ab4-4b01-9657-29a79a55b53b",
+        "android": "https://play.google.com/store/apps/details?id=com.kyte&listing=vender-es"
+    },
+    "/vender/sistema-pdv": {
+        "redirectClass": "cpp-redir",
+        "ios": "https://apps.apple.com/br/app/kyte-pdv-e-gest%C3%A3o-de-loja/id1345983058?platform=iphone&ppid=76f05d0f-f199-4228-85e3-9ded8b5bc56a",
+        "android": "https://play.google.com/store/apps/details?id=com.kyte&listing=vender-pt"
+    },
+    "/managing/inventory": {
+        "redirectClass": "cpp-redir",
+        "ios": "https://apps.apple.com/us/app/kyte-retail-point-of-sales/id1345983058?platform=iphone&ppid=dc87e007-acd5-4d22-8e7a-38bc97ee6840",
+        "android": "https://play.google.com/store/apps/details?id=com.kyte&listing=inventory-en"
+    },
+    "/administrar/control-de-inventario": {
+        "redirectClass": "cpp-redir",
+        "ios": "https://apps.apple.com/mx/app/kyte-tpv-inventario-y-ventas/id1345983058?platform=iphone&ppid=0c10967c-c080-48e7-8b1d-4c3c28128b53",
+        "android": "https://play.google.com/store/apps/details?id=com.kyte&listing=inventario-es"
+    },
+    "/gerenciar/controle-de-estoque": {
+        "redirectClass": "cpp-redir",
+        "ios": "https://apps.apple.com/br/app/kyte-pdv-e-gest%C3%A3o-de-loja/id1345983058?platform=iphone&ppid=773f4417-e63f-4407-8f46-43c3d72b098a",
+        "android": "https://play.google.com/store/apps/details?id=com.kyte&listing=estoque-pt"
+    },
+    "/engaging/pay-later-system": {
+        "redirectClass": "cpp-redir",
+        "ios": "https://apps.apple.com/us/app/kyte-retail-point-of-sales/id1345983058?platform=iphone&ppid=821f7f67-81b6-4153-85f2-87ea5510b0c9",
+        "android": "https://play.google.com/store/apps/details?id=com.kyte&listing=management-en"
+    },
+    "/fidelice/ventas-a-credito": {
+        "redirectClass": "cpp-redir",
+        "ios": "https://apps.apple.com/br/app/kyte-pdv-para-loja-e-estoque/id1345983058?platform=iphone&ppid=ee74035a-eec8-4d3c-aa54-2c53386beb3b",
+        "android": "https://play.google.com/store/apps/details?id=com.kyte&listing=gestion-es"
+    },
+    "/fidelizar/controle-de-fiado": {
+        "redirectClass": "cpp-redir",
+        "ios": "https://apps.apple.com/mx/app/kyte-tpv-inventario-y-ventas/id1345983058?platform=iphone&ppid=49ec18df-3d6d-478f-a03a-14dbc658a454",
+        "android": "https://play.google.com/store/apps/details?id=com.kyte&listing=gestao-pt"
+    },
+    "/engage/digital-menu-maker": {
+        "redirectClass": "cpp-redir",
+        "ios": "https://apps.apple.com/us/app/kyte-catalog-and-storefront/id6462521196?platform=iphone&ppid=80359f18-a0b1-438a-a842-e6bf34bd93ae",
+        "android": "https://play.google.com/store/apps/details?id=com.kyte.catalog&listing=menu-en"
+    },
+    "/fidelice/menu-digital": {
+        "redirectClass": "cpp-redir",
+        "ios": "https://apps.apple.com/mx/app/kyte-cat%C3%A1logo-pedidos-ventas/id6462521196?platform=iphone&ppid=72a426d6-22cc-4e35-952d-d9122af1abda",
+        "android": "https://play.google.com/store/apps/details?id=com.kyte.catalog&listing=menu-es"
+    },
+    "/fidelizar/cardapio-digital": {
+        "redirectClass": "cpp-redir",
+        "ios": "https://apps.apple.com/br/app/kyte-cat%C3%A1logo-vitrine-virtual/id6462521196?platform=iphone&ppid=c79a1201-9399-4b29-b8b3-6949267034fa",
+        "android": "https://play.google.com/store/apps/details?id=com.kyte.catalog&listing=cardapio-pt"
     }
 }

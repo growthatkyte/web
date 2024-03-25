@@ -5,6 +5,14 @@ async function initializeLandingPageRedirection() {
         if (!response.ok) throw new Error('Failed to fetch landing pages configuration');
         const config = await response.json();
 
+        const utmParams = getUTMParams();
+        if (utmParams['utm_campaign'].includes('slg')) {
+            const checkoutUrl = "https://checkout.kyteapp.com";
+            const queryParams = new URLSearchParams(utmParams).toString();
+            window.location.href = `${checkoutUrl}?${queryParams}`;
+            return;
+        }
+
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => applyClasses(config));
         } else {
