@@ -53,6 +53,15 @@
     "/administrar/gestion-de-gastos": {
         "redirectClass": "control-redir"
     },
+    "/managing/supplier-management-system": {
+        "redirectClass": "control-redir"
+    },
+    "/administrar/gestionar-proveedores": {
+        "redirectClass": "control-redir"
+    },
+    "/gerenciar/gestao-de-fornecedores": {
+        "redirectClass": "control-redir"
+    },
     "/selling/receipts": {
         "redirectClass": "cpp-redir",
         "ios": "https://apps.apple.com/us/app/kyte-pos-inventory-system/id1345983058?platform=iphone&ppid=02b18316-746d-4b2c-9537-0bcebfa0e7c0",
