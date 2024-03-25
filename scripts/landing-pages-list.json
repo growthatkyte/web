@@ -11,7 +11,7 @@
     "/sales/selling-on-facebook": {
         "redirectClass": "catalog-redir"
     },
-    "/sales/online-orders": {
+    "/selling/online-orders": {
         "redirectClass": "catalog-redir"
     },
     "/vender/vender-por-whatsapp": {
