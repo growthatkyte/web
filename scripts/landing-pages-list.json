@@ -11,7 +11,7 @@
     "/sales/selling-on-facebook": {
         "redirectClass": "catalog-redir"
     },
-    "/sales/online-orders": {
+    "/selling/online-orders": {
         "redirectClass": "catalog-redir"
     },
     "/vender/vender-por-whatsapp": {
@@ -119,12 +119,12 @@
     },
     "/fidelice/ventas-a-credito": {
         "redirectClass": "cpp-redir",
-        "ios": "https://apps.apple.com/br/app/kyte-pdv-para-loja-e-estoque/id1345983058?platform=iphone&ppid=ee74035a-eec8-4d3c-aa54-2c53386beb3b",
+        "ios": "https://apps.apple.com/mx/app/kyte-punto-de-venta-con-stock/id1345983058?platform=iphone&ppid=49ec18df-3d6d-478f-a03a-14dbc658a454",
         "android": "https://play.google.com/store/apps/details?id=com.kyte&listing=gestion-es"
     },
     "/fidelizar/controle-de-fiado": {
         "redirectClass": "cpp-redir",
-        "ios": "https://apps.apple.com/mx/app/kyte-tpv-inventario-y-ventas/id1345983058?platform=iphone&ppid=49ec18df-3d6d-478f-a03a-14dbc658a454",
+        "ios": "https://apps.apple.com/br/app/kyte-pdv-e-gest%C3%A3o-de-loja/id1345983058?platform=iphone&ppid=2e45ba55-fc97-4e12-9d2f-3f39803d7181",
         "android": "https://play.google.com/store/apps/details?id=com.kyte&listing=gestao-pt"
     },
     "/engage/digital-menu-maker": {
