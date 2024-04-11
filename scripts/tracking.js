@@ -7,7 +7,7 @@ async function initializeLandingPageRedirection() {
 
         const utmParams = getUTMParams();
         if (utmParams['utm_campaign'].includes('slg')) {
-            const checkoutUrl = "https://checkout.kyteapp.com";
+            const checkoutUrl = "https://checkout.auth.kyteapp.com";
             const queryParams = new URLSearchParams(utmParams).toString();
             window.location.href = `${checkoutUrl}?${queryParams}`;
             return;
@@ -86,7 +86,7 @@ const appConfig = {
 
 function createDynamicLink(redirectClass, utmParams) {
     const base = 'https://kyteapp.page.link/';
-    const loginPageURL = "https://web.kyteapp.com/login";
+    const loginPageURL = "https://web.auth.kyteapp.com";
     const queryParams = new URLSearchParams(utmParams).toString();
     const link = `${loginPageURL}?${queryParams}`;
     const { apn, ibi, isi } = appConfig[redirectClass] || appConfig['default'];
@@ -98,7 +98,7 @@ function handleCPPRedirection(config, isMobile) {
     if (config.redirectClass === 'cpp-redir') {
         if (!isMobile) {
             const queryParams = new URLSearchParams(getUTMParams()).toString();
-            return `https://web.kyteapp.com/login?${queryParams}`;
+            return `https://web.auth.kyteapp.com?${queryParams}`;
         }
         return isIOSDevice() ? config.ios : config.android;
     } else {
