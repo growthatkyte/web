@@ -39,20 +39,28 @@ function applyClasses(config) {
 function setupClickHandler(config) {
     document.addEventListener('click', event => {
         const target = event.target.closest('input[type="submit"], button[type="submit"]');
-        if (target && config[normalizePath(window.location.pathname)]) {
+        if (target) {
             event.preventDefault();
-            redirectUser(config, getUTMParams(), target);
+            handleRedirection(config, getUTMParams(), target);
         }
     });
 }
 
-function redirectUser(config, utmParams, target) {
-    const redirectType = target.classList.contains('cpp-redir') ? handleCPPRedirection : createDynamicLink;
-    window.location.href = redirectType(config[normalizePath(window.location.pathname)].redirectClass, utmParams);
-}
+function handleRedirection(config, utmParams, target) {
+    const path = normalizePath(window.location.pathname);
+    const pageConfig = config[path] || appConfig['default'];
+    const redirectClass = target.classList.contains('cpp-redir') ? 'cpp-redir' :
+        target.classList.contains('catalog-redir') ? 'catalog-redir' :
+            target.classList.contains('control-redir') ? 'control-redir' :
+                'default';
 
+    const redirectUrl = redirectClass === 'cpp-redir' ? handleCPPRedirection(pageConfig, utmParams) :
+        createDynamicLink(redirectClass, utmParams);
+
+    window.location.href = redirectUrl;
+}
 function createDynamicLink(redirectClass, utmParams) {
-    const { apn, ibi, isi } = appConfig[redirectClass] || appConfig['default'];
+    const { apn, ibi, isi } = appConfig[redirectClass];
     const dynamicParams = new URLSearchParams({
         link: encodeURIComponent(`https://web.auth.kyteapp.com?${new URLSearchParams(utmParams).toString()}`),
         apn, ibi, isi, ct: `${redirectClass}_${utmParams.utm_campaign}`
@@ -60,12 +68,13 @@ function createDynamicLink(redirectClass, utmParams) {
     return `https://kyteapp.page.link/?${dynamicParams}`;
 }
 
-function handleCPPRedirection(redirectClass, utmParams) {
+function handleCPPRedirection(pageConfig, utmParams) {
     if (!isMobileDevice()) {
         return `https://web.auth.kyteapp.com?${new URLSearchParams(utmParams).toString()}`;
     }
-    return isIOSDevice() ? appConfig[redirectClass].ios : appConfig[redirectClass].android;
+    return isIOSDevice() ? pageConfig.ios : pageConfig.android;
 }
+
 
 function normalizePath(path) {
     return path.endsWith('/') ? path.slice(0, -1) : path;
