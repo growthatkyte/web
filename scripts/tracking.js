@@ -38,13 +38,21 @@ function normalizePath(path) {
 function applyClasses(config) {
     const path = normalizePath(window.location.pathname);
     const buttons = document.querySelectorAll('input[type="submit"], button[type="submit"]');
-    Object.keys(config).forEach(key => {
-        if (normalizePath(key) === path) {
-            const redirectClass = config[key].redirectClass;
-            buttons.forEach(button => button.classList.add(redirectClass));
-            console.log(`Applied '${redirectClass}' to buttons for path: ${path}`);
-        }
-    });
+    const defaultRedirectClass = 'default-redir';
+
+    const configExists = Object.keys(config).some(key => normalizePath(key) === path);
+    if (configExists) {
+        Object.keys(config).forEach(key => {
+            if (normalizePath(key) === path) {
+                const redirectClass = config[key].redirectClass;
+                buttons.forEach(button => button.classList.add(redirectClass));
+                console.log(`Applied '${redirectClass}' to buttons for path: ${path}`);
+            }
+        });
+    } else {
+        buttons.forEach(button => button.classList.add(defaultRedirectClass));
+        console.log(`Applied '${defaultRedirectClass}' to all buttons as no specific config exists for path: ${path}`);
+    }
 }
 
 function handleRedirection(target, config) {
