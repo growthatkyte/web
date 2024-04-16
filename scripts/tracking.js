@@ -38,18 +38,21 @@ function normalizePath(path) {
 function applyClasses(config) {
     const path = normalizePath(window.location.pathname);
     const buttons = document.querySelectorAll('input[type="submit"], button[type="submit"]');
-    buttons.forEach(button => {
-        const configKey = Object.keys(config).find(key => normalizePath(key) === path);
-        const redirectClass = configKey ? config[configKey].redirectClass : 'default-redir';
-        button.classList.add(redirectClass);
-        console.log(`Applied '${redirectClass}' to buttons for path: ${path}`);
+    Object.keys(config).forEach(key => {
+        if (normalizePath(key) === path) {
+            const redirectClass = config[key].redirectClass;
+            buttons.forEach(button => button.classList.add(redirectClass));
+            console.log(`Applied '${redirectClass}' to buttons for path: ${path}`);
+        }
     });
 }
 
 function handleRedirection(target, config) {
     const path = normalizePath(window.location.pathname);
-    const redirectClass = target.classList.contains('catalog-redir') || target.classList.contains('cpp-redir') || target.classList.contains('control-redir') ? target.className : 'default-redir';
-    const pageConfig = config[path] || appConfig[redirectClass];
+    const pageConfig = config[normalizePath(path)];
+
+    console.log(`Current path: ${path}`);
+    console.log(`Configuration found:`, pageConfig);
 
     if (!pageConfig) {
         console.error('Configuration missing for this page:', path);
