@@ -1,4 +1,7 @@
 {
+    "/": {
+        "redirectClass": "default-redir"
+    },
     "/selling/whatsapp-sales": {
         "redirectClass": "catalog-redir"
     },
