@@ -38,29 +38,18 @@ function normalizePath(path) {
 function applyClasses(config) {
     const path = normalizePath(window.location.pathname);
     const buttons = document.querySelectorAll('input[type="submit"], button[type="submit"]');
-    const defaultRedirectClass = 'default-redir';
-
-    const configExists = Object.keys(config).some(key => normalizePath(key) === path);
-    if (configExists) {
-        Object.keys(config).forEach(key => {
-            if (normalizePath(key) === path) {
-                const redirectClass = config[key].redirectClass;
-                buttons.forEach(button => button.classList.add(redirectClass));
-                console.log(`Applied '${redirectClass}' to buttons for path: ${path}`);
-            }
-        });
-    } else {
-        buttons.forEach(button => button.classList.add(defaultRedirectClass));
-        console.log(`Applied '${defaultRedirectClass}' to all buttons as no specific config exists for path: ${path}`);
-    }
+    buttons.forEach(button => {
+        const configKey = Object.keys(config).find(key => normalizePath(key) === path);
+        const redirectClass = configKey ? config[configKey].redirectClass : 'default-redir';
+        button.classList.add(redirectClass);
+        console.log(`Applied '${redirectClass}' to buttons for path: ${path}`);
+    });
 }
 
 function handleRedirection(target, config) {
     const path = normalizePath(window.location.pathname);
-    const pageConfig = config[normalizePath(path)];
-
-    console.log(`Current path: ${path}`);
-    console.log(`Configuration found:`, pageConfig);
+    const redirectClass = target.classList.contains('catalog-redir') || target.classList.contains('cpp-redir') || target.classList.contains('control-redir') ? target.className : 'default-redir';
+    const pageConfig = config[path] || appConfig[redirectClass];
 
     if (!pageConfig) {
         console.error('Configuration missing for this page:', path);
