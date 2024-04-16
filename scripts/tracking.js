@@ -59,13 +59,19 @@ function handleRedirection(config, utmParams, target) {
 
     window.location.href = redirectUrl;
 }
+
 function createDynamicLink(redirectClass, utmParams) {
     const { apn, ibi, isi } = appConfig[redirectClass];
+    const baseLink = "https://web.auth.kyteapp.com";
+    const queryParams = new URLSearchParams(utmParams).toString();
+
+    const link = `${baseLink}?${encodeURIComponent(queryParams)}`;
     const dynamicParams = new URLSearchParams({
-        link: encodeURIComponent(`https://web.auth.kyteapp.com?${new URLSearchParams(utmParams).toString()}`),
+        link: link,
         apn, ibi, isi, ct: `${redirectClass}_${utmParams.utm_campaign}`
     });
-    return `https://kyteapp.page.link/?${dynamicParams}`;
+
+    return `https://kyteapp.page.link/?${dynamicParams.toString()}`;
 }
 
 function handleCPPRedirection(pageConfig, utmParams) {
