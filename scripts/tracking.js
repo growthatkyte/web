@@ -63,15 +63,11 @@ function createDynamicLink(redirectClass, utmParams) {
         ct: `${redirectClass}_${utmParams.utm_campaign}`
     });
 
-    if (utmParams.utm_source) dynamicParams.append('utm_source', utmParams.utm_source);
-    if (utmParams.utm_medium) dynamicParams.append('utm_medium', utmParams.utm_medium);
-    if (utmParams.utm_campaign) dynamicParams.append('utm_campaign', utmParams.utm_campaign);
-    if (utmParams.gclid) dynamicParams.append('gclid', utmParams.gclid);
+    const unencodedQueryParams = Object.keys(utmParams).map(key => `${key}=${utmParams[key]}`).join('&');
+    const finalUrl = `https://kyteapp.page.link/?${dynamicParams.toString()}&${unencodedQueryParams}`;
 
-    return `https://kyteapp.page.link/?${dynamicParams.toString()}`;
+    return finalUrl;
 }
-
-
 
 function handleCPPRedirection(pageConfig, utmParams) {
     if (!isMobileDevice()) {
