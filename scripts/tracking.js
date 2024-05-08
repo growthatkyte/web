@@ -1,7 +1,9 @@
 async function initializeLandingPageRedirection() {
     try {
         const config = await fetchConfig();
-        document.addEventListener('DOMContentLoaded', () => applyClassesAndSetupRedirection(config));
+
+        document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', () => applyClasses(config)) : applyClasses(config);
+        setupClickHandler(config);
     } catch (error) {
         console.error('Initialization failed:', error);
     }
@@ -13,16 +15,12 @@ async function fetchConfig() {
     return response.json();
 }
 
-function applyClassesAndSetupRedirection(config) {
-    applyClasses(config);
-    setupClickHandler(config);
-}
-
 function applyClasses(config) {
     const path = normalizePath(window.location.pathname);
     document.querySelectorAll('input[type="submit"], button[type="submit"]').forEach(button => {
         if (config[path]) {
             button.classList.add(config[path].redirectClass);
+            console.log(`Applied '${config[path].redirectClass}' to buttons for path: ${path}`);
         }
     });
 }
@@ -39,42 +37,59 @@ function setupClickHandler(config) {
 
 function handleRedirection(config, utmParams, target) {
     const path = normalizePath(window.location.pathname);
-    const pageConfig = config[path] || config['default'];
-    const redirectUrl = isMobileDevice() ?
-        (isIOSDevice() ? pageConfig.ios : pageConfig.android) :
-        createDynamicLink(pageConfig, utmParams);
+    const pageConfig = config[path] || appConfig['default'];
+    const redirectClass = target.classList.contains('cpp-redir') ? 'cpp-redir' :
+        target.classList.contains('catalog-redir') ? 'catalog-redir' :
+            target.classList.contains('control-redir') ? 'control-redir' :
+                'default';
+
+    const redirectUrl = redirectClass === 'cpp-redir' ? handleCPPRedirection(pageConfig, utmParams) :
+        createDynamicLink(redirectClass, utmParams);
+
     window.location.href = redirectUrl;
 }
 
-function createDynamicLink(pageConfig, utmParams) {
+function createDynamicLink(redirectClass, utmParams) {
+    const { apn, ibi, isi } = appConfig[redirectClass];
     const baseLink = "https://web.auth.kyteapp.com/signup";
-    const encodedParams = new URLSearchParams(utmParams).toString();
-    const link = `${baseLink}?${encodeURIComponent(encodedParams)}`;
+    const encodedQueryParams = new URLSearchParams(utmParams).toString();
+    const unencodedQueryParams = Object.keys(utmParams).map(key => `${key}=${utmParams[key]}`).join('&');
+
+    const link = `${baseLink}?${encodeURIComponent(encodedQueryParams)}`;
     const dynamicParams = new URLSearchParams({
-        link,
-        apn: pageConfig.apn,
-        ibi: pageConfig.ibi,
-        isi: pageConfig.isi,
-        ct: pageConfig.utm_campaign,
+        link: link,
+        apn, ibi, isi,
+        ct: `${redirectClass}_${utmParams.utm_campaign}`,
         utm_source: utmParams.utm_source,
         utm_medium: utmParams.utm_medium,
         utm_campaign: utmParams.utm_campaign,
         gclid: utmParams.gclid
     });
+
     return `https://kyteapp.page.link/?${dynamicParams.toString()}`;
+}
+
+
+function handleCPPRedirection(pageConfig, utmParams) {
+    if (!isMobileDevice()) {
+        return `https://web.auth.kyteapp.com?${new URLSearchParams(utmParams).toString()}`;
+    }
+    return isIOSDevice() ? pageConfig.ios : pageConfig.android;
+}
+
+
+function normalizePath(path) {
+    return path.endsWith('/') ? path.slice(0, -1) : path;
 }
 
 function getUTMParams() {
     const params = new URLSearchParams(location.search);
     const utmParams = {};
-    ['utm_source', 'utm_medium', 'utm_campaign', 'gclid'].forEach(param => {
-        utmParams[param] = params.get(param) || '';
+    const path = normalizePath(window.location.pathname.substring(1));
+    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(param => {
+        utmParams[param] = params.get(param) || (param === 'utm_campaign' ? path : '');
     });
     return utmParams;
-}
-
-function normalizePath(path) {
-    return path.endsWith('/') ? path.slice(0, -1) : path;
 }
 
 function isMobileDevice() {
@@ -84,5 +99,12 @@ function isMobileDevice() {
 function isIOSDevice() {
     return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 }
+
+
+const appConfig = {
+    'catalog-redir': { apn: 'com.kyte.catalog', ibi: 'com.kytecatalog', isi: '6462521196' },
+    'control-redir': { apn: 'com.kytecontrol', ibi: 'com.kytecontrol', isi: '6472947922' },
+    'default': { apn: 'com.kyte', ibi: 'com.kytepos', isi: '1345983058' }
+};
 
 initializeLandingPageRedirection();
