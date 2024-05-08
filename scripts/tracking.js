@@ -58,15 +58,18 @@ function createDynamicLink(redirectClass, utmParams) {
 
     const encodedLink = encodeURIComponent(baseLink);
 
-    const dynamicParams = new URLSearchParams();
-    dynamicParams.set('link', encodedLink);
-    dynamicParams.set('apn', apn);
-    dynamicParams.set('ibi', ibi);
-    dynamicParams.set('isi', isi);
-    dynamicParams.set('ct', `${redirectClass}_${utmParams.utm_campaign}`);
+    const dynamicParams = new URLSearchParams({
+        link: encodedLink,
+        apn: apn,
+        ibi: ibi,
+        isi: isi,
+        ct: `${redirectClass}_${utmParams.utm_campaign}`
+    });
 
-    Object.keys(utmParams).forEach(key => {
-        dynamicParams.set(key, utmParams[key]);
+    Object.entries(utmParams).forEach(([key, value]) => {
+        if (value) {
+            dynamicParams.set(key, value);
+        }
     });
 
     return `https://kyteapp.page.link/?${dynamicParams.toString()}`;
