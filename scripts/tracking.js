@@ -1,6 +1,13 @@
 async function initializeLandingPageRedirection() {
     try {
         const config = await fetchConfig();
+        const utmParams = getUTMParams();
+
+        if (utmParams['utm_campaign'].includes('slg')) {
+            redirectToCheckout(utmParams);
+            return;
+        }
+
         document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', () => applyClasses(config)) : applyClasses(config);
         setupClickHandler(config);
     } catch (error) {
@@ -12,6 +19,11 @@ async function fetchConfig() {
     const response = await fetch('https://growthatkyte.github.io/web/scripts/landing-pages-list.json');
     if (!response.ok) throw new Error('Failed to fetch landing pages configuration');
     return response.json();
+}
+
+function redirectToCheckout(utmParams) {
+    const checkoutUrl = "https://checkout.auth.kyteapp.com";
+    window.location.href = `${checkoutUrl}?${new URLSearchParams(utmParams).toString()}`;
 }
 
 function applyClasses(config) {
@@ -37,62 +49,66 @@ function setupClickHandler(config) {
 function handleRedirection(config, utmParams, target) {
     const path = normalizePath(window.location.pathname);
     const pageConfig = config[path] || appConfig['default'];
-    const redirectClass = pageConfig.redirectClass || 'default';
-    const redirectUrl = createDynamicLink(redirectClass, utmParams);
+    const redirectClass = target.classList.contains('cpp-redir') ? 'cpp-redir' :
+        target.classList.contains('catalog-redir') ? 'catalog-redir' :
+            target.classList.contains('control-redir') ? 'control-redir' :
+                'default';
+
+    const redirectUrl = redirectClass === 'cpp-redir' ? handleCPPRedirection(pageConfig, utmParams) :
+        createDynamicLink(redirectClass, utmParams);
 
     window.location.href = redirectUrl;
 }
 
-function paramsToObject(entries) {
-    const result = {}
-    for (const [key, value] of entries) {
-        result[key] = value;
-    }
-    return result;
-}
-
 function createDynamicLink(redirectClass, utmParams) {
     const { apn, ibi, isi } = appConfig[redirectClass];
+    const baseLink = "https://web.auth.kyteapp.com";
+    const queryParams = new URLSearchParams(utmParams).toString();
 
-    const baseLink = `https://web.auth.kyteapp.com?${new URLSearchParams(utmParams)}`;
-
-    const encodedLink = encodeURIComponent(baseLink);
-
+    const link = `${baseLink}?${encodeURIComponent(queryParams)}`;
     const dynamicParams = new URLSearchParams({
-        link: encodedLink,
-        apn: apn,
-        ibi: ibi,
-        isi: isi,
-        ct: `${redirectClass}_${utmParams.utm_campaign}`
-    });
-
-    Object.entries(utmParams).forEach(([key, value]) => {
-        if (value) {
-            dynamicParams.set(key, value);
-        }
+        link: link,
+        apn, ibi, isi, ct: `${redirectClass}_${utmParams.utm_campaign}`
     });
 
     return `https://kyteapp.page.link/?${dynamicParams.toString()}`;
 }
 
-function getUTMParams() {
-    const params = new URLSearchParams(location.search);
-    const storageParams = new URLSearchParams(localStorage.getItem('utmParams'));
-    const utmParams = {};
-    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid'].forEach(param => {
-        utmParams[param] = params.get(param) || storageParams.get(param) || '';
-    });
-    return utmParams;
+function handleCPPRedirection(pageConfig, utmParams) {
+    if (!isMobileDevice()) {
+        return `https://web.auth.kyteapp.com?${new URLSearchParams(utmParams).toString()}`;
+    }
+    return isIOSDevice() ? pageConfig.ios : pageConfig.android;
 }
+
 
 function normalizePath(path) {
     return path.endsWith('/') ? path.slice(0, -1) : path;
 }
 
+function getUTMParams() {
+    const params = new URLSearchParams(location.search);
+    const utmParams = {};
+    const path = normalizePath(window.location.pathname.substring(1));
+    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(param => {
+        utmParams[param] = params.get(param) || (param === 'utm_campaign' ? path : '');
+    });
+    return utmParams;
+}
+
+function isMobileDevice() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+function isIOSDevice() {
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+}
+
+
 const appConfig = {
     'catalog-redir': { apn: 'com.kyte.catalog', ibi: 'com.kytecatalog', isi: '6462521196' },
     'control-redir': { apn: 'com.kytecontrol', ibi: 'com.kytecontrol', isi: '6472947922' },
-    'default': { apn: 'com.kyte', ibi: 'com.kytepos', isi: '1345983058', redirectClass: 'default' }
+    'default': { apn: 'com.kyte', ibi: 'com.kytepos', isi: '1345983058' }
 };
 
 initializeLandingPageRedirection();
