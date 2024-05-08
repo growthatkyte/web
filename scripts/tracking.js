@@ -85,7 +85,7 @@ function getUTMParams() {
     const params = new URLSearchParams(location.search);
     const utmParams = {};
     const path = normalizePath(window.location.pathname.substring(1));
-    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(param => {
+    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid'].forEach(param => {
         utmParams[param] = params.get(param) || (param === 'utm_campaign' ? path : '');
     });
     return utmParams;
