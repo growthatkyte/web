@@ -54,21 +54,19 @@ function paramsToObject(entries) {
 function createDynamicLink(redirectClass, utmParams) {
     const { apn, ibi, isi } = appConfig[redirectClass];
 
-    const queryParams = new URLSearchParams(utmParams);
-    const baseLink = `https://web.auth.kyteapp.com?${queryParams.toString()}`;
+    const baseLink = `https://web.auth.kyteapp.com?${new URLSearchParams(utmParams)}`;
 
     const encodedLink = encodeURIComponent(baseLink);
 
-    const dynamicParams = new URLSearchParams({
-        link: encodedLink,
-        apn: apn,
-        ibi: ibi,
-        isi: isi,
-        ct: `${redirectClass}_${utmParams.utm_campaign}`
-    });
+    const dynamicParams = new URLSearchParams();
+    dynamicParams.set('link', encodedLink);
+    dynamicParams.set('apn', apn);
+    dynamicParams.set('ibi', ibi);
+    dynamicParams.set('isi', isi);
+    dynamicParams.set('ct', `${redirectClass}_${utmParams.utm_campaign}`);
 
-    queryParams.forEach((value, key) => {
-        dynamicParams.append(key, value);
+    Object.keys(utmParams).forEach(key => {
+        dynamicParams.set(key, utmParams[key]);
     });
 
     return `https://kyteapp.page.link/?${dynamicParams.toString()}`;
