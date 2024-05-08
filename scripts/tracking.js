@@ -1,7 +1,6 @@
 async function initializeLandingPageRedirection() {
     try {
         const config = await fetchConfig();
-
         document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', () => applyClasses(config)) : applyClasses(config);
         setupClickHandler(config);
     } catch (error) {
@@ -38,66 +37,55 @@ function setupClickHandler(config) {
 function handleRedirection(config, utmParams, target) {
     const path = normalizePath(window.location.pathname);
     const pageConfig = config[path] || appConfig['default'];
-    const redirectClass = target.classList.contains('cpp-redir') ? 'cpp-redir' :
-        target.classList.contains('catalog-redir') ? 'catalog-redir' :
-            target.classList.contains('control-redir') ? 'control-redir' :
-                'default';
-
-    const redirectUrl = redirectClass === 'cpp-redir' ? handleCPPRedirection(pageConfig, utmParams) :
-        createDynamicLink(redirectClass, utmParams);
+    const redirectClass = pageConfig.redirectClass || 'default';
+    const redirectUrl = createDynamicLink(redirectClass, utmParams);
 
     window.location.href = redirectUrl;
 }
 
+function paramsToObject(entries) {
+    const result = {}
+    for (const [key, value] of entries) {
+        result[key] = value;
+    }
+    return result;
+}
+
 function createDynamicLink(redirectClass, utmParams) {
     const { apn, ibi, isi } = appConfig[redirectClass];
-    const baseLink = "https://web.auth.kyteapp.com";
-    const queryParams = new URLSearchParams(utmParams).toString();
+    const queryParams = new URLSearchParams(utmParams)
+    const entries = queryParams.entries()
+    const queryParamsToString = queryParams.toString();
 
-    const link = `${baseLink}?${encodeURIComponent(queryParams)}`;
+    const link = `https://web.auth.kyteapp.com?${encodeURIComponent(queryParamsToString)}`;
+
     const dynamicParams = new URLSearchParams({
         link: link,
-        apn, ibi, isi, ct: `${redirectClass}_${utmParams.utm_campaign}`
+        apn, ibi, isi, ct: `${redirectClass}_${utmParams.utm_campaign}`,
+        ...paramsToObject(entries)
     });
 
     return `https://kyteapp.page.link/?${dynamicParams.toString()}`;
 }
 
-function handleCPPRedirection(pageConfig, utmParams) {
-    if (!isMobileDevice()) {
-        return `https://web.auth.kyteapp.com?${new URLSearchParams(utmParams).toString()}`;
-    }
-    return isIOSDevice() ? pageConfig.ios : pageConfig.android;
+function getUTMParams() {
+    const params = new URLSearchParams(location.search);
+    const storageParams = new URLSearchParams(localStorage.getItem('utmParams'));
+    const utmParams = {};
+    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid'].forEach(param => {
+        utmParams[param] = params.get(param) || storageParams.get(param) || '';
+    });
+    return utmParams;
 }
-
 
 function normalizePath(path) {
     return path.endsWith('/') ? path.slice(0, -1) : path;
 }
 
-function getUTMParams() {
-    const params = new URLSearchParams(location.search);
-    const utmParams = {};
-    const path = normalizePath(window.location.pathname.substring(1));
-    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(param => {
-        utmParams[param] = params.get(param) || (param === 'utm_campaign' ? path : '');
-    });
-    return utmParams;
-}
-
-function isMobileDevice() {
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-}
-
-function isIOSDevice() {
-    return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-}
-
-
 const appConfig = {
     'catalog-redir': { apn: 'com.kyte.catalog', ibi: 'com.kytecatalog', isi: '6462521196' },
     'control-redir': { apn: 'com.kytecontrol', ibi: 'com.kytecontrol', isi: '6472947922' },
-    'default': { apn: 'com.kyte', ibi: 'com.kytepos', isi: '1345983058' }
+    'default': { apn: 'com.kyte', ibi: 'com.kytepos', isi: '1345983058', redirectClass: 'default' }
 };
 
 initializeLandingPageRedirection();
