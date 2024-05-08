@@ -53,21 +53,24 @@ function createDynamicLink(redirectClass, utmParams) {
     const { apn, ibi, isi } = appConfig[redirectClass];
     const baseLink = "https://web.auth.kyteapp.com/signup";
     const encodedQueryParams = new URLSearchParams(utmParams).toString();
-    const unencodedQueryParams = Object.keys(utmParams).map(key => `${key}=${utmParams[key]}`).join('&');
 
     const link = `${baseLink}?${encodeURIComponent(encodedQueryParams)}`;
     const dynamicParams = new URLSearchParams({
         link: link,
-        apn, ibi, isi,
-        ct: `${redirectClass}_${utmParams.utm_campaign}`,
-        utm_source: utmParams.utm_source,
-        utm_medium: utmParams.utm_medium,
-        utm_campaign: utmParams.utm_campaign,
-        gclid: utmParams.gclid
+        apn: apn,
+        ibi: ibi,
+        isi: isi,
+        ct: `${redirectClass}_${utmParams.utm_campaign}`
     });
+
+    if (utmParams.utm_source) dynamicParams.append('utm_source', utmParams.utm_source);
+    if (utmParams.utm_medium) dynamicParams.append('utm_medium', utmParams.utm_medium);
+    if (utmParams.utm_campaign) dynamicParams.append('utm_campaign', utmParams.utm_campaign);
+    if (utmParams.gclid) dynamicParams.append('gclid', utmParams.gclid);
 
     return `https://kyteapp.page.link/?${dynamicParams.toString()}`;
 }
+
 
 
 function handleCPPRedirection(pageConfig, utmParams) {
