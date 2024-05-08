@@ -1,12 +1,6 @@
 async function initializeLandingPageRedirection() {
     try {
         const config = await fetchConfig();
-        const utmParams = getUTMParams();
-
-        if (utmParams['utm_campaign'].includes('slg')) {
-            redirectToCheckout(utmParams);
-            return;
-        }
 
         document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', () => applyClasses(config)) : applyClasses(config);
         setupClickHandler(config);
@@ -19,11 +13,6 @@ async function fetchConfig() {
     const response = await fetch('https://growthatkyte.github.io/web/scripts/landing-pages-list.json');
     if (!response.ok) throw new Error('Failed to fetch landing pages configuration');
     return response.json();
-}
-
-function redirectToCheckout(utmParams) {
-    const checkoutUrl = "https://checkout.auth.kyteapp.com";
-    window.location.href = `${checkoutUrl}?${new URLSearchParams(utmParams).toString()}`;
 }
 
 function applyClasses(config) {
