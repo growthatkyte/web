@@ -1,3 +1,4 @@
+
 async function initializeLandingPageRedirection() {
     try {
         const config = await fetchConfig();
@@ -18,9 +19,9 @@ async function fetchConfig() {
 function applyClasses(config) {
     const path = normalizePath(window.location.pathname);
     document.querySelectorAll('input[type="submit"], button[type="submit"]').forEach(button => {
-        if (config[path]) {
+        if (!button.classList.contains('mauticform-button') && !button.classList.contains('direct-button') && config[path]) {
             button.classList.add(config[path].redirectClass);
-            console.log(`Applied '${config[path].redirectClass}' to buttons for path: ${path}`);
+            console.log(`Applied '${config[path].redirectClass}' to buttons for path: ${path} `);
         }
     });
 }
@@ -28,7 +29,7 @@ function applyClasses(config) {
 function setupClickHandler(config) {
     document.addEventListener('click', event => {
         const target = event.target.closest('input[type="submit"], button[type="submit"]');
-        if (target) {
+        if (target && !target.classList.contains('mauticform-button') && !target.classList.contains('direct-button')) {
             event.preventDefault();
             handleRedirection(config, getUTMParams(), target);
         }
@@ -54,16 +55,16 @@ function createDynamicLink(redirectClass, utmParams) {
     const baseLink = "https://web.auth.kyteapp.com/signup";
     const encodedQueryParams = new URLSearchParams(utmParams).toString();
 
-    const link = `${baseLink}?${encodeURIComponent(encodedQueryParams)}`;
+    const link = `${baseLink}?${encodeURIComponent(encodedQueryParams)} `;
     const dynamicParams = new URLSearchParams({
         link: link,
         apn: apn,
         ibi: ibi,
         isi: isi,
-        ct: `${redirectClass}_${utmParams.utm_campaign}`
+        ct: `${redirectClass}_${utmParams.utm_campaign} `
     });
 
-    const unencodedQueryParams = Object.keys(utmParams).map(key => `${key}=${utmParams[key]}`).join('&');
+    const unencodedQueryParams = Object.keys(utmParams).map(key => `${key}=${utmParams[key]} `).join('&');
     const finalUrl = `https://kyteapp.page.link/?${dynamicParams.toString()}&${unencodedQueryParams}`;
 
     return finalUrl;
@@ -71,11 +72,10 @@ function createDynamicLink(redirectClass, utmParams) {
 
 function handleCPPRedirection(pageConfig, utmParams) {
     if (!isMobileDevice()) {
-        return `https://web.auth.kyteapp.com?${new URLSearchParams(utmParams).toString()}`;
+        return `https://web.auth.kyteapp.com/signup?${new URLSearchParams(utmParams).toString()}`;
     }
     return isIOSDevice() ? pageConfig.ios : pageConfig.android;
 }
-
 
 function normalizePath(path) {
     return path.endsWith('/') ? path.slice(0, -1) : path;
@@ -98,7 +98,6 @@ function isMobileDevice() {
 function isIOSDevice() {
     return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 }
-
 
 const appConfig = {
     'catalog-redir': { apn: 'com.kyte.catalog', ibi: 'com.kytecatalog', isi: '6462521196' },
