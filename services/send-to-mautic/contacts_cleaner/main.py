@@ -1,6 +1,5 @@
 import os
 import csv
-import re
 
 # Input and output directories
 input_directory = "inputs"
@@ -14,7 +13,7 @@ country_dict = {}
 with open("country_dict.csv", "r") as file:
     reader = csv.DictReader(file)
     for row in reader:
-        country_dict[row["country_name"]] = row["iso_code"]
+        country_dict[row["country_name"].strip().lower()] = row["iso_code"]
 
 
 def normalize_text(text):
@@ -27,39 +26,35 @@ def clean_contacts(input_file):
     with open(input_file, "r") as file:
         reader = csv.DictReader(file)
         for row in reader:
-            # Assuming 'name' column exists and needs to be split.
-            if "name" in row:
+            # Check if the 'name' column exists and is not 'Undefined' or 'undefined'
+            if "name" in row and row["name"].strip().lower() not in ["undefined", ""]:
                 name_parts = row["name"].split(" ", 1)
                 first_name = normalize_text(name_parts[0])
                 last_name = normalize_text(name_parts[1]) if len(name_parts) > 1 else ""
-            else:
-                # Default to empty strings if 'name' column doesn't exist
-                first_name, last_name = "", ""
 
-            # Standardize the city and state
-            city = normalize_text(row.get("city", ""))
-            state = normalize_text(row.get("state", ""))
+                # Standardize the city and state
+                city = normalize_text(row.get("city", ""))
+                state = normalize_text(row.get("state", ""))
 
-            # Standardize the country column using ISO codes
-            country_code = country_dict.get(
-                row.get("country", ""), row.get("country", "")
-            )
+                # Standardize the country column using ISO codes
+                country_name = row.get("country", "").strip().lower()
+                country_code = country_dict.get(country_name, row.get("country", ""))
 
-            # Update the row with cleaned and standardized values, prepare row for writing
-            updated_row = {
-                "first_name": first_name,
-                "last_name": last_name,
-                "city": city,
-                "state": state,
-                "country": country_code,
-            }
+                # Update the row with cleaned and standardized values, prepare row for writing
+                updated_row = {
+                    "first_name": first_name,
+                    "last_name": last_name,
+                    "city": city,
+                    "state": state,
+                    "country": country_code,
+                }
 
-            # Merge with existing data, excluding 'phone_number'
-            for key in row:
-                if key not in ["phone_number", "name"]:
-                    updated_row[key] = row[key]
+                # Merge with existing data, excluding 'phone_number'
+                for key in row:
+                    if key not in ["phone_number", "name"]:
+                        updated_row[key] = row[key]
 
-            cleaned_contacts.append(updated_row)
+                cleaned_contacts.append(updated_row)
 
     return cleaned_contacts
 
@@ -94,19 +89,19 @@ for input_file in input_files:
             fieldnames = [
                 "aid",
                 "email",
-                "last_active",
+                "first_name",
+                "last_name",
+                "last_seen",
+                "preferred_locale",
                 "country",
                 "state",
                 "city",
-                "preferred_locale",
-                "buy_date",
-                "end_date",
-                "billing_recurrence",
                 "os",
-                "plan",
+                "app_sessions",
                 "billing_status",
-                "first_name",
-                "last_name",
+                "billing_buy_date",
+                "billing_end_date",
+                "billing_tolerance_date",
             ]
             writer = csv.DictWriter(file, fieldnames=fieldnames)
             writer.writeheader()

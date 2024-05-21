@@ -1,4 +1,3 @@
-
 async function initializeLandingPageRedirection() {
     try {
         const config = await fetchConfig();
@@ -21,7 +20,7 @@ function applyClasses(config) {
     document.querySelectorAll('input[type="submit"], button[type="submit"]').forEach(button => {
         if (!button.classList.contains('mauticform-button') && !button.classList.contains('direct-button') && config[path]) {
             button.classList.add(config[path].redirectClass);
-            console.log(`Applied '${config[path].redirectClass}' to buttons for path: ${path} `);
+            console.log(`Applied '${config[path].redirectClass}' to buttons for path: ${path}`);
         }
     });
 }
@@ -38,7 +37,7 @@ function setupClickHandler(config) {
 
 function handleRedirection(config, utmParams, target) {
     const path = normalizePath(window.location.pathname);
-    const pageConfig = config[path] || appConfig['default'];
+    const pageConfig = config[path] || { redirectUrl: 'https://pos.auth.kyteapp.com' };
     const redirectClass = target.classList.contains('cpp-redir') ? 'cpp-redir' :
         target.classList.contains('catalog-redir') ? 'catalog-redir' :
             target.classList.contains('control-redir') ? 'control-redir' :
@@ -51,20 +50,25 @@ function handleRedirection(config, utmParams, target) {
 }
 
 function createDynamicLink(redirectClass, utmParams) {
-    const { apn, ibi, isi } = appConfig[redirectClass];
-    const baseLink = "https://web.auth.kyteapp.com/signup";
+    const baseLinks = {
+        'default': 'https://pos.auth.kyteapp.com',
+        'catalog-redir': 'https://catalog.auth.kyteapp.com',
+        'control-redir': 'https://control.auth.kyteapp.com'
+    };
+
+    const baseLink = baseLinks[redirectClass] || baseLinks['default'];
     const encodedQueryParams = new URLSearchParams(utmParams).toString();
 
-    const link = `${baseLink}?${encodeURIComponent(encodedQueryParams)} `;
+    const link = `${baseLink}?${encodedQueryParams}`;
     const dynamicParams = new URLSearchParams({
         link: link,
-        apn: apn,
-        ibi: ibi,
-        isi: isi,
-        ct: `${redirectClass}_${utmParams.utm_campaign} `
+        apn: 'com.kyte',
+        ibi: 'com.kytepos',
+        isi: '1345983058',
+        ct: `${redirectClass}_${utmParams.utm_campaign}`
     });
 
-    const unencodedQueryParams = Object.keys(utmParams).map(key => `${key}=${utmParams[key]} `).join('&');
+    const unencodedQueryParams = Object.keys(utmParams).map(key => `${key}=${utmParams[key]}`).join('&');
     const finalUrl = `https://kyteapp.page.link/?${dynamicParams.toString()}&${unencodedQueryParams}`;
 
     return finalUrl;
@@ -98,11 +102,5 @@ function isMobileDevice() {
 function isIOSDevice() {
     return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 }
-
-const appConfig = {
-    'catalog-redir': { apn: 'com.kyte.catalog', ibi: 'com.kytecatalog', isi: '6462521196' },
-    'control-redir': { apn: 'com.kytecontrol', ibi: 'com.kytecontrol', isi: '6472947922' },
-    'default': { apn: 'com.kyte', ibi: 'com.kytepos', isi: '1345983058' }
-};
 
 initializeLandingPageRedirection();
