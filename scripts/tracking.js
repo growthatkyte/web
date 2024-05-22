@@ -58,9 +58,9 @@ function handleDesktopRedirection(utmParams) {
 
 function createStaticLink(redirectClass, utmParams) {
     const baseLinks = {
-        'default': 'https://pos.auth.kyteapp.com/signup',
-        'catalog-redir': 'https://catalog.auth.kyteapp.com/signup',
-        'control-redir': 'https://control.auth.kyteapp.com/signup'
+        'default': 'https://pos.auth.kyteapp.com',
+        'catalog-redir': 'https://catalog.auth.kyteapp.com',
+        'control-redir': 'https://control.auth.kyteapp.com'
     };
 
     const baseLink = baseLinks[redirectClass] || baseLinks['default'];
@@ -81,8 +81,14 @@ function getUTMParams() {
     const params = new URLSearchParams(location.search);
     const utmParams = {};
     const path = normalizePath(window.location.pathname.substring(1));
-    const referrer = new URL(document.referrer);
-    const referrerHostnameParts = referrer.hostname.split('.').filter(part => part !== 'www');
+    let referrerHostnameParts = [];
+
+    try {
+        const referrer = new URL(document.referrer);
+        referrerHostnameParts = referrer.hostname.split('.').filter(part => part !== 'www');
+    } catch (error) {
+        console.warn('Invalid or empty referrer:', error);
+    }
 
     ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid'].forEach(param => {
         if (param === 'utm_source') {
