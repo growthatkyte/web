@@ -58,9 +58,9 @@ function handleDesktopRedirection(utmParams) {
 
 function createStaticLink(redirectClass, utmParams) {
     const baseLinks = {
-        'default': 'https://pos.auth.kyteapp.com',
-        'catalog-redir': 'https://catalog.auth.kyteapp.com',
-        'control-redir': 'https://control.auth.kyteapp.com'
+        'default': 'https://pos.auth.kyteapp.com/signup',
+        'catalog-redir': 'https://catalog.auth.kyteapp.com/signup',
+        'control-redir': 'https://control.auth.kyteapp.com/signup'
     };
 
     const baseLink = baseLinks[redirectClass] || baseLinks['default'];
@@ -81,8 +81,17 @@ function getUTMParams() {
     const params = new URLSearchParams(location.search);
     const utmParams = {};
     const path = normalizePath(window.location.pathname.substring(1));
+    const referrer = new URL(document.referrer);
+    const referrerHostnameParts = referrer.hostname.split('.').filter(part => part !== 'www');
+
     ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid'].forEach(param => {
-        utmParams[param] = params.get(param) || (param === 'utm_campaign' ? path : '');
+        if (param === 'utm_source') {
+            utmParams[param] = params.get(param) || referrerHostnameParts[0] || '';
+        } else if (param === 'utm_campaign') {
+            utmParams[param] = params.get(param) || (path ? path : 'home');
+        } else {
+            utmParams[param] = params.get(param) || '';
+        }
     });
     return utmParams;
 }
@@ -92,7 +101,10 @@ function isMobileDevice() {
 }
 
 function isIOSDevice() {
-    return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    if (navigator.userAgentData) {
+        return navigator.userAgentData.platform === 'iOS';
+    }
+    return /iPad|iPhone|iPod/.test(navigator.userAgent);
 }
 
 initializeLandingPageRedirection();
