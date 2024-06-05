@@ -91,12 +91,12 @@ function createStaticLink(redirectClass, utmParams) {
     };
 
     const baseLink = baseLinks[redirectClass] || baseLinks['default'];
-    const queryParams = new URLSearchParams(utmParams).toString();
+    const queryParams = mergeQueryParams(new URL(baseLink).searchParams, utmParams).toString();
     return `${baseLink}?${queryParams}`;
 }
 
 function createRedirectUrl(baseLink, utmParams) {
-    const queryParams = new URLSearchParams(utmParams).toString();
+    const queryParams = mergeQueryParams(new URL(baseLink).searchParams, utmParams).toString();
     return `${baseLink}?${queryParams}`;
 }
 
@@ -141,16 +141,23 @@ function appendUTMParamsToLinks() {
 
     document.querySelectorAll('a').forEach(link => {
         const url = new URL(link.href);
-        const currentParams = new URLSearchParams(url.search);
-
-        // Merge existing parameters with new UTM parameters
-        Object.entries(utmParams).forEach(([key, value]) => {
-            currentParams.set(key, value);
-        });
+        const currentParams = mergeQueryParams(new URLSearchParams(url.search), utmParams);
 
         url.search = currentParams.toString();
         link.href = url.toString();
     });
+}
+
+function mergeQueryParams(existingParams, newParams) {
+    const mergedParams = new URLSearchParams(existingParams);
+
+    Object.entries(newParams).forEach(([key, value]) => {
+        if (!mergedParams.has(key)) {
+            mergedParams.set(key, value);
+        }
+    });
+
+    return mergedParams;
 }
 
 function isMobileDevice() {
