@@ -91,12 +91,12 @@ function createStaticLink(redirectClass, utmParams) {
     };
 
     const baseLink = baseLinks[redirectClass] || baseLinks['default'];
-    const queryParams = mergeQueryParams(new URL(baseLink).searchParams, utmParams).toString();
+    const queryParams = mergeQueryParams(new URLSearchParams(new URL(baseLink).search), utmParams).toString();
     return `${baseLink}?${queryParams}`;
 }
 
 function createRedirectUrl(baseLink, utmParams) {
-    const queryParams = mergeQueryParams(new URL(baseLink).searchParams, utmParams).toString();
+    const queryParams = mergeQueryParams(new URLSearchParams(new URL(baseLink).search), utmParams).toString();
     return `${baseLink}?${queryParams}`;
 }
 
