@@ -17,6 +17,7 @@ async function fetchConfig() {
 
 function initialize(config) {
     applyButtonClasses(config);
+    storeUTMParams();
     appendUTMParamsToLinks();
     setupClickHandler(config);
 }
