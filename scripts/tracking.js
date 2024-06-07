@@ -43,7 +43,7 @@ function setupClickHandler(config) {
         const target = event.target.closest('input[type="submit"], button[type="submit"]');
         if (shouldHandleRedirection(target)) {
             event.preventDefault();
-            handleRedirection(config, getUTMParams(), target);
+            handleRedirection(config, getStoredUTMParams(), target);
         }
     });
 }
@@ -80,7 +80,12 @@ function handleMobileRedirection(redirectClass, pageConfig, utmParams) {
 
 function handleCPPRedirection(pageConfig, utmParams) {
     const queryParams = new URLSearchParams(utmParams).toString();
-    return isIOSDevice() ? `${pageConfig.ios}?${queryParams}` : `${pageConfig.android}?${queryParams}`;
+    if (isIOSDevice()) {
+        return pageConfig.ios ? `${pageConfig.ios}&${queryParams}` : createRedirectUrl('https://web.auth.kyteapp.com/signup', utmParams);
+    } else if (isAndroidDevice()) {
+        return pageConfig.android ? `${pageConfig.android}&${queryParams}` : createRedirectUrl('https://web.auth.kyteapp.com/signup', utmParams);
+    }
+    return createRedirectUrl('https://web.auth.kyteapp.com/signup', utmParams);
 }
 
 function createStaticLink(redirectClass, utmParams) {
@@ -136,8 +141,25 @@ function getUTMParamValue(params, param, referrerHostnameParts, path) {
     }
 }
 
-function appendUTMParamsToLinks() {
+function storeUTMParams() {
     const utmParams = getUTMParams();
+    const storedUTMParams = getStoredUTMParams();
+
+    Object.entries(utmParams).forEach(([key, value]) => {
+        if (!storedUTMParams[key]) {
+            storedUTMParams[key] = value;
+        }
+    });
+
+    localStorage.setItem('utm_params', JSON.stringify(storedUTMParams));
+}
+
+function getStoredUTMParams() {
+    return JSON.parse(localStorage.getItem('utm_params')) || {};
+}
+
+function appendUTMParamsToLinks() {
+    const utmParams = getStoredUTMParams();
 
     document.querySelectorAll('a').forEach(link => {
         const url = new URL(link.href);
@@ -165,10 +187,11 @@ function isMobileDevice() {
 }
 
 function isIOSDevice() {
-    if (navigator.userAgentData) {
-        return navigator.userAgentData.platform === 'iOS';
-    }
     return /iPad|iPhone|iPod/.test(navigator.userAgent);
+}
+
+function isAndroidDevice() {
+    return /Android/.test(navigator.userAgent);
 }
 
 initializeLandingPageRedirection();
