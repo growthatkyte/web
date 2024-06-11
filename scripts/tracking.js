@@ -17,8 +17,6 @@ async function fetchConfig() {
 
 function initialize(config) {
     applyButtonClasses(config);
-    storeUTMParams();
-    appendUTMParamsToLinks();
     setupClickHandler(config);
 }
 
@@ -44,7 +42,7 @@ function setupClickHandler(config) {
         const target = event.target.closest('input[type="submit"], button[type="submit"]');
         if (shouldHandleRedirection(target)) {
             event.preventDefault();
-            handleRedirection(config, getStoredUTMParams(), target);
+            handleRedirection(config, getUTMParams(), target);
         }
     });
 }
@@ -140,35 +138,6 @@ function getUTMParamValue(params, param, referrerHostnameParts, path) {
     } else {
         return params.get(param) || '';
     }
-}
-
-function storeUTMParams() {
-    const utmParams = getUTMParams();
-    const storedUTMParams = getStoredUTMParams();
-
-    Object.entries(utmParams).forEach(([key, value]) => {
-        if (!storedUTMParams[key]) {
-            storedUTMParams[key] = value;
-        }
-    });
-
-    localStorage.setItem('utm_params', JSON.stringify(storedUTMParams));
-}
-
-function getStoredUTMParams() {
-    return JSON.parse(localStorage.getItem('utm_params')) || {};
-}
-
-function appendUTMParamsToLinks() {
-    const utmParams = getStoredUTMParams();
-
-    document.querySelectorAll('a').forEach(link => {
-        const url = new URL(link.href);
-        const currentParams = mergeQueryParams(new URLSearchParams(url.search), utmParams);
-
-        url.search = currentParams.toString();
-        link.href = url.toString();
-    });
 }
 
 function mergeQueryParams(existingParams, newParams) {
