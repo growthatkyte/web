@@ -1,9 +1,7 @@
 async function initializeLandingPageRedirection() {
     try {
         const config = await fetchConfig();
-        document.readyState === 'loading' ?
-            document.addEventListener('DOMContentLoaded', () => initialize(config)) :
-            initialize(config);
+        initialize(config);
     } catch (error) {
         console.error('Initialization failed:', error);
     }
@@ -38,11 +36,12 @@ function shouldApplyClass(button, config, path) {
 }
 
 function setupClickHandler(config) {
-    document.addEventListener('click', event => {
+    document.addEventListener('click', async event => {
         const target = event.target.closest('input[type="submit"], button[type="submit"]');
         if (shouldHandleRedirection(target)) {
             event.preventDefault();
-            handleRedirection(config, getUTMParams(), target);
+            const utmParams = await getUTMParams();
+            handleRedirection(config, utmParams, target);
         }
     });
 }
@@ -108,7 +107,7 @@ function normalizePath(path) {
     return path.endsWith('/') ? path.slice(0, -1) : path;
 }
 
-function getUTMParams() {
+async function getUTMParams() {
     const params = new URLSearchParams(location.search);
     const utmParams = {};
     const path = normalizePath(window.location.pathname.substring(1));
