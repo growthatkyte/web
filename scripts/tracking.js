@@ -1,7 +1,9 @@
 async function initializeLandingPageRedirection() {
     try {
         const config = await fetchConfig();
-        initialize(config);
+        document.readyState === 'loading' ?
+            document.addEventListener('DOMContentLoaded', () => initialize(config)) :
+            initialize(config);
     } catch (error) {
         console.error('Initialization failed:', error);
     }
@@ -15,6 +17,8 @@ async function fetchConfig() {
 
 function initialize(config) {
     applyButtonClasses(config);
+    storeUTMParams();
+    appendUTMParamsToLinks();
     setupClickHandler(config);
 }
 
@@ -36,12 +40,11 @@ function shouldApplyClass(button, config, path) {
 }
 
 function setupClickHandler(config) {
-    document.addEventListener('click', async event => {
+    document.addEventListener('click', event => {
         const target = event.target.closest('input[type="submit"], button[type="submit"]');
         if (shouldHandleRedirection(target)) {
             event.preventDefault();
-            const utmParams = await getUTMParams();
-            handleRedirection(config, utmParams, target);
+            handleRedirection(config, getStoredUTMParams(), target);
         }
     });
 }
@@ -107,7 +110,7 @@ function normalizePath(path) {
     return path.endsWith('/') ? path.slice(0, -1) : path;
 }
 
-async function getUTMParams() {
+function getUTMParams() {
     const params = new URLSearchParams(location.search);
     const utmParams = {};
     const path = normalizePath(window.location.pathname.substring(1));
@@ -137,6 +140,35 @@ function getUTMParamValue(params, param, referrerHostnameParts, path) {
     } else {
         return params.get(param) || '';
     }
+}
+
+function storeUTMParams() {
+    const utmParams = getUTMParams();
+    const storedUTMParams = getStoredUTMParams();
+
+    Object.entries(utmParams).forEach(([key, value]) => {
+        if (!storedUTMParams[key]) {
+            storedUTMParams[key] = value;
+        }
+    });
+
+    localStorage.setItem('utm_params', JSON.stringify(storedUTMParams));
+}
+
+function getStoredUTMParams() {
+    return JSON.parse(localStorage.getItem('utm_params')) || {};
+}
+
+function appendUTMParamsToLinks() {
+    const utmParams = getStoredUTMParams();
+
+    document.querySelectorAll('a').forEach(link => {
+        const url = new URL(link.href);
+        const currentParams = mergeQueryParams(new URLSearchParams(url.search), utmParams);
+
+        url.search = currentParams.toString();
+        link.href = url.toString();
+    });
 }
 
 function mergeQueryParams(existingParams, newParams) {
