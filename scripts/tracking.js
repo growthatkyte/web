@@ -1,9 +1,7 @@
 async function initializeLandingPageRedirection() {
     try {
         const config = await fetchConfig();
-        document.readyState === 'loading' ?
-            $(document).on('DOMContentLoaded', () => initialize(config)) :
-            initialize(config);
+        $().ready(() => initialize(config));
     } catch (error) {
         console.error('Initialization failed:', error);
     }
@@ -24,17 +22,17 @@ function initialize(config) {
 
 function applyButtonClasses(config) {
     const path = normalizePath(window.location.pathname);
-    $('input[type="submit"], button[type="submit"]').each(function () {
-        if (shouldApplyClass(this, config, path)) {
-            this.classList.add(config[path].redirectClass);
+    $('input[type="submit"], button[type="submit"]').each(function (button) {
+        if (shouldApplyClass(button, config, path)) {
+            $(button).addClass(config[path].redirectClass);
             console.log(`Applied '${config[path].redirectClass}' to buttons for path: ${path}`);
         }
     });
 }
 
 function shouldApplyClass(button, config, path) {
-    return !button.classList.contains('mauticform-button') &&
-        !button.classList.contains('direct-button') &&
+    return !$(button).hasClass('mauticform-button') &&
+        !$(button).hasClass('direct-button') &&
         config[path];
 }
 
@@ -50,8 +48,8 @@ function setupClickHandler(config) {
 
 function shouldHandleRedirection(target) {
     return target &&
-        !target.classList.contains('mauticform-button') &&
-        !target.classList.contains('direct-button');
+        !$(target).hasClass('mauticform-button') &&
+        !$(target).hasClass('direct-button');
 }
 
 function handleRedirection(config, utmParams, target) {
@@ -67,9 +65,9 @@ function handleRedirection(config, utmParams, target) {
 }
 
 function getRedirectClass(target) {
-    if (target.classList.contains('cpp-redir')) return 'cpp-redir';
-    if (target.classList.contains('catalog-redir')) return 'catalog-redir';
-    if (target.classList.contains('control-redir')) return 'control-redir';
+    if ($(target).hasClass('cpp-redir')) return 'cpp-redir';
+    if ($(target).hasClass('catalog-redir')) return 'catalog-redir';
+    if ($(target).hasClass('control-redir')) return 'control-redir';
     return 'default';
 }
 
@@ -161,12 +159,12 @@ function getStoredUTMParams() {
 function appendUTMParamsToLinks() {
     const utmParams = getStoredUTMParams();
 
-    $('a').each(function () {
-        const url = new URL(this.href);
+    $('a').each(function (link) {
+        const url = new URL(link.href);
         const currentParams = mergeQueryParams(new URLSearchParams(url.search), utmParams);
 
         url.search = currentParams.toString();
-        this.href = url.toString();
+        link.href = url.toString();
     });
 }
 
