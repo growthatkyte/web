@@ -1,7 +1,9 @@
 async function initializeLandingPageRedirection() {
     try {
         const config = await fetchConfig();
-        $().ready(() => initialize(config));
+        document.readyState === 'loading' ?
+            document.addEventListener('DOMContentLoaded', () => initialize(config)) :
+            initialize(config);
     } catch (error) {
         console.error('Initialization failed:', error);
     }
@@ -22,22 +24,23 @@ function initialize(config) {
 
 function applyButtonClasses(config) {
     const path = normalizePath(window.location.pathname);
-    $('input[type="submit"], button[type="submit"]').each(function (button) {
+    const buttons = document.querySelectorAll('input[type="submit"], button[type="submit"]');
+    buttons.forEach(button => {
         if (shouldApplyClass(button, config, path)) {
-            $(button).addClass(config[path].redirectClass);
+            button.classList.add(config[path].redirectClass);
             console.log(`Applied '${config[path].redirectClass}' to buttons for path: ${path}`);
         }
     });
 }
 
 function shouldApplyClass(button, config, path) {
-    return !$(button).hasClass('mauticform-button') &&
-        !$(button).hasClass('direct-button') &&
+    return !button.classList.contains('mauticform-button') &&
+        !button.classList.contains('direct-button') &&
         config[path];
 }
 
 function setupClickHandler(config) {
-    $(document).on('click', event => {
+    document.addEventListener('click', event => {
         const target = event.target.closest('input[type="submit"], button[type="submit"]');
         if (shouldHandleRedirection(target)) {
             event.preventDefault();
@@ -48,8 +51,8 @@ function setupClickHandler(config) {
 
 function shouldHandleRedirection(target) {
     return target &&
-        !$(target).hasClass('mauticform-button') &&
-        !$(target).hasClass('direct-button');
+        !target.classList.contains('mauticform-button') &&
+        !target.classList.contains('direct-button');
 }
 
 function handleRedirection(config, utmParams, target) {
@@ -65,9 +68,9 @@ function handleRedirection(config, utmParams, target) {
 }
 
 function getRedirectClass(target) {
-    if ($(target).hasClass('cpp-redir')) return 'cpp-redir';
-    if ($(target).hasClass('catalog-redir')) return 'catalog-redir';
-    if ($(target).hasClass('control-redir')) return 'control-redir';
+    if (target.classList.contains('cpp-redir')) return 'cpp-redir';
+    if (target.classList.contains('catalog-redir')) return 'catalog-redir';
+    if (target.classList.contains('control-redir')) return 'control-redir';
     return 'default';
 }
 
@@ -159,7 +162,7 @@ function getStoredUTMParams() {
 function appendUTMParamsToLinks() {
     const utmParams = getStoredUTMParams();
 
-    $('a').each(function (link) {
+    document.querySelectorAll('a').forEach(link => {
         const url = new URL(link.href);
         const currentParams = mergeQueryParams(new URLSearchParams(url.search), utmParams);
 
