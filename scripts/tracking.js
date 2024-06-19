@@ -116,7 +116,11 @@ function getUTMParams() {
     const referrerHostnameParts = getReferrerHostnameParts();
 
     ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid'].forEach(param => {
-        utmParams[param] = getUTMParamValue(params, param, referrerHostnameParts, path);
+        if (params.has(param)) {
+            utmParams[param] = params.get(param);
+        } else {
+            utmParams[param] = getFallbackParamValue(param, referrerHostnameParts, path);
+        }
     });
     return utmParams;
 }
@@ -131,13 +135,13 @@ function getReferrerHostnameParts() {
     }
 }
 
-function getUTMParamValue(params, param, referrerHostnameParts, path) {
+function getFallbackParamValue(param, referrerHostnameParts, path) {
     if (param === 'utm_source') {
-        return params.get(param) || referrerHostnameParts[0] || '';
+        return referrerHostnameParts[0] || '';
     } else if (param === 'utm_campaign') {
-        return params.get(param) || (path ? path : 'home');
+        return path ? path : 'home';
     } else {
-        return params.get(param) || '';
+        return '';
     }
 }
 
