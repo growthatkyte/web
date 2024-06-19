@@ -121,8 +121,12 @@ function getUTMParams() {
 
 function getReferrerHostnameParts() {
     try {
-        const referrer = new URL(document.referrer);
-        return referrer.hostname.split('.').filter(part => part !== 'www');
+        if (document.referrer) {
+            const referrer = new URL(document.referrer);
+            return referrer.hostname.split('.').filter(part => part !== 'www');
+        } else {
+            return [];
+        }
     } catch (error) {
         console.warn('Invalid or empty referrer:', error);
         return [];
