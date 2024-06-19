@@ -2,7 +2,7 @@ async function initializeLandingPageRedirection() {
     try {
         const config = await fetchConfig();
         document.readyState === 'loading' ?
-            $('document').on('DOMContentLoaded', () => initialize(config)) :
+            $(document).on('DOMContentLoaded', () => initialize(config)) :
             initialize(config);
     } catch (error) {
         console.error('Initialization failed:', error);
@@ -39,7 +39,7 @@ function shouldApplyClass(button, config, path) {
 }
 
 function setupClickHandler(config) {
-    $('document').on('click', event => {
+    $(document).on('click', event => {
         const target = event.target.closest('input[type="submit"], button[type="submit"]');
         if (shouldHandleRedirection(target)) {
             event.preventDefault();
