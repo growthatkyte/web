@@ -2,7 +2,7 @@ async function initializeLandingPageRedirection() {
     try {
         const config = await fetchConfig();
         document.readyState === 'loading' ?
-            document.addEventListener('DOMContentLoaded', () => initialize(config)) :
+            $('document').on('DOMContentLoaded', () => initialize(config)) :
             initialize(config);
     } catch (error) {
         console.error('Initialization failed:', error);
@@ -24,10 +24,9 @@ function initialize(config) {
 
 function applyButtonClasses(config) {
     const path = normalizePath(window.location.pathname);
-    const buttons = document.querySelectorAll('input[type="submit"], button[type="submit"]');
-    buttons.forEach(button => {
-        if (shouldApplyClass(button, config, path)) {
-            button.classList.add(config[path].redirectClass);
+    $('input[type="submit"], button[type="submit"]').each(function () {
+        if (shouldApplyClass(this, config, path)) {
+            this.classList.add(config[path].redirectClass);
             console.log(`Applied '${config[path].redirectClass}' to buttons for path: ${path}`);
         }
     });
@@ -40,7 +39,7 @@ function shouldApplyClass(button, config, path) {
 }
 
 function setupClickHandler(config) {
-    document.addEventListener('click', event => {
+    $('document').on('click', event => {
         const target = event.target.closest('input[type="submit"], button[type="submit"]');
         if (shouldHandleRedirection(target)) {
             event.preventDefault();
@@ -162,12 +161,12 @@ function getStoredUTMParams() {
 function appendUTMParamsToLinks() {
     const utmParams = getStoredUTMParams();
 
-    document.querySelectorAll('a').forEach(link => {
-        const url = new URL(link.href);
+    $('a').each(function () {
+        const url = new URL(this.href);
         const currentParams = mergeQueryParams(new URLSearchParams(url.search), utmParams);
 
         url.search = currentParams.toString();
-        link.href = url.toString();
+        this.href = url.toString();
     });
 }
 
