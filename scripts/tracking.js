@@ -57,9 +57,12 @@ function handleRedirection(config, utmParams, target) {
     const pageConfig = config[path] || {};
     const redirectClass = getRedirectClass(target);
 
+    const currentParams = new URLSearchParams(window.location.search);
+    const allParams = mergeQueryParams(currentParams, utmParams);
+
     const redirectUrl = !isMobileDevice() ?
-        createRedirectUrl('https://web.auth.kyteapp.com/signup', utmParams) :
-        handleMobileRedirection(redirectClass, pageConfig, utmParams);
+        createRedirectUrl('https://web.auth.kyteapp.com/signup', allParams) :
+        handleMobileRedirection(redirectClass, pageConfig, allParams);
 
     window.location.href = redirectUrl;
 }
@@ -71,22 +74,22 @@ function getRedirectClass(target) {
     return 'default';
 }
 
-function handleMobileRedirection(redirectClass, pageConfig, utmParams) {
-    if (redirectClass === 'cpp-redir') return handleCPPRedirection(pageConfig, utmParams);
-    return createStaticLink(redirectClass, utmParams);
+function handleMobileRedirection(redirectClass, pageConfig, allParams) {
+    if (redirectClass === 'cpp-redir') return handleCPPRedirection(pageConfig, allParams);
+    return createStaticLink(redirectClass, allParams);
 }
 
-function handleCPPRedirection(pageConfig, utmParams) {
-    const queryParams = new URLSearchParams(utmParams).toString();
+function handleCPPRedirection(pageConfig, allParams) {
+    const queryParams = new URLSearchParams(allParams).toString();
     if (isIOSDevice()) {
-        return pageConfig.ios ? `${pageConfig.ios}&${queryParams}` : createRedirectUrl('https://web.auth.kyteapp.com/signup', utmParams);
+        return pageConfig.ios ? `${pageConfig.ios}&${queryParams}` : createRedirectUrl('https://web.auth.kyteapp.com/signup', allParams);
     } else if (isAndroidDevice()) {
-        return pageConfig.android ? `${pageConfig.android}&${queryParams}` : createRedirectUrl('https://web.auth.kyteapp.com/signup', utmParams);
+        return pageConfig.android ? `${pageConfig.android}&${queryParams}` : createRedirectUrl('https://web.auth.kyteapp.com/signup', allParams);
     }
-    return createRedirectUrl('https://web.auth.kyteapp.com/signup', utmParams);
+    return createRedirectUrl('https://web.auth.kyteapp.com/signup', allParams);
 }
 
-function createStaticLink(redirectClass, utmParams) {
+function createStaticLink(redirectClass, allParams) {
     const baseLinks = {
         'default': 'https://pos.auth.kyteapp.com',
         'catalog-redir': 'https://catalog.auth.kyteapp.com',
@@ -94,12 +97,12 @@ function createStaticLink(redirectClass, utmParams) {
     };
 
     const baseLink = baseLinks[redirectClass] || baseLinks['default'];
-    const queryParams = mergeQueryParams(new URLSearchParams(new URL(baseLink).search), utmParams).toString();
+    const queryParams = new URLSearchParams(allParams).toString();
     return `${baseLink}?${queryParams}`;
 }
 
-function createRedirectUrl(baseLink, utmParams) {
-    const queryParams = mergeQueryParams(new URLSearchParams(new URL(baseLink).search), utmParams).toString();
+function createRedirectUrl(baseLink, allParams) {
+    const queryParams = new URLSearchParams(allParams).toString();
     return `${baseLink}?${queryParams}`;
 }
 
