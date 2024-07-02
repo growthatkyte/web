@@ -115,7 +115,7 @@ function getUTMParams() {
     const path = normalizePath(window.location.pathname.substring(1));
     const referrerHostnameParts = getReferrerHostnameParts();
 
-    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid'].forEach(param => {
+    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'ttclid', 'fbclid'].forEach(param => {
         if (params.has(param)) {
             utmParams[param] = params.get(param);
         } else {
