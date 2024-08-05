@@ -4,7 +4,7 @@
 }
 
 .lead-form .full-width {
-    width: 100%;
+    width: 90%;
     padding-top: 1rem;
 }
 
@@ -32,7 +32,6 @@
     transition: ease-in-out .3s all;
     margin-right: 5px;
     margin-bottom: 10px;
-    width: 75%;
 
 }
 
