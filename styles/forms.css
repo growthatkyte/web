@@ -1,21 +1,27 @@
-.lead-form{
+.lead-form {
     font-family: "Roboto", sans-serif;
     color: #363f4d;
 }
-.lead-form .full-width{
+
+.lead-form .full-width {
     width: 100%;
 }
-.lead-form .hidden{
+
+.lead-form .hidden {
     display: none !important;
 }
-.lead-form input .hidden{
+
+.lead-form input .hidden {
     display: none !important;
 }
-.lead-form label{
+
+.lead-form label {
     font-weight: 400;
     font-size: 16px;
 }
-.lead-form input, .lead-form select {
+
+.lead-form input,
+.lead-form select {
     border: 1px solid #ddd;
     border-radius: .5rem;
     box-shadow: inset 0px 1px 2px rgba(0, 0, 0, .1);
@@ -27,13 +33,16 @@
     margin-bottom: 10px;
 
 }
-.lead-form .step{
+
+.lead-form .step {
     margin-bottom: 10px;
     min-height: 54px;
 }
+
 .lead-form .navigation {
     display: flex;
 }
+
 .lead-form .navigation .btn {
     display: inline-block;
     padding: 10px;
@@ -41,22 +50,26 @@
     text-decoration: none;
     border: 0;
     background: #2dd1ac;
-    border-radius: 6px; 
+    border-radius: 6px;
     color: white;
     cursor: pointer;
+    max-width: 280px;
     font-size: 18px;
     font-weight: 500;
 }
-.lead-form .navigation .btn-prev{
-    padding: 0 5px 0 0!important;
+
+.lead-form .navigation .btn-prev {
+    padding: 0 5px 0 0 !important;
     background: #363f4d;
     margin-right: 5px;
 }
-.lead-form .navigation .btn-prev svg{
+
+.lead-form .navigation .btn-prev svg {
     color: white;
     height: 40px;
     fill: #fff;
 }
+
 .intercom-14ybb7e {
     text-decoration: none;
     padding: 5px;
@@ -66,6 +79,7 @@
     line-height: 0px !important;
     border-bottom: none !important;
 }
+
 #intercom-container-body {
     position: absolute !important;
     margin-top: 0 !important;
