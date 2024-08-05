@@ -18,6 +18,7 @@ async function fetchConfig() {
 function initialize(config) {
     applyButtonClasses(config);
     appendUTMParamsToLinks();
+    fillAttributionFields();
     setupClickHandler(config);
 }
 
@@ -114,7 +115,7 @@ function getAttributionParams() {
     const localStorageParams = getParamsFromLocalStorage();
     const attributionParams = {};
 
-    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid', 'ttclid', 'campaignid', 'adgroupid', 'keyword'].forEach(param => {
+    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid', 'ttclid', 'cid', 'aid', 'ref', 'referrer', 'campaignid', 'adgroupid', 'keyword', 'gadid', 'fbadid', 'ttadid'].forEach(param => {
         if (params.has(param)) {
             attributionParams[param] = params.get(param);
         } else if (localStorageParams[param]) {
@@ -127,7 +128,7 @@ function getAttributionParams() {
 
 function getParamsFromLocalStorage() {
     const params = {};
-    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid', 'ttclid', 'campaignid', 'adgroupid', 'keyword'].forEach(param => {
+    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid', 'ttclid', 'cid', 'aid', 'ref', 'referrer', 'campaignid', 'adgroupid', 'keyword', 'gadid', 'fbadid', 'ttadid'].forEach(param => {
         const value = localStorage.getItem(param);
         if (value) {
             params[param] = value;
@@ -158,6 +159,16 @@ function mergeQueryParams(existingParams, newParams) {
     });
 
     return mergedParams;
+}
+
+function fillAttributionFields() {
+    const attributionParams = getAttributionParams();
+    Object.keys(attributionParams).forEach(param => {
+        const field = document.querySelector(`input[name="${param}"]`);
+        if (field) {
+            field.value = attributionParams[param];
+        }
+    });
 }
 
 function isMobileDevice() {
