@@ -43,7 +43,7 @@ function setupClickHandler(config) {
         const target = event.target.closest('input[type="submit"], button[type="submit"]');
         if (shouldHandleRedirection(target)) {
             event.preventDefault();
-            handleRedirection(config, getUTMParams(), target);
+            handleRedirection(config, getAttributionParams(), target);
         }
     });
 }
@@ -54,14 +54,14 @@ function shouldHandleRedirection(target) {
         !target.classList.contains('direct-button');
 }
 
-function handleRedirection(config, utmParams, target) {
+function handleRedirection(config, attributionParams, target) {
     const path = normalizePath(window.location.pathname);
     const pageConfig = config[path] || {};
     const redirectClass = getRedirectClass(target);
 
     const redirectUrl = !isMobileDevice() ?
-        createRedirectUrl('https://web.auth.kyteapp.com/signup', utmParams) :
-        handleMobileRedirection(redirectClass, pageConfig, utmParams);
+        createRedirectUrl('https://web.auth.kyteapp.com/signup', attributionParams) :
+        handleMobileRedirection(redirectClass, pageConfig, attributionParams);
 
     window.location.href = redirectUrl;
 }
@@ -73,22 +73,22 @@ function getRedirectClass(target) {
     return 'default';
 }
 
-function handleMobileRedirection(redirectClass, pageConfig, utmParams) {
-    if (redirectClass === 'cpp-redir') return handleCPPRedirection(pageConfig, utmParams);
-    return createStaticLink(redirectClass, utmParams);
+function handleMobileRedirection(redirectClass, pageConfig, attributionParams) {
+    if (redirectClass === 'cpp-redir') return handleCPPRedirection(pageConfig, attributionParams);
+    return createStaticLink(redirectClass, attributionParams);
 }
 
-function handleCPPRedirection(pageConfig, utmParams) {
-    const queryParams = new URLSearchParams(utmParams).toString();
+function handleCPPRedirection(pageConfig, attributionParams) {
+    const queryParams = new URLSearchParams(attributionParams).toString();
     if (isIOSDevice()) {
-        return pageConfig.ios ? `${pageConfig.ios}&${queryParams}` : createRedirectUrl('https://web.auth.kyteapp.com/signup', utmParams);
+        return pageConfig.ios ? `${pageConfig.ios}&${queryParams}` : createRedirectUrl('https://web.auth.kyteapp.com/signup', attributionParams);
     } else if (isAndroidDevice()) {
-        return pageConfig.android ? `${pageConfig.android}&${queryParams}` : createRedirectUrl('https://web.auth.kyteapp.com/signup', utmParams);
+        return pageConfig.android ? `${pageConfig.android}&${queryParams}` : createRedirectUrl('https://web.auth.kyteapp.com/signup', attributionParams);
     }
-    return createRedirectUrl('https://web.auth.kyteapp.com/signup', utmParams);
+    return createRedirectUrl('https://web.auth.kyteapp.com/signup', attributionParams);
 }
 
-function createStaticLink(redirectClass, utmParams) {
+function createStaticLink(redirectClass, attributionParams) {
     const baseLinks = {
         'default': 'https://pos.auth.kyteapp.com',
         'catalog-redir': 'https://catalog.auth.kyteapp.com',
@@ -96,12 +96,12 @@ function createStaticLink(redirectClass, utmParams) {
     };
 
     const baseLink = baseLinks[redirectClass] || baseLinks['default'];
-    const queryParams = mergeQueryParams(new URLSearchParams(new URL(baseLink).search), utmParams).toString();
+    const queryParams = mergeQueryParams(new URLSearchParams(new URL(baseLink).search), attributionParams).toString();
     return `${baseLink}?${queryParams}`;
 }
 
-function createRedirectUrl(baseLink, utmParams) {
-    const queryParams = mergeQueryParams(new URLSearchParams(new URL(baseLink).search), utmParams).toString();
+function createRedirectUrl(baseLink, attributionParams) {
+    const queryParams = mergeQueryParams(new URLSearchParams(new URL(baseLink).search), attributionParams).toString();
     return `${baseLink}?${queryParams}`;
 }
 
@@ -109,48 +109,39 @@ function normalizePath(path) {
     return path.endsWith('/') ? path.slice(0, -1) : path;
 }
 
-function getUTMParams() {
+function getAttributionParams() {
     const params = new URLSearchParams(location.search);
-    const utmParams = {};
-    const path = normalizePath(window.location.pathname.substring(1));
-    const referrerHostnameParts = getReferrerHostnameParts();
+    const localStorageParams = getParamsFromLocalStorage();
+    const attributionParams = {};
 
-    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'ttclid', 'fbclid'].forEach(param => {
+    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid', 'ttclid', 'campaignid', 'adgroupid', 'keyword'].forEach(param => {
         if (params.has(param)) {
-            utmParams[param] = params.get(param);
-        } else {
-            utmParams[param] = getFallbackParamValue(param, referrerHostnameParts, path);
+            attributionParams[param] = params.get(param);
+        } else if (localStorageParams[param]) {
+            attributionParams[param] = localStorageParams[param];
         }
     });
-    return utmParams;
+
+    return attributionParams;
 }
 
-function getReferrerHostnameParts() {
-    try {
-        const referrer = new URL(document.referrer);
-        return referrer.hostname.split('.').filter(part => part !== 'www');
-    } catch (error) {
-        console.warn('Invalid or empty referrer:', error);
-        return [];
-    }
-}
-
-function getFallbackParamValue(param, referrerHostnameParts, path) {
-    if (param === 'utm_source') {
-        return referrerHostnameParts[0] || '';
-    } else if (param === 'utm_campaign') {
-        return path ? path : 'home';
-    } else {
-        return '';
-    }
+function getParamsFromLocalStorage() {
+    const params = {};
+    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid', 'ttclid', 'campaignid', 'adgroupid', 'keyword'].forEach(param => {
+        const value = localStorage.getItem(param);
+        if (value) {
+            params[param] = value;
+        }
+    });
+    return params;
 }
 
 function appendUTMParamsToLinks() {
-    const utmParams = getUTMParams();
+    const attributionParams = getAttributionParams();
 
     document.querySelectorAll('a').forEach(link => {
         const url = new URL(link.href);
-        const currentParams = mergeQueryParams(new URLSearchParams(url.search), utmParams);
+        const currentParams = mergeQueryParams(new URLSearchParams(url.search), attributionParams);
 
         url.search = currentParams.toString();
         link.href = url.toString();
@@ -161,7 +152,7 @@ function mergeQueryParams(existingParams, newParams) {
     const mergedParams = new URLSearchParams(existingParams);
 
     Object.entries(newParams).forEach(([key, value]) => {
-        if (!mergedParams.has(key)) {
+        if (value) {
             mergedParams.set(key, value);
         }
     });
