@@ -11,17 +11,17 @@ const initLeadForm = function (id = 'LeadForm', validationRules = {}) {
 	};
 
 	const validate = (step) => {
-		const elm = step
-			? window[alias].form.querySelector(`.step${step}`)
-			: window[alias].form;
+		const elm = step ? window[alias].form.querySelector(`.step${step}`) : window[alias].form;
 		const fields = elm.querySelectorAll('[name]');
 
 		for (let f of fields) {
 			const name = f.getAttribute('name');
-			if (
-				(f.hasAttribute('required') && ((f.type === 'checkbox' && !f.checked) || !f.value)) ||
-				(validationRules[name] && !validationRules[name](f.value))
-			) {
+			if (f.hasAttribute('required') && ((f.type === 'checkbox' && !f.checked) || !f.value)) {
+				console.log(`Validation failed: required field '${name}' is missing or empty.`);
+				return false;
+			}
+			if (validationRules[name] && !validationRules[name](f.value)) {
+				console.log(`Validation failed: field '${name}' with value '${f.value}' did not pass custom validation.`);
 				return false;
 			}
 		}
@@ -71,9 +71,10 @@ const initLeadForm = function (id = 'LeadForm', validationRules = {}) {
 	}
 };
 
+// Initialize the form with validation rules
 initLeadForm('LeadForm', {
 	email: (value) => {
-		const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-1]\d{2}\.\d{1,3}\.\d{1,3}\.\d{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i;
+		const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-1]\d{2}\.\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i;
 		return re.test(String(value));
 	}
 });
