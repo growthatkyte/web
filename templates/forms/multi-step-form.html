@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="/styles/forms.css">
 
-<form class="lead-form" id="sell-in-person" data-steps="3" method="post"
+<form class="lead-form" id="LEadForm" data-steps="3" method="post"
   action="https://us-central1-kyte-7c484.cloudfunctions.net/send-to-crm">
 
   <!--REDIRECT URL-->
@@ -67,11 +67,3 @@
 <!--END OF FORM ITEMS-->
 
 <script src="/scripts/multi-step-form.js"></script>
-<script>
-  initLeadForm('LeadForm', {
-    email: function (value) {
-      const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-1]\d{2}\.\d{1,3}\.\d{1,3}\.\d{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i;
-      return re.test(String(value));
-    }
-  })
-</script>
