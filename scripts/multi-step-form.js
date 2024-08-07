@@ -48,25 +48,7 @@ const initLeadForm = function (id = 'LeadForm', validationRules = {}) {
 			return false;
 		}
 		console.log('Validation passed, submitting form');
-
-		const formData = new FormData(window[alias].form);
-		fetch(window[alias].form.getAttribute('action'), {
-			method: 'POST',
-			body: formData
-		})
-			.then(response => {
-				if (!response.ok) {
-					throw new Error('Network response was not ok');
-				}
-				return response.json();
-			})
-			.then(data => {
-				window.location.href = 'https://kyteapp.page.link/?link=https://web.kyteapp.com/login&apn=com.kyte&ibi=com.kytepos&isi=1345983058&pt=120346822&mt=8';
-			})
-			.catch(error => {
-				console.error('There was a problem with the fetch operation:', error);
-			});
-
+		window[alias].form.submit();
 		window[alias].submitBtn.disabled = true;
 	});
 
@@ -85,6 +67,7 @@ const initLeadForm = function (id = 'LeadForm', validationRules = {}) {
 	}
 };
 
+// Initialize the form with validation rules
 initLeadForm('LeadForm', {
 	email: (value) => {
 		const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-1]\d{2}\.\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i;
