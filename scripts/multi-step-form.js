@@ -48,9 +48,26 @@ const initLeadForm = function (id = 'LeadForm', validationRules = {}) {
 			return false;
 		}
 		console.log('Validation passed, submitting form');
-		window[alias].form.submit();
+
+		const formData = new FormData(window[alias].form);
+		fetch(window[alias].form.getAttribute('action'), {
+			method: 'POST',
+			body: formData
+		})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error('Network response was not ok');
+				}
+				return response.json();
+			})
+			.then(data => {
+				window.location.href = 'https://kyteapp.page.link/?link=https://web.kyteapp.com/login&apn=com.kyte&ibi=com.kytepos&isi=1345983058&pt=120346822&mt=8';
+			})
+			.catch(error => {
+				console.error('There was a problem with the fetch operation:', error);
+			});
+
 		window[alias].submitBtn.disabled = true;
-		window.location.href = 'https://kyteapp.page.link/?link=https://web.kyteapp.com/login&apn=com.kyte&ibi=com.kytepos&isi=1345983058&pt=120346822&mt=8';
 	});
 
 	if (window[alias].steps > 0) {
