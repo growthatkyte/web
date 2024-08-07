@@ -50,6 +50,7 @@ const initLeadForm = function (id = 'LeadForm', validationRules = {}) {
 		console.log('Validation passed, submitting form');
 		window[alias].form.submit();
 		window[alias].submitBtn.disabled = true;
+		window.location.href = 'https://kyteapp.page.link/?link=https://web.kyteapp.com/login&apn=com.kyte&ibi=com.kytepos&isi=1345983058&pt=120346822&mt=8';
 	});
 
 	if (window[alias].steps > 0) {
@@ -67,7 +68,6 @@ const initLeadForm = function (id = 'LeadForm', validationRules = {}) {
 	}
 };
 
-// Initialize the form with validation rules
 initLeadForm('LeadForm', {
 	email: (value) => {
 		const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-1]\d{2}\.\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i;
