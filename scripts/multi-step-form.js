@@ -1,7 +1,3 @@
-/**
- * Gerencia pequenos formulários, fazendo sua validação e aplicando recurso de "passos"
- */
-
 const initLeadForm = function (id = 'LeadForm', validationRules = {}) {
 	const alias = `leadScript_${id}`;
 
