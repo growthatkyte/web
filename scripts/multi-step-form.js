@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				console.log('Success:', data);
 				const attributionInfo = getAttributionInfo();
 				const queryParams = new URLSearchParams(attributionInfo).toString();
-				window.location.href = `https://pos.auth.kyteapp.com?${queryParams}`;
+				return window.location.href = `https://pos.auth.kyteapp.com?${queryParams}`;
 			})
 			.catch(error => {
 				console.error('Error:', error);
