@@ -7,7 +7,8 @@ const initLeadForm = function (id = 'LeadForm', validationRules = {}) {
 
 	// Function to set visibility of elements
 	var setVisible = function (elm, isVisible) {
-		elm.setAttribute('class', `${elm.getAttribute('class').replace('hidden', '')} ${isVisible ? 'show' : 'hidden'}`);
+		elm.classList.toggle('hidden', !isVisible);
+		elm.classList.toggle('show', isVisible);
 	};
 
 	// Function to validate form fields
@@ -17,9 +18,12 @@ const initLeadForm = function (id = 'LeadForm', validationRules = {}) {
 		for (var f of fields) {
 			var name = f.getAttribute('name');
 			if (
-				(f.hasAttribute('required') && ((f.type === 'checkbox' && !f.checked) || !!!f.value)) ||
+				(f.hasAttribute('required') && ((f.type === 'checkbox' && !f.checked) || !f.value)) ||
 				(validationRules[name] && !validationRules[name](f.value))
-			) return false;
+			) {
+				console.log(`Validation failed for field: ${name}`);
+				return false;
+			}
 		}
 		return true;
 	};
@@ -28,11 +32,17 @@ const initLeadForm = function (id = 'LeadForm', validationRules = {}) {
 	var showStep = function (step) {
 		if (step > window[alias].steps || step < 1) return;
 		window[alias].currStep = step;
-		for (var s = 1; s <= window[alias].steps; s++)
-			setVisible(window[alias].form.getElementsByClassName(`step${s}`)[0], (step === s));
-		setVisible(window[alias].prevBtn, (step > 1));
-		setVisible(window[alias].nextBtn, (step < window[alias].steps));
-		setVisible(window[alias].submitBtn, (step === window[alias].steps));
+		for (var s = 1; s <= window[alias].steps; s++) {
+			const stepElement = window[alias].form.getElementsByClassName(`step${s}`)[0];
+			if (stepElement) {
+				setVisible(stepElement, step === s);
+			} else {
+				console.warn(`Step ${s} not found in form`);
+			}
+		}
+		setVisible(window[alias].prevBtn, step > 1);
+		setVisible(window[alias].nextBtn, step < window[alias].steps);
+		setVisible(window[alias].submitBtn, step === window[alias].steps);
 	};
 
 	// Function to capture attribution data from URL or local storage
@@ -49,8 +59,11 @@ const initLeadForm = function (id = 'LeadForm', validationRules = {}) {
 			const value = params.get(field) || localStorage.getItem(field);
 			if (value) {
 				attributionInfo[field] = value;
-				if (window[alias].form.elements[`mauticform[${field}]`]) {
-					window[alias].form.elements[`mauticform[${field}]`].value = value;  // Populate hidden field
+				const fieldElement = window[alias].form.querySelector(`[name="mauticform[${field}]"]`);
+				if (fieldElement) {
+					fieldElement.value = value;  // Populate hidden field
+				} else {
+					console.warn(`Field mauticform[${field}] not found in form`);
 				}
 			}
 		});
@@ -62,7 +75,7 @@ const initLeadForm = function (id = 'LeadForm', validationRules = {}) {
 	window[alias] = {
 		form: document.getElementById(id),
 		steps: Number(document.getElementById(id).getAttribute('data-steps')),
-		submitBtn: document.getElementById(id).getElementsByClassName('btn-submit')[0]
+		submitBtn: document.getElementById(id).querySelector('.btn-submit')
 	};
 
 	// Capture and populate attribution data
@@ -75,7 +88,8 @@ const initLeadForm = function (id = 'LeadForm', validationRules = {}) {
 
 		const redirectUrl = window[alias].form.elements['mauticform[return]'].value;
 		const queryParams = new URLSearchParams(attributionData).toString();
-		window.location.href = `${redirectUrl}&${queryParams}`;
+		const finalRedirectUrl = `${redirectUrl}&${queryParams}`;
+		window.location.href = finalRedirectUrl;
 
 		window[alias].form.submit();
 		window[alias].submitBtn.disabled = true;
@@ -83,10 +97,21 @@ const initLeadForm = function (id = 'LeadForm', validationRules = {}) {
 
 	// Handle multi-step form
 	if (window[alias].steps > 0) {
-		window[alias].prevBtn = window[alias].form.getElementsByClassName('btn-prev')[0];
-		window[alias].nextBtn = window[alias].form.getElementsByClassName('btn-next')[0];
-		window[alias].prevBtn.addEventListener('click', function (evt) { evt.preventDefault(); showStep(window[alias].currStep - 1); });
-		window[alias].nextBtn.addEventListener('click', function (evt) { evt.preventDefault(); if (validate(window[alias].currStep)) showStep(window[alias].currStep + 1); });
-		showStep(1);
+		window[alias].prevBtn = window[alias].form.querySelector('.btn-prev');
+		window[alias].nextBtn = window[alias].form.querySelector('.btn-next');
+		window[alias].prevBtn.addEventListener('click', function (evt) {
+			evt.preventDefault();
+			showStep(window[alias].currStep - 1);
+		});
+		window[alias].nextBtn.addEventListener('click', function (evt) {
+			evt.preventDefault();
+			if (validate(window[alias].currStep)) showStep(window[alias].currStep + 1);
+		});
+		showStep(1); // Show the first step on load
 	}
 };
+
+// Initialize the form after the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', function () {
+	initLeadForm('LeadForm');
+});
