@@ -56,30 +56,24 @@ const initLeadForm = function (id = 'LeadForm', validationRules = {}) {
 
 		const attributionInfo = {};
 		attributionFields.forEach(field => {
-			const value = params.get(field) || localStorage.getItem(field);
+			const value = params.get(field); // Fetch from URL
+			console.log(`Fetching ${field}: ${value}`); // Debugging log
+
 			if (value) {
 				attributionInfo[field] = value;
 				const fieldElement = window[alias].form.querySelector(`[name="mauticform[${field}]"]`);
 				if (fieldElement) {
 					fieldElement.value = value;  // Populate hidden field
+					console.log(`Populating field ${fieldElement.name} with value: ${value}`); // Debugging log
 				} else {
 					console.warn(`Field mauticform[${field}] not found in form`);
 				}
+			} else {
+				console.warn(`${field} not found in URL or local storage.`);
 			}
 		});
 
 		return attributionInfo;
-	};
-
-	// Function to build the redirect URL with form data
-	var buildRedirectUrl = function (redirectUrl, formData) {
-		const url = new URL(redirectUrl);
-		for (let key in formData) {
-			if (formData[key]) {
-				url.searchParams.append(key, formData[key]);
-			}
-		}
-		return url.toString();
 	};
 
 	// Initialize the form
@@ -90,31 +84,16 @@ const initLeadForm = function (id = 'LeadForm', validationRules = {}) {
 	};
 
 	// Capture and populate attribution data
-	const attributionData = captureAttributionData();
+	captureAttributionData();
 
 	// Handle form submission
 	window[alias].submitBtn.addEventListener('click', function (evt) {
 		evt.preventDefault();
 		if (!validate()) return false;
 
-		// Collect form data to add to the redirect URL
-		const formData = {};
-		for (let element of window[alias].form.elements) {
-			if (element.name && element.value) {
-				formData[element.name.replace('mauticform[', '').replace(']', '')] = element.value;
-			}
-		}
-
-		// Build the final redirect URL
-		const redirectUrl = window[alias].form.elements['mauticform[return]'].value;
-		const finalRedirectUrl = buildRedirectUrl(redirectUrl, formData);
-
-		// Redirect to the URL with form data
-		window.location.href = finalRedirectUrl;
-
-		// Submit the form after redirect
-		window[alias].submitBtn.disabled = true;
+		// Submit the form
 		window[alias].form.submit();
+		window[alias].submitBtn.disabled = true;
 	});
 
 	// Handle multi-step form
