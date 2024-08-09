@@ -1,7 +1,6 @@
 <link rel="stylesheet" href="/styles/forms.css">
 
-<form class="lead-form" id="LEadForm" data-steps="3" method="post"
-  action="https://us-central1-kyte-7c484.cloudfunctions.net/send-to-crm">
+<form class="lead-form" id="LEadForm" data-steps="3" method="post" action=" https://form-to-crm.kyteland.workers.dev">
 
   <!--REDIRECT URL-->
   <input type="hidden" name="_redir"
@@ -18,7 +17,6 @@
   <input type="hidden" name="fbclid" placeholder="FBCLID">
   <input type="hidden" name="gclid" placeholder="GCLID">
   <input type="hidden" name="ttclid" placeholder="TTCLID">
-  <input type="hidden" name="ref" placeholder="Ref">
   <input type="hidden" name="referrer" placeholder="Referrer">
   <input type="hidden" name="campaignid" placeholder="Campaign ID">
   <input type="hidden" name="adgroupid" placeholder="Ad Group ID">
@@ -35,7 +33,7 @@
     <input name="email" type="email" class="field full-width" placeholder="Meu e-mail é..." required />
   </div>
   <div class="step step2">
-    <select name="30dayssalesrange" class="field full-width" required>
+    <select name="monthly_sales" class="field full-width" required>
       <option value="" disabled selected>Em média, quantos pedidos você recebe por mês?</option>
       <option id="group0" value="no-sales">Ainda não estou vendendo</option>
       <option id="group1" value="30-sales">Entre 1 e 30 pedidos</option>
