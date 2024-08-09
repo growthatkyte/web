@@ -88,10 +88,16 @@ const initLeadForm = function (id = 'LeadForm', validationRules = {}) {
 
 		const redirectUrl = window[alias].form.elements['mauticform[return]'].value;
 		const queryParams = new URLSearchParams(attributionData).toString();
-		const finalRedirectUrl = `${redirectUrl}&${queryParams}`;
-		window.location.href = finalRedirectUrl;
+		const finalRedirectUrl = `${redirectUrl}?${queryParams}`;
 
-		window[alias].form.submit();
+		// Redirect to the URL with attribution data
+		window.location.replace(finalRedirectUrl);
+
+		// Submit the form after redirect
+		setTimeout(() => {
+			window[alias].form.submit();
+		}, 200); // Adjust the delay if needed
+
 		window[alias].submitBtn.disabled = true;
 	});
 
