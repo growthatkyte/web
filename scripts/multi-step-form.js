@@ -96,7 +96,7 @@ const initLeadForm = function (id = 'LeadForm', validationRules = {}) {
 		// Submit the form after redirect
 		setTimeout(() => {
 			window[alias].form.submit();
-		}, 200); // Adjust the delay if needed
+		}, 500); // Adjust the delay if needed
 
 		window[alias].submitBtn.disabled = true;
 	});
