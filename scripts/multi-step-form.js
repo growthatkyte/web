@@ -71,6 +71,17 @@ const initLeadForm = function (id = 'LeadForm', validationRules = {}) {
 		return attributionInfo;
 	};
 
+	// Function to build the redirect URL with form data
+	var buildRedirectUrl = function (redirectUrl, formData) {
+		const url = new URL(redirectUrl);
+		for (let key in formData) {
+			if (formData[key]) {
+				url.searchParams.append(key, formData[key]);
+			}
+		}
+		return url.toString();
+	};
+
 	// Initialize the form
 	window[alias] = {
 		form: document.getElementById(id),
@@ -86,19 +97,24 @@ const initLeadForm = function (id = 'LeadForm', validationRules = {}) {
 		evt.preventDefault();
 		if (!validate()) return false;
 
-		const redirectUrl = window[alias].form.elements['mauticform[return]'].value;
-		const queryParams = new URLSearchParams(attributionData).toString();
-		const finalRedirectUrl = `${redirectUrl}?${queryParams}`;
+		// Collect form data to add to the redirect URL
+		const formData = {};
+		for (let element of window[alias].form.elements) {
+			if (element.name && element.value) {
+				formData[element.name.replace('mauticform[', '').replace(']', '')] = element.value;
+			}
+		}
 
-		// Redirect to the URL with attribution data
-		window.location.replace(finalRedirectUrl);
+		// Build the final redirect URL
+		const redirectUrl = window[alias].form.elements['mauticform[return]'].value;
+		const finalRedirectUrl = buildRedirectUrl(redirectUrl, formData);
+
+		// Redirect to the URL with form data
+		window.location.href = finalRedirectUrl;
 
 		// Submit the form after redirect
-		setTimeout(() => {
-			window[alias].form.submit();
-		}, 500); // Adjust the delay if needed
-
 		window[alias].submitBtn.disabled = true;
+		window[alias].form.submit();
 	});
 
 	// Handle multi-step form
