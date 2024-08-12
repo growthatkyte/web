@@ -36,7 +36,6 @@ const initLeadForm = function (id = 'LeadForm', validationRules = {}) {
 			if (stepElement) {
 				setVisible(stepElement, step === s);
 			} else {
-				console.warn(`Step ${s} not found in form`);
 			}
 		}
 		setVisible(window[alias].prevBtn, step > 1);
@@ -59,32 +58,16 @@ const initLeadForm = function (id = 'LeadForm', validationRules = {}) {
 
 			if (value) {
 				attributionInfo[field] = value;
-				const fieldElement = window[alias].form.querySelector(`[name="mauticform[${field}]"]`);
+				const fieldElement = window[alias].form.querySelector(`[name="${field}"]`);
 				if (fieldElement) {
 					fieldElement.value = value;  // Populate hidden field
+				} else {
 				}
+			} else {
 			}
 		});
-
-		// Capture and populate the gclid field specifically
-		const gclidField = window[alias].form.querySelector('[name="gclid"]');
-		const gclid = params.get('gclid');
-		if (gclid && gclidField) {
-			gclidField.value = gclid;
-		}
 
 		return attributionInfo;
-	};
-
-	// Function to capture and populate the GA client ID
-	var captureGAClientID = function () {
-		ga(function (tracker) {
-			var clientId = tracker.get('clientId');
-			var clientIdField = window[alias].form.querySelector('[name="gclid"]');
-			if (clientIdField) {
-				clientIdField.value = clientId;
-			}
-		});
 	};
 
 	// Initialize the form
@@ -94,20 +77,22 @@ const initLeadForm = function (id = 'LeadForm', validationRules = {}) {
 		submitBtn: document.getElementById(id).querySelector('.btn-submit')
 	};
 
-	// Capture and populate attribution data and GA client ID
+	// Capture and populate attribution data
 	captureAttributionData();
-	captureGAClientID();
 
 	// Handle form submission
 	window[alias].submitBtn.addEventListener('click', function (evt) {
 		evt.preventDefault();
 		if (!validate()) return false;
 
+		// Capture form title for GA4 event
+		const formTitle = window[alias].form.querySelector('[name="formTitle"]').value;
+
 		// Send GA4 event for lead generation
 		gtag("event", "generate_lead", {
 			currency: "BRL",
 			value: 1.00,
-			lead_source: window[alias].form.getAttribute('data-title')
+			lead_source: formTitle
 		});
 
 		// Check for qualifying lead criteria
