@@ -21,7 +21,6 @@ const initLeadForm = function (id = 'LeadForm', validationRules = {}) {
 				(f.hasAttribute('required') && ((f.type === 'checkbox' && !f.checked) || !f.value)) ||
 				(validationRules[name] && !validationRules[name](f.value))
 			) {
-				console.log(`Validation failed for field: ${name}`);
 				return false;
 			}
 		}
@@ -63,13 +62,29 @@ const initLeadForm = function (id = 'LeadForm', validationRules = {}) {
 				const fieldElement = window[alias].form.querySelector(`[name="mauticform[${field}]"]`);
 				if (fieldElement) {
 					fieldElement.value = value;  // Populate hidden field
-				} else {
 				}
-			} else {
 			}
 		});
 
+		// Capture and populate the gclid field specifically
+		const gclidField = window[alias].form.querySelector('[name="gclid"]');
+		const gclid = params.get('gclid');
+		if (gclid && gclidField) {
+			gclidField.value = gclid;
+		}
+
 		return attributionInfo;
+	};
+
+	// Function to capture and populate the GA client ID
+	var captureGAClientID = function () {
+		ga(function (tracker) {
+			var clientId = tracker.get('clientId');
+			var clientIdField = window[alias].form.querySelector('[name="gclid"]');
+			if (clientIdField) {
+				clientIdField.value = clientId;
+			}
+		});
 	};
 
 	// Initialize the form
@@ -79,13 +94,31 @@ const initLeadForm = function (id = 'LeadForm', validationRules = {}) {
 		submitBtn: document.getElementById(id).querySelector('.btn-submit')
 	};
 
-	// Capture and populate attribution data
+	// Capture and populate attribution data and GA client ID
 	captureAttributionData();
+	captureGAClientID();
 
 	// Handle form submission
 	window[alias].submitBtn.addEventListener('click', function (evt) {
 		evt.preventDefault();
 		if (!validate()) return false;
+
+		// Send GA4 event for lead generation
+		gtag("event", "generate_lead", {
+			currency: "BRL",
+			value: 1.00,
+			lead_source: window[alias].form.getAttribute('data-title')
+		});
+
+		// Check for qualifying lead criteria
+		const monthlySalesField = window[alias].form.querySelector('[name="monthly_sales"]');
+		const selectedOption = monthlySalesField ? monthlySalesField.value : null;
+		if (selectedOption === '30-sales' || selectedOption === '200-sales' || selectedOption === '200plus-sales') {
+			gtag("event", "qualify_lead", {
+				currency: "BRL",
+				value: 1.00
+			});
+		}
 
 		// Submit the form
 		window[alias].form.submit();
