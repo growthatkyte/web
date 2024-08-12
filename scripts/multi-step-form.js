@@ -57,19 +57,15 @@ const initLeadForm = function (id = 'LeadForm', validationRules = {}) {
 		const attributionInfo = {};
 		attributionFields.forEach(field => {
 			const value = params.get(field); // Fetch from URL
-			console.log(`Fetching ${field}: ${value}`); // Debugging log
 
 			if (value) {
 				attributionInfo[field] = value;
 				const fieldElement = window[alias].form.querySelector(`[name="mauticform[${field}]"]`);
 				if (fieldElement) {
 					fieldElement.value = value;  // Populate hidden field
-					console.log(`Populating field ${fieldElement.name} with value: ${value}`); // Debugging log
 				} else {
-					console.warn(`Field mauticform[${field}] not found in form`);
 				}
 			} else {
-				console.warn(`${field} not found in URL or local storage.`);
 			}
 		});
 
