@@ -35,7 +35,6 @@ const initLeadForm = function (id = 'LeadForm', validationRules = {}) {
 			const stepElement = window[alias].form.getElementsByClassName(`step${s}`)[0];
 			if (stepElement) {
 				setVisible(stepElement, step === s);
-			} else {
 			}
 		}
 		setVisible(window[alias].prevBtn, step > 1);
@@ -55,15 +54,12 @@ const initLeadForm = function (id = 'LeadForm', validationRules = {}) {
 		const attributionInfo = {};
 		attributionFields.forEach(field => {
 			const value = params.get(field); // Fetch from URL
-
 			if (value) {
 				attributionInfo[field] = value;
-				const fieldElement = window[alias].form.querySelector(`[name="${field}"]`);
+				const fieldElement = window[alias].form.querySelector(`[name="mauticform[${field}]"]`);
 				if (fieldElement) {
 					fieldElement.value = value;  // Populate hidden field
-				} else {
 				}
-			} else {
 			}
 		});
 
@@ -86,7 +82,7 @@ const initLeadForm = function (id = 'LeadForm', validationRules = {}) {
 		if (!validate()) return false;
 
 		// Capture form title for GA4 event
-		const formTitle = window[alias].form.querySelector('[name="formTitle"]').value;
+		const formTitle = window[alias].form.querySelector('[name="mauticform[formtitle]"]').value;
 
 		// Send GA4 event for lead generation
 		gtag("event", "generate_lead", {
@@ -96,7 +92,7 @@ const initLeadForm = function (id = 'LeadForm', validationRules = {}) {
 		});
 
 		// Check for qualifying lead criteria
-		const monthlySalesField = window[alias].form.querySelector('[name="monthly_sales"]');
+		const monthlySalesField = window[alias].form.querySelector('[name="mauticform[monthlysales]"]');
 		const selectedOption = monthlySalesField ? monthlySalesField.value : null;
 		if (selectedOption === '30-sales' || selectedOption === '200-sales' || selectedOption === '200plus-sales') {
 			gtag("event", "qualify_lead", {
