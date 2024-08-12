@@ -81,6 +81,10 @@
     border-bottom: none !important;
 }
 
+.step3 a {
+    color: #2dd1ac;
+}
+
 #intercom-container-body {
     position: absolute !important;
     margin-top: 0 !important;
