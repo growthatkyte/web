@@ -126,13 +126,15 @@ function getUTMParams() {
 }
 
 function getReferrerHostnameParts() {
-    try {
-        const referrer = new URL(document.referrer);
-        return referrer.hostname.split('.').filter(part => part !== 'www');
-    } catch (error) {
-        console.warn('Invalid or empty referrer:', error);
-        return [];
+    if (document.referrer) {
+        try {
+            const referrer = new URL(document.referrer);
+            return referrer.hostname.split('.').filter(part => part !== 'www');
+        } catch (error) {
+            console.warn('Invalid referrer:', error);
+        }
     }
+    return [];
 }
 
 function getFallbackParamValue(param, referrerHostnameParts, path) {
