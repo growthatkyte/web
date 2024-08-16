@@ -151,11 +151,19 @@ function appendUTMParamsToLinks() {
     const utmParams = getUTMParams();
 
     document.querySelectorAll('a').forEach(link => {
-        const url = new URL(link.href);
-        const currentParams = mergeQueryParams(new URLSearchParams(url.search), utmParams);
+        try {
+            if (link.href && link.href.startsWith('http')) {
+                const url = new URL(link.href);
+                const currentParams = mergeQueryParams(new URLSearchParams(url.search), utmParams);
 
-        url.search = currentParams.toString();
-        link.href = url.toString();
+                url.search = currentParams.toString();
+                link.href = url.toString();
+            } else {
+                console.warn('Invalid or unsupported link href:', link.href);
+            }
+        } catch (error) {
+            console.warn('Error processing link:', link.href, error);
+        }
     });
 }
 
