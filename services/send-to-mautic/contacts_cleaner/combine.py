@@ -5,7 +5,7 @@ import csv
 directory = "outputs"
 
 # Specify the path for the combined output CSV file
-combined_csv_path = "combined_output.csv"
+combined_csv_path = "/Users/ivanfarias/Downloads/free_base_upload.csv"
 
 # Initialize a variable to track whether the header has been written
 header_written = False

@@ -6,18 +6,20 @@ input_directory = "inputs"
 output_directory = "outputs"
 
 # Maximum rows per output file
-max_rows_per_file = 10000
+max_rows_per_file = 50000
 
-# Load country dictionary from file
+# Load country dictionary from file: ISO codes as keys, full country names as values
 country_dict = {}
 with open("country_dict.csv", "r") as file:
     reader = csv.DictReader(file)
     for row in reader:
-        country_dict[row["country_name"].strip().lower()] = row["iso_code"]
+        # Assuming the CSV has columns 'iso_code' and 'country_name'
+        country_dict[row["iso_code"].strip().upper()] = row["country_name"].strip()
 
 
 def normalize_text(text):
-    return " ".join(text.title().split())
+    """Removes non-UTF-8 characters and normalizes text."""
+    return "".join(char for char in text if char.isascii())
 
 
 # Clean up and standardize contacts
@@ -26,35 +28,73 @@ def clean_contacts(input_file):
     with open(input_file, "r") as file:
         reader = csv.DictReader(file)
         for row in reader:
-            # Check if the 'name' column exists and is not 'Undefined' or 'undefined'
-            if "name" in row and row["name"].strip().lower() not in ["undefined", ""]:
-                name_parts = row["name"].split(" ", 1)
-                first_name = normalize_text(name_parts[0])
-                last_name = normalize_text(name_parts[1]) if len(name_parts) > 1 else ""
+            # Remove non-UTF-8 characters from firstname
+            firstname = normalize_text(row.get("firstname", "").strip())
 
-                # Standardize the city and state
-                city = normalize_text(row.get("city", ""))
-                state = normalize_text(row.get("state", ""))
+            # Get the country ISO code from the row and find the full name using the dictionary
+            country_code = row.get("country", "").strip().upper()
+            country_name = country_dict.get(
+                country_code, country_code
+            )  # Fallback to ISO code if not found
 
-                # Standardize the country column using ISO codes
-                country_name = row.get("country", "").strip().lower()
-                country_code = country_dict.get(country_name, row.get("country", ""))
+            # Set preferred_locale based on country code if undefined
+            preferred_locale = row.get("preferred_locale", "").strip().lower()
+            if preferred_locale == "undefined":
+                if country_code == ["BR", "MZ", "AO"]:
+                    preferred_locale = "pt_BR"
+                elif country_code in [
+                    "US",
+                    "ID",
+                    "CA",
+                    "MY",
+                    "PH",
+                    "GB",
+                    "UAE",
+                    "IN",
+                    "AG",
+                    "MV",
+                    "AE",
+                    "BS",
+                    "CM",
+                    "SG",
+                ]:
+                    preferred_locale = "en_US"
+                elif country_code in [
+                    "MX",
+                    "AR",
+                    "CO",
+                    "EC",
+                    "PE",
+                    "CL",
+                    "UY",
+                    "DO",
+                    "CR",
+                    "ES",
+                    "PA",
+                    "GT",
+                    "GE",
+                    "HN",
+                    "PY",
+                    "VE",
+                    "NI",
+                    "SV",
+                ]:
+                    preferred_locale = "es_MX"
 
-                # Update the row with cleaned and standardized values, prepare row for writing
-                updated_row = {
-                    "first_name": first_name,
-                    "last_name": last_name,
-                    "city": city,
-                    "state": state,
-                    "country": country_code,
-                }
+            # Update the row with cleaned and standardized values
+            updated_row = {
+                "aid": row.get("aid", ""),
+                "email": row.get("email", ""),
+                "creation_date": row.get("creation_date", ""),
+                "buy_date": row.get("buy_date", ""),
+                "billing_status": row.get("billing_status", ""),
+                "country": country_name,  # Replace with full country name
+                "preferred_locale": preferred_locale,
+                "firstname": firstname,
+                "plan": row.get("plan", ""),
+            }
 
-                # Merge with existing data, excluding 'phone_number'
-                for key in row:
-                    if key not in ["phone_number", "name"]:
-                        updated_row[key] = row[key]
-
-                cleaned_contacts.append(updated_row)
+            cleaned_contacts.append(updated_row)
 
     return cleaned_contacts
 
@@ -85,23 +125,17 @@ for input_file in input_files:
             output_directory, f"{output_file_base}_{output_file_counter}.csv"
         )
         with open(output_file, "w", newline="") as file:
-            # Adjust fieldnames to match the processed and cleaned data
+            # Adjust fieldnames to match the provided fields
             fieldnames = [
                 "aid",
                 "email",
-                "first_name",
-                "last_name",
-                "last_seen",
-                "preferred_locale",
-                "country",
-                "state",
-                "city",
-                "os",
-                "app_sessions",
+                "creation_date",
+                "buy_date",
                 "billing_status",
-                "billing_buy_date",
-                "billing_end_date",
-                "billing_tolerance_date",
+                "country",
+                "preferred_locale",
+                "firstname",
+                "plan",
             ]
             writer = csv.DictWriter(file, fieldnames=fieldnames)
             writer.writeheader()

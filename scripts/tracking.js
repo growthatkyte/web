@@ -35,6 +35,7 @@ function applyButtonClasses(config) {
 function shouldApplyClass(button, config, path) {
     return !button.classList.contains('mauticform-button') &&
         !button.classList.contains('direct-button') &&
+        !button.classList.contains('auth-submit') &&
         config[path];
 }
 
@@ -51,6 +52,7 @@ function setupClickHandler(config) {
 function shouldHandleRedirection(target) {
     return target &&
         !target.classList.contains('mauticform-button') &&
+        !target.classList.contains('auth-submit') &&
         !target.classList.contains('direct-button');
 }
 
