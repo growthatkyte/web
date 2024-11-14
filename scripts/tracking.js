@@ -14,13 +14,11 @@ async function fetchConfig() {
     if (!response.ok) throw new Error('Failed to fetch landing pages configuration');
     return response.json();
 }
-
 function initialize(config) {
     applyButtonClasses(config);
     appendUTMParamsToLinks();
     setupFormHandler(config);
 }
-
 function applyButtonClasses(config) {
     const path = normalizePath(window.location.pathname);
     const buttons = document.querySelectorAll('input[type="submit"], button[type="submit"]');
