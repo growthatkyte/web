@@ -18,7 +18,7 @@ async function fetchConfig() {
 function initialize(config) {
     applyButtonClasses(config);
     appendUTMParamsToLinks();
-    setupClickHandler(config);
+    setupFormHandler(config);
 }
 
 function applyButtonClasses(config) {
@@ -39,40 +39,29 @@ function shouldApplyClass(button, config, path) {
         config[path];
 }
 
-function setupClickHandler(config) {
-    document.addEventListener('click', event => {
-        const target = event.target.closest('input[type="submit"], button[type="submit"]');
-        if (shouldHandleRedirection(target)) {
-            event.preventDefault();
-            handleRedirection(config, getUTMParams(), target);
-        }
-    });
+function setupFormHandler(config) {
+    const leadForm = document.getElementById('LeadForm');
+
+    if (leadForm) {
+        leadForm.addEventListener('submit', event => {
+            event.preventDefault(); // Prevent form submission
+
+            const utmParams = getUTMParams(); // Get UTM and form params
+            handleRedirection(config, utmParams); // Redirect
+        });
+    }
 }
 
-function shouldHandleRedirection(target) {
-    return target &&
-        !target.classList.contains('mauticform-button') &&
-        !target.classList.contains('auth-submit') &&
-        !target.classList.contains('direct-button');
-}
-
-function handleRedirection(config, utmParams, target) {
+function handleRedirection(config, utmParams) {
     const path = normalizePath(window.location.pathname);
     const pageConfig = config[path] || {};
-    const redirectClass = getRedirectClass(target);
+    const redirectClass = 'default';
 
     const redirectUrl = !isMobileDevice() ?
         createRedirectUrl('https://web.auth.kyteapp.com/signup', utmParams) :
         handleMobileRedirection(redirectClass, pageConfig, utmParams);
 
     window.location.href = redirectUrl;
-}
-
-function getRedirectClass(target) {
-    if (target.classList.contains('cpp-redir')) return 'cpp-redir';
-    if (target.classList.contains('catalog-redir')) return 'catalog-redir';
-    if (target.classList.contains('control-redir')) return 'control-redir';
-    return 'default';
 }
 
 function handleMobileRedirection(redirectClass, pageConfig, utmParams) {
@@ -119,34 +108,25 @@ function getUTMParams() {
     ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid', 'ttclid', 'campaignid', 'adgroupid', 'exp_email_only_signup'].forEach(param => {
         if (params.has(param)) {
             utmParams[param] = params.get(param);
-        } else {
-            utmParams[param] = getFallbackParamValue(param);
+        } else if (formValues[param]) {
+            utmParams[param] = formValues[param];
         }
     });
 
-    return { ...utmParams, ...formValues };
+    return utmParams;
 }
 
-function getReferrerHostnameParts() {
-    if (document.referrer) {
-        try {
-            const referrer = new URL(document.referrer);
-            return referrer.hostname.split('.').filter(part => part !== 'www');
-        } catch (error) {
-            console.warn('Invalid referrer:', error);
+function getFormValues() {
+    const formElements = document.forms['LeadForm'].elements;
+    const formParams = {};
+
+    Array.from(formElements).forEach(element => {
+        if (element.name && element.value) {
+            formParams[element.name] = element.value;
         }
-    }
-    return [];
-}
+    });
 
-function getFallbackParamValue(param, referrerHostnameParts, path) {
-    if (param === 'utm_source') {
-        return referrerHostnameParts[0] || '';
-    } else if (param === 'utm_campaign') {
-        return path ? path : 'home';
-    } else {
-        return '';
-    }
+    return formParams;
 }
 
 function appendUTMParamsToLinks() {
@@ -173,25 +153,12 @@ function mergeQueryParams(existingParams, newParams) {
     const mergedParams = new URLSearchParams(existingParams);
 
     Object.entries(newParams).forEach(([key, value]) => {
-        if (value) {
+        if (value) { // Only add if the value is not empty
             mergedParams.set(key, value);
         }
     });
 
     return mergedParams;
-}
-
-function getFormValues() {
-    const formElements = document.forms['LeadForm'].elements;
-    const formParams = {};
-
-    Array.from(formElements).forEach(element => {
-        if (element.name && element.value) {
-            formParams[element.name] = element.value;
-        }
-    });
-
-    return formParams;
 }
 
 function isMobileDevice() {
