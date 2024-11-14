@@ -1,7 +1,6 @@
 'use client'
 
-import React, { useState, useRef, useEffect } from 'react'
-import JsBarcode from 'jsbarcode'
+import { useState, useRef, useEffect } from 'react'; import JsBarcode from 'jsbarcode'
 import { QRCodeSVG } from 'qrcode.react'
 import './App.css';
 import ReactDOM from 'react-dom';
@@ -23,7 +22,6 @@ export default function BarcodeGenerator() {
   const [paperType, setPaperType] = useState(paperTypes[0])
   const [customPaper, setCustomPaper] = useState({ width: '', height: '', columns: '', rows: '' })
   const [showBulkDialog, setShowBulkDialog] = useState(false)
-  const barcodeRef = useRef<SVGSVGElement>(null)
 
   useEffect(() => {
     if (paperType.name === 'Custom') {
@@ -37,6 +35,7 @@ export default function BarcodeGenerator() {
   }, [customPaper, paperType.name]);
 
   const detectBarcodeType = (input: string) => {
+    if (barcodeType === 'QR') return 'QR';
     if (/^\d{12}$/.test(input)) return 'UPC';
     if (/^\d{13}$/.test(input)) return 'EAN13';
     if (/^\d{8}$/.test(input)) return 'EAN8';
@@ -47,7 +46,7 @@ export default function BarcodeGenerator() {
   const generateBarcode = (code: string, type: string) => {
     const barcodeFormat = type === 'GENERAL' ? 'CODE128' : type;
 
-    if (barcodeFormat === 'QR' || barcodeFormat === 'DataMatrix') {
+    if (barcodeFormat === 'QR') {
       return new Promise<string>((resolve) => {
         const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         const qr = <QRCodeSVG value={code} size={200} />;

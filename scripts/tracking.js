@@ -117,7 +117,7 @@ function getUTMParams() {
     const path = normalizePath(window.location.pathname.substring(1));
     const referrerHostnameParts = getReferrerHostnameParts();
 
-    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid', 'ttclid', 'campaignid', 'adgroupid', 'keyword'].forEach(param => {
+    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid', 'ttclid', 'campaignid', 'adgroupid', 'exp_email_only_signup'].forEach(param => {
         if (params.has(param)) {
             utmParams[param] = params.get(param);
         } else {
