@@ -114,17 +114,17 @@ function normalizePath(path) {
 function getUTMParams() {
     const params = new URLSearchParams(location.search);
     const utmParams = {};
-    const path = normalizePath(window.location.pathname.substring(1));
-    const referrerHostnameParts = getReferrerHostnameParts();
+    const formValues = getFormValues();
 
     ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid', 'ttclid', 'campaignid', 'adgroupid', 'exp_email_only_signup'].forEach(param => {
         if (params.has(param)) {
             utmParams[param] = params.get(param);
         } else {
-            utmParams[param] = getFallbackParamValue(param, referrerHostnameParts, path);
+            utmParams[param] = getFallbackParamValue(param);
         }
     });
-    return utmParams;
+
+    return { ...utmParams, ...formValues };
 }
 
 function getReferrerHostnameParts() {
@@ -173,12 +173,25 @@ function mergeQueryParams(existingParams, newParams) {
     const mergedParams = new URLSearchParams(existingParams);
 
     Object.entries(newParams).forEach(([key, value]) => {
-        if (!mergedParams.has(key)) {
+        if (value) {
             mergedParams.set(key, value);
         }
     });
 
     return mergedParams;
+}
+
+function getFormValues() {
+    const formElements = document.forms['LeadForm'].elements;
+    const formParams = {};
+
+    Array.from(formElements).forEach(element => {
+        if (element.name && element.value) {
+            formParams[element.name] = element.value;
+        }
+    });
+
+    return formParams;
 }
 
 function isMobileDevice() {
