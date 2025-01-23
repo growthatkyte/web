@@ -40,7 +40,7 @@
 }
 
 .lead-form .navigation {
-    display: flex;
+    display: block;
 }
 
 .lead-form .navigation .btn {
@@ -53,7 +53,7 @@
     border-radius: 6px;
     color: white;
     cursor: pointer;
-    max-width: 280px;
+    max-width: 340px;
     font-size: 18px;
     font-weight: 500;
 }
