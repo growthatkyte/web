@@ -137,7 +137,7 @@ const translations = {
     'where.description': {
       en: 'You can reach us anytime via help@kyteapp.com',
       es: 'Puedes contactarnos en cualquier momento a través de help@kyteapp.com',
-      pt: 'Você pode nos contatar a qualquer momento através de help@kyteapp.com'
+      pt: 'Você pode nos contatar a qualquer momento através de parceiros@kyte.com.br'
     },
     'faq.subheading': {
       en: 'Support',
@@ -232,7 +232,7 @@ const translations = {
     'faq.a.8': {
       en: 'No problem, just shoot an email to help@kyteapp.com if you need answers to anything else.',
       es: 'No hay problema, simplemente envía un correo electrónico a help@kyteapp.com si necesitas respuestas a cualquier otra cosa.',
-      pt: 'Sem problemas, basta enviar um e-mail para help@kyteapp.com se precisar de respostas para qualquer outra coisa.'
+      pt: 'Sem problemas, basta enviar um e-mail para parceiros@kyte.com.br se precisar de respostas para qualquer outra coisa.'
     },
     'faq.cta.title': {
       en: 'Become a partner',
