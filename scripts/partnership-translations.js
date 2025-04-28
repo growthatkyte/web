@@ -422,8 +422,6 @@ updateElementContent('faq.cta.description', userLocale);
 updateElementContent('faq.cta.button', userLocale);
 updateElementContent('where.login.title', userLocale);
 
-
-// Get translated content for each form element
 updateElementContent('pfy-input-first_name', userLocale);
 updateElementContent('pfy-input-job_title', userLocale);
 updateElementContent('pfy-input-phone_number', userLocale);
