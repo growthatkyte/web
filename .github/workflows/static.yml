@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Preload upload-artifact
-        uses: actions/upload-artifact@v3.1.3
+        uses: actions/upload-artifact@8cc7f19e202262ac4f2789f4d2b4898d27f79f4d
         with:
           name: dummy
           path: README.md
