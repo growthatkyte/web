@@ -29,6 +29,12 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
+      - name: Preload upload-artifact
+        uses: actions/upload-artifact@v3.1.3
+        with:
+          name: dummy
+          path: README.md
+        continue-on-error: true
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup Pages
