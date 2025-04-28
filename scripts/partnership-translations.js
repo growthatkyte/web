@@ -154,7 +154,7 @@ const translations = {
       es: 'Todo lo que necesitas saber sobre el Programa de Socios de Kyte',
       pt: 'Tudo o que você precisa saber sobre o Programa de Parceria Kyte'
     },
-    'faq.q.1': {
+'faq.q.1': {
       en: 'Is anyone allowed to join the Partner Program?',
       es: '¿Cualquiera puede participar en el Programa de Socios?',
       pt: 'Qualquer um pode participar do Programa de Parceiros?'
@@ -172,7 +172,7 @@ const translations = {
     'faq.a.2': {
       en: 'All you need to do is fill in some basic info to sign up. After that, we\'ll send you a confirmation email. As soon as we confirm your partnership, you\'ll get a special link to share with others. You\'ll also get access to your very own referral dashboard.',
       es: 'Todo lo que necesitas hacer es llenar algunos detalles básicos para registrarte. Después de eso, recibirás un enlace único para compartir con otras personas. También tendrás acceso a tu propio panel de referencias.',
-      pt: 'Tudo que você precisa fazer é preencher algumas informações básicas para se inscrever. Depois disso, você receberá um link único para compartilhar com outras pessoas. Você também terá acesso ao seu próprio painel de indicações.'
+      pt: 'Tudo que você precisa fazer é preencher algumas informações básicas para se inscrever. Depois disso, no seu painel você terá acesso a um link único para compartilhar com outras pessoas. Você também terá acesso ao seu próprio painel de indicações.'
     },
     'faq.q.3': {
       en: 'How and when do I get my money?',
@@ -182,7 +182,7 @@ const translations = {
     'faq.a.3': {
       en: 'We\'ve got you covered! Upon earning a referral commission, we\'ll contact you via email to arrange your cash payout. Commissions are paid monthly. For monthly subscriptions, commissions are validated and paid after the first renewal, meaning in the second month. For yearly subscriptions, commissions are paid 30 days post-subscription. We conduct a verification process and disburse payments accordingly.',
       es: 'Nos encargamos de todo. Al ganar una comisión por referido, te contactaremos por correo electrónico para organizar tu pago en efectivo. Las comisiones se pagan mensualmente. Para suscripciones mensuales, las comisiones se validan y pagan después de la primera renovación, es decir, en el segundo mes. Para suscripciones anuales, las comisiones se pagan 30 días después de la suscripción. Realizamos un proceso de verificación y emitimos los pagos correspondientemente.',
-      pt: 'Nós cuidamos de tudo. Ao conquistar uma comissão por indicação, entraremos em contato por e-mail para organizar o seu pagamento em dinheiro. As comissões são pagas mensalmente. Para assinaturas mensais, as comissões são validadas e pagas após a primeira renovação, ou seja, no segundo mês. Para assinaturas anuais, as comissões são pagas 30 dias após a assinatura. Realizamos um processo de verificação e efetuamos os pagamentos de acordo.'
+      pt: 'A cada indicação bem-sucedida, você recebe R$100. É importante que você saiba que todas as indicações recebidas passaram por nosso sistema de anti-fraude. O pagamento será dividido em dois meses, 10% no primeiro mês e 90% no segundo. Você poderá solicitar seu saque na Plataforma de Parceiros sempre que o saldo mínimo de R$150 for atingido. Se a pessoa indicada assinar um plano anual, o valor integral da comissão é liberado assim que a conversão for validada, seguindo a mesma lógica de 10% do valor no primeiro mês e 90% no mês seguinte.''
     },
     'faq.q.4': {
       en: 'Do you help with getting referrals?',
@@ -245,6 +245,11 @@ const translations = {
       pt: 'Vamos ajudar empreendedores a darem conta de seus negócios?'
     },
     'faq.cta.button': {
+      en: 'Get started',
+      es: 'Empieza ahora',
+      pt: 'Começar'
+    },
+    'faq.cta.link': {
       en: 'Get started',
       es: 'Empieza ahora',
       pt: 'Começar'
